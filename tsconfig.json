@@ -1,0 +1,9 @@
+{
+  "compilerOptions": {
+      "module": "node16",
+      "target": "ESNext",
+      "outDir": "build",
+      "rootDir": "./src",
+      "declaration": true
+  }
+}
