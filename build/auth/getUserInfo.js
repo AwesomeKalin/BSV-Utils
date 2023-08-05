@@ -4,7 +4,7 @@ import chalk from 'chalk';
 import isBase64 from 'is-base64';
 export async function getUserInfo(account) {
     let decoded;
-    if (isBase64(decoded)) {
+    if (isBase64(account.toString())) {
         decoded = Buffer.from(account.toString('ascii'), 'base64').toString();
     }
     else {

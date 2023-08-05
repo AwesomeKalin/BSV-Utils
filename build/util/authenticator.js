@@ -26,7 +26,7 @@ export class authenticate {
 export async function getAuthClass() {
     const account = readFileSync(`${os.homedir()}/.bsvutils/account.bsv`);
     let decoded;
-    if (isBase64(decoded)) {
+    if (isBase64(account.toString())) {
         decoded = Buffer.from(account.toString('ascii'), 'base64').toString();
     }
     else {
