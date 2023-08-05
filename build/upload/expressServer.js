@@ -5,7 +5,4 @@ export class expressServer {
         this.app.use(express.static('./temp'));
         this.app.listen(port);
     }
-    shutdown() {
-        this.app.shutdown();
-    }
 }

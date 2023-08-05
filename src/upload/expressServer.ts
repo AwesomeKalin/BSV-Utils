@@ -8,8 +8,4 @@ export class expressServer {
 
         this.app.listen(port);
     }
-
-    shutdown() {
-        this.app.shutdown();
-    }
 }
