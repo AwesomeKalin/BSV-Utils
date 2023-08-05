@@ -4,6 +4,7 @@ import RelysiaSDK from '@relysia/sdk';
 import chalk from 'chalk';
 import { Spinner, createSpinner } from 'nanospinner';
 import { encrypt } from '../util/encryption.js';
+import { writeFileSync } from 'fs';
 
 export async function login() {
     const email: string = await input({ message: 'Relysia Email: ' });
@@ -12,13 +13,13 @@ export async function login() {
     const spinner: Spinner = createSpinner('Testing credentials and saving').start();
     try {
         const relysia: RelysiaSDK = new RelysiaSDK();
-        await relysia.auth({ email, password: accPassword });
+        await relysia.authentication.v1.auth({ email, password: accPassword });
         const toSave: string = Buffer.from(JSON.stringify({
             email,
             accPassword
         })).toString('base64');
 
-        if (encryptionPassword != '' || encryptionPassword != undefined) {
+        if (encryptionPassword != '') {
             spinner.stop();
             return await encrypt(toSave, encryptionPassword);
         }
@@ -27,6 +28,7 @@ export async function login() {
         return Buffer.from(toSave);
     }
     catch {
+        spinner.stop();
         console.log(chalk.red('Are you sure that you entered the correct email and/or password?'));
         return login();
     }

@@ -1,11 +1,11 @@
 import chalk from 'chalk';
 import gradient from 'gradient-string';
-import { readFileSync, writeFileSync, unlinkSync } from 'fs';
+import { readFileSync, writeFileSync, unlinkSync, mkdirSync } from 'fs';
 import { login } from './login.js';
-import input from '@inquirer/input';
 import figlet from 'figlet';
 import { getUserInfo } from './getUserInfo.js';
 import select from '@inquirer/select';
+import os from 'os';
 
 export async function auth() {
     console.log(figlet(gradient.retro('BSV Utils'), function () { }));
@@ -33,13 +33,13 @@ export async function auth() {
         });
 
         if (nextToDo === 'remove-account') {
-            unlinkSync('~/.bsvutils/account.bsv');
+            unlinkSync(`${os.homedir()}/.bsvutils/account.bsv`);
             process.exit(0);
         } else if (nextToDo === 'switch-account') {
             account = await login();
 
             console.log(chalk.greenBright('Successfully Logged In. Saving Information to Drive'));
-            writeFileSync('~/.bsvutils/account.bsv', account);
+            writeFileSync(`${os.homedir()}/.bsvutils/account.bsv`, account);
             console.clear();
             await auth();
         } else {
@@ -47,14 +47,18 @@ export async function auth() {
         }
     }
     catch {
-        console.log(chalk.greenBright('Let\'s get your Relysia account setup! If you don\'t have a Relysia account, head over to https://relysia.com/auth/register then come back here! Press enter when your ready'));
-        await input({ message: '' });
+        console.log(chalk.greenBright('Let\'s get your Relysia account setup! If you don\'t have a Relysia account, head over to https://relysia.com/auth/register then come back here!'));
 
         account = await login();
 
         console.log(chalk.greenBright('Successfully Logged In. Saving Information to Drive'));
-        writeFileSync('~/.bsvutils/account.bsv', account);
-        console.clear();
+        try {
+            writeFileSync(`${os.homedir()}/.bsvutils/account.bsv`, account);
+        } catch {
+            mkdirSync(`${os.homedir()}/.bsvutils`);
+            writeFileSync(`${os.homedir()}/.bsvutils/account.bsv`, account);
+        }
+        //console.clear();
         await auth();
     }
 }

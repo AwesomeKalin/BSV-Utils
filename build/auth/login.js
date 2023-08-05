@@ -11,12 +11,12 @@ export async function login() {
     const spinner = createSpinner('Testing credentials and saving').start();
     try {
         const relysia = new RelysiaSDK();
-        await relysia.auth({ email, password: accPassword });
+        await relysia.authentication.v1.auth({ email, password: accPassword });
         const toSave = Buffer.from(JSON.stringify({
             email,
             accPassword
         })).toString('base64');
-        if (encryptionPassword != '' || encryptionPassword != undefined) {
+        if (encryptionPassword != '') {
             spinner.stop();
             return await encrypt(toSave, encryptionPassword);
         }
@@ -24,6 +24,7 @@ export async function login() {
         return Buffer.from(toSave);
     }
     catch {
+        spinner.stop();
         console.log(chalk.red('Are you sure that you entered the correct email and/or password?'));
         return login();
     }
