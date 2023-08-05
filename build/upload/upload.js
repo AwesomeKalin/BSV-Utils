@@ -16,7 +16,7 @@ export async function upload(file, fileName, uploadJson) {
     const server = new expressServer(port);
     const url = await ngrok.connect(port);
     let txid;
-    if (uploadJson === 'none') {
+    if (uploadJson === undefined) {
         txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);
     }
     else {
