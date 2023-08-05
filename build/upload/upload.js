@@ -7,8 +7,8 @@ import { expressServer } from "./expressServer.js";
 import getPort from "get-port";
 import { uploadFiles } from "./uploadFiles.js";
 export async function upload(file, fileName) {
-    const spinner = createSpinner(chalk.blue('Loading your file')).start();
     let authenticator = await getAuthClass();
+    const spinner = createSpinner(chalk.blue('Loading your file')).start();
     const fileBuffer = readFileSync(file);
     mkdirSync('./temp');
     const port = await getPort();

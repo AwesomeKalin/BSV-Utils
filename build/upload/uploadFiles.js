@@ -28,7 +28,7 @@ export async function uploadFiles(auth, fileBuffer, fileName, ngrok, spinner) {
         // Upload
         let toReturn;
         const fileName = Date.now().toString();
-        fs.writeFileSync(`./public/${fileName}`, fileBuffer);
+        fs.writeFileSync(`./temp/${fileName}`, fileBuffer);
         const url = `${ngrok}/${fileName}`;
         // Send TX
         await axios.post('https://api.relysia.com/upload', {

@@ -8,8 +8,8 @@ import getPort from "get-port";
 import { uploadFiles } from "./uploadFiles.js";
 
 export async function upload(file: string, fileName: string) {
-    const spinner: Spinner = createSpinner(chalk.blue('Loading your file')).start();
     let authenticator: authenticate = await getAuthClass();
+    const spinner: Spinner = createSpinner(chalk.blue('Loading your file')).start();
     
     const fileBuffer: Buffer = readFileSync(file);
     mkdirSync('./temp');

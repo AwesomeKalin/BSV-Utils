@@ -37,7 +37,7 @@ export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileNa
         let toReturn: string;
 
         const fileName: string = Date.now().toString();
-        fs.writeFileSync(`./public/${fileName}`, fileBuffer);
+        fs.writeFileSync(`./temp/${fileName}`, fileBuffer);
 
         const url: string = `${ngrok}/${fileName}`;
 
