@@ -9,20 +9,21 @@ import { resumeUpload, uploadFiles } from "./uploadFiles.js";
 export async function upload(file, fileName, uploadJson) {
     let authenticator = await getAuthClass();
     const spinner = createSpinner(chalk.blue('Loading your file')).start();
+    spinner.stop();
     const fileBuffer = readFileSync(file);
     mkdirSync('./temp');
     const port = await getPort();
     const server = new expressServer(port);
     const url = await ngrok.connect(port);
     let txid;
-    if (uploadJson != undefined) {
+    if (uploadJson === 'none') {
         txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);
     }
     else {
-        const parsedJson = JSON.parse(uploadJson);
+        const parsedJson = JSON.parse(readFileSync(uploadJson).toString());
         const uploadedParts = parsedJson.txs.length;
         txid = await resumeUpload(authenticator, fileBuffer, parsedJson.name, url, spinner, uploadedParts, parsedJson.txs);
-        unlinkSync('./uploadedFile.json');
+        unlinkSync(uploadJson);
     }
     await ngrok.disconnect();
     rmSync('./temp', { recursive: true, force: true });

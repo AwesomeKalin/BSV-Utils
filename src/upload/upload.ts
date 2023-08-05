@@ -10,6 +10,7 @@ import { resumeUpload, uploadFiles } from "./uploadFiles.js";
 export async function upload(file: string, fileName: string, uploadJson: string) {
     let authenticator: authenticate = await getAuthClass();
     const spinner: Spinner = createSpinner(chalk.blue('Loading your file')).start();
+    spinner.stop();
 
     const fileBuffer: Buffer = readFileSync(file);
     mkdirSync('./temp');
@@ -19,15 +20,15 @@ export async function upload(file: string, fileName: string, uploadJson: string)
 
     let txid: string;
 
-    if (uploadJson != undefined) {
+    if (uploadJson === 'none') {
         txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);
     } else {
-        const parsedJson: { txs: Array<string>, name: string } = JSON.parse(uploadJson);
+        const parsedJson: { txs: Array<string>, name: string } = JSON.parse(readFileSync(uploadJson).toString());
         const uploadedParts: number = parsedJson.txs.length;
 
         txid = await resumeUpload(authenticator, fileBuffer, parsedJson.name, url, spinner, uploadedParts, parsedJson.txs);
 
-        unlinkSync('./uploadedFile.json');
+        unlinkSync(uploadJson);
     }
 
     await ngrok.disconnect();
