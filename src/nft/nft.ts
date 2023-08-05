@@ -98,6 +98,7 @@ export async function nft(prefix: string, folder: string, description: string, f
 
         nftManifestList.nfts.push(nftManifestPush);
         writeFileSync('./nfts.json', JSON.stringify(nftManifestList));
+        toUpload += 1;
         bar.increment(1);
     }
 }
