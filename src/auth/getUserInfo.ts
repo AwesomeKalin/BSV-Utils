@@ -1,6 +1,5 @@
 import { decrypt } from "../util/encryption.js";
 import input from '@inquirer/input';
-import RelysiaSDK from '@relysia/sdk';
 import chalk from 'chalk';
 
 export async function getUserInfo(account: Buffer) {

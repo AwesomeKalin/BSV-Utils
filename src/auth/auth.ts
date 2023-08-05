@@ -12,22 +12,22 @@ export async function auth() {
     console.log(chalk.greenBright('Thank you for your interest in this library!'));
     let account: Buffer;
     try {
-        account = readFileSync('~/.bsvutils/account.bsv');
+        account = readFileSync(`${os.homedir()}/.bsvutils/account.bsv`);
         console.log(`Currently logged in to ${await getUserInfo(account)}`);
         const nextToDo: string = await select({
             message: 'What would you like to do next?',
             choices: [
                 {
-                    name: 'remove-account',
-                    value: 'Remove Account and Exit to Terminal',
+                    name: 'Remove Account and Exit to Terminal',
+                    value: 'remove-account',
                 },
                 {
-                    name: 'switch-account',
-                    value: 'Switch Account'
+                    name: 'Switch Account',
+                    value: 'switch-account'
                 },
                 {
-                    name: 'exit-cli',
-                    value: 'Exit to Terminal',
+                    name: 'Exit to Terminal',
+                    value: 'exit-cli',
                 }
             ]
         });
