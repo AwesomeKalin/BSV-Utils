@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "fs";
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { getAuthClass } from "../util/authenticator.js";
 import { expressServer } from "../upload/expressServer.js";
@@ -8,13 +8,13 @@ import cliProgress, { Presets } from 'cli-progress';
 import { makeid } from "../util/randomString.js";
 import axios from "axios";
 import chalk from "chalk";
-export async function nft(prefix, folder, description, fileformat, digits, defaultPrice) {
+export async function nft(prefix, folder, description, fileformat, digits, defaultPrice, toUpload) {
     const folderLength = readdirSync(folder).length;
     const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
-    bar.start(folderLength, 0);
-    let toUpload = 1;
+    bar.start(folderLength, toUpload - 1);
     const auth = await getAuthClass();
     const port = await getPort();
+    mkdirSync('./temp');
     const server = new expressServer(port);
     const url = await ngrok.connect(port);
     let nftManifestList = { nfts: [] };
@@ -27,8 +27,9 @@ export async function nft(prefix, folder, description, fileformat, digits, defau
             txid = await uploadFiles(auth, readFileSync(filePathToUpload), `${fileNameToUpload}.${fileformat}`, url, undefined);
         }
         catch {
-            writeFileSync('./nfts.json', JSON.stringify(nftManifestList));
             await ngrok.disconnect();
+            rmSync('./temp', { recursive: true, force: true });
+            bar.stop();
             console.log(chalk.greenBright('Successfully uploaded and created atomic swap offers for NFTs. A JSON full of the NFTs can be found in nfts.json'));
             process.exit(0);
         }
@@ -103,6 +104,7 @@ export async function nft(prefix, folder, description, fileformat, digits, defau
             offerHex,
         };
         nftManifestList.nfts.push(nftManifestPush);
+        writeFileSync('./nfts.json', JSON.stringify(nftManifestList));
         bar.increment(1);
     }
 }

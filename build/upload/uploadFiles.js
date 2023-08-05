@@ -61,7 +61,7 @@ export async function resumeUpload(auth, fileBuffer, fileName, ngrok, spinner, n
     }
     let txid = txs;
     const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
-    bar.start(chunk + 1, 0);
+    bar.start(chunk + 1, nextToUpload);
     for (var i = nextToUpload; i < bufferList.length; i++) {
         txid.push(await uploadFiles(auth, bufferList[i], Date.now().toString(), ngrok));
         const tempJson = JSON.stringify({ txs: txid, name: fileName });

@@ -1,1 +1,1 @@
-export declare function nft(prefix: string, folder: string, description: string, fileformat: string, digits: number, defaultPrice: number): Promise<void>;
+export declare function nft(prefix: string, folder: string, description: string, fileformat: string, digits: number, defaultPrice: number, toUpload: number): Promise<void>;

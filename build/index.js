@@ -4,6 +4,7 @@ import chalk from 'chalk';
 import { auth } from './auth/auth.js';
 import { upload } from './upload/upload.js';
 import { nft } from './nft/nft.js';
+import { readFileSync } from 'fs';
 let ranCommand = false;
 yargs(process.argv.slice(2))
     .scriptName('bsv-utils')
@@ -64,10 +65,23 @@ yargs(process.argv.slice(2))
         description: 'Default Price of the NFTs in BSV',
         default: undefined,
     });
+    yargs.positional('nftJson', {
+        type: 'string',
+        description: 'If you stopped uploading NFTs midway through, pass the generated json, usually called nfts.json',
+        default: undefined
+    });
 }, async function (argv) {
     ranCommand = true;
-    //@ts-expect-error
-    await nft(argv.prefix, argv.folder, argv.description, argv.fileformat, argv.digits, argv.defaultPrice);
+    if (argv.nftJson === undefined) {
+        //@ts-expect-error
+        await nft(argv.prefix, argv.folder, argv.description, argv.fileformat, argv.digits, argv.defaultPrice, 1);
+    }
+    else {
+        //@ts-expect-error
+        const nftJson = JSON.parse(readFileSync(argv.nftJson));
+        //@ts-expect-error
+        await nft(argv.prefix, argv.folder, argv.description, argv.fileformat, argv.digits, argv.defaultPrice, nftJson.nfts.length);
+    }
 })
     .help()
     .argv;
