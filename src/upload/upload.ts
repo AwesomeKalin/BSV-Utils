@@ -19,7 +19,7 @@ export async function upload(file: string, fileName: string, uploadJson: string)
 
     let txid: string;
 
-    if (uploadJson !== undefined) {
+    if (uploadJson != undefined) {
         txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);
     } else {
         const parsedJson: { txs: Array<string>, name: string } = JSON.parse(uploadJson);
