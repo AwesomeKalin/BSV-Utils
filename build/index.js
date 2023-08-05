@@ -80,7 +80,7 @@ yargs(process.argv.slice(2))
         //@ts-expect-error
         const nftJson = JSON.parse(readFileSync(argv.nftJson));
         //@ts-expect-error
-        await nft(argv.prefix, argv.folder, argv.description, argv.fileformat, argv.digits, argv.defaultPrice, nftJson.nfts.length);
+        await nft(argv.prefix, argv.folder, argv.description, argv.fileformat, argv.digits, argv.defaultPrice, nftJson.nfts.length, nftJson);
     }
 })
     .help()

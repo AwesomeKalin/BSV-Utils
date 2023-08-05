@@ -6,9 +6,10 @@ import getPort from "get-port";
 import ngrok from 'ngrok';
 import cliProgress, { Presets } from 'cli-progress';
 import { makeid } from "../util/randomString.js";
-import axios from "axios";
 import chalk from "chalk";
-export async function nft(prefix, folder, description, fileformat, digits, defaultPrice, toUpload) {
+import { issueToken } from "./issueToken.js";
+import { createOffer } from "./createOffer.js";
+export async function nft(prefix, folder, description, fileformat, digits, defaultPrice, toUpload, nftManifestList = { nfts: [] }) {
     const folderLength = readdirSync(folder).length;
     const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
     bar.start(folderLength, toUpload - 1);
@@ -17,7 +18,6 @@ export async function nft(prefix, folder, description, fileformat, digits, defau
     mkdirSync('./temp');
     const server = new expressServer(port);
     const url = await ngrok.connect(port);
-    let nftManifestList = { nfts: [] };
     while (true) {
         const zerosToPad = digits - (toUpload.toString().length);
         const fileNameToUpload = `${'0'.repeat(zerosToPad)}${toUpload.toString()}`;
@@ -73,28 +73,10 @@ export async function nft(prefix, folder, description, fileformat, digits, defau
             splitable: false,
             data: {}
         };
-        const tokenId = (await axios.post('https://api.relysia.com/v2/issue', nftManifest, {
-            headers: {
-                authToken: auth.relysia.authentication.v1.getAuthToken(),
-                type: 'NFT',
-            }
-        })).data.data.tokenId;
+        const tokenId = await issueToken(nftManifest, auth);
         let offerHex;
         if (defaultPrice !== undefined) {
-            offerHex = (await axios.post('https://api.relysia.com/v1/offer', {
-                dataArray: [
-                    {
-                        tokenId,
-                        amount: 1,
-                        type: "BSV",
-                        wantedAmount: defaultPrice
-                    }
-                ]
-            }, {
-                headers: {
-                    authToken: auth.relysia.authentication.v1.getAuthToken(),
-                }
-            })).data.data.contents[0];
+            offerHex = await createOffer(tokenId, defaultPrice, auth);
         }
         else {
             offerHex = undefined;
