@@ -21,10 +21,16 @@ yargs(process.argv.slice(2))
         default: 'file',
         alias: 'name',
     });
+    yargs.positional('uploadJson', {
+        type: 'string',
+        description: 'If you stopped uploading the file midway through, pass the generated json file, usually called uploadedFile.json',
+        default: undefined,
+        alias: 'json',
+    });
 }, async function (argv) {
     ranCommand = true;
     //@ts-expect-error
-    await upload(argv.file, argv.fileName);
+    await upload(argv.file, argv.fileName, argv.uploadJson);
 }).help().argv;
 if (!ranCommand) {
     console.log(chalk.red('No arguments listed. Don\'t know how to use? Run bsv-utils --help'));

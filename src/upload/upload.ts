@@ -5,19 +5,30 @@ import { mkdirSync, readFileSync, rmSync, unlinkSync } from "fs";
 import ngrok from 'ngrok';
 import { expressServer } from "./expressServer.js";
 import getPort from "get-port";
-import { uploadFiles } from "./uploadFiles.js";
+import { resumeUpload, uploadFiles } from "./uploadFiles.js";
 
-export async function upload(file: string, fileName: string) {
+export async function upload(file: string, fileName: string, uploadJson: string) {
     let authenticator: authenticate = await getAuthClass();
     const spinner: Spinner = createSpinner(chalk.blue('Loading your file')).start();
-    
+
     const fileBuffer: Buffer = readFileSync(file);
     mkdirSync('./temp');
     const port: number = await getPort();
     const server: expressServer = new expressServer(port);
     const url: string = await ngrok.connect(port);
 
-    const txid: string = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);
+    let txid: string;
+
+    if (uploadJson !== undefined) {
+        txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);
+    } else {
+        const parsedJson: { txs: Array<string>, name: string } = JSON.parse(uploadJson);
+        const uploadedParts: number = parsedJson.txs.length;
+
+        txid = await resumeUpload(authenticator, fileBuffer, parsedJson.name, url, spinner, uploadedParts, parsedJson.txs);
+
+        unlinkSync('./uploadedFile.json');
+    }
 
     await ngrok.disconnect();
     rmSync('./temp', { recursive: true, force: true });

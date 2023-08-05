@@ -1,7 +1,7 @@
 import RelysiaSDK from '@relysia/sdk';
 import chunks from 'buffer-chunks';
 import axios from 'axios';
-import fs from 'fs';
+import fs, { writeFileSync } from 'fs';
 import { authenticate } from '../util/authenticator.js';
 import { Spinner } from 'nanospinner';
 import cliProgress, { Presets } from 'cli-progress';
@@ -33,6 +33,8 @@ export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileNa
         bar.stop();
         return await uploadFiles(auth, Buffer.from(fileJson), `${fileName}.json`, ngrok);
     } else {
+        spinner.stop();
+
         // Upload
         let toReturn: string;
 
@@ -60,4 +62,29 @@ export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileNa
     }
 }
 
-// return data.uploadObj.txid
+export async function resumeUpload(auth: authenticate, fileBuffer: Buffer, fileName: string, ngrok: string, spinner: Spinner, nextToUpload: number, txs: Array<string>): Promise<string> {
+    await auth.checkAuth();
+    let relysia: RelysiaSDK = auth.relysia;
+
+    // Split buffer
+    const bufferList: Array<Buffer> = chunks(fileBuffer, 921600);
+    const chunk: number = bufferList.length;
+
+    spinner.stop();
+
+    let txid: Array<string> = txs;
+    const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
+    bar.start(chunk + 1, 0);
+
+    for (var i = nextToUpload; i < bufferList.length; i++) {
+        txid.push(await uploadFiles(auth, bufferList[i], Date.now().toString(), ngrok));
+        const tempJson: string = JSON.stringify({ txs: txid, name: fileName });
+        writeFileSync('./uploadedFile.json', tempJson);
+        bar.increment(1);
+    }
+
+    const fileJson: string = JSON.stringify({ txs: txid, name: fileName });
+    bar.increment(1);
+    bar.stop();
+    return await uploadFiles(auth, Buffer.from(fileJson), `${fileName}.json`, ngrok);
+}
