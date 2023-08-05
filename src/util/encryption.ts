@@ -19,5 +19,5 @@ export async function decrypt(b: Buffer, key: string) {
         passwords: [key],
         format: 'binary',
     });
-    return decrypted.toString();
+    return Buffer.from(decrypted).toString();
 }

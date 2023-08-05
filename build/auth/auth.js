@@ -56,7 +56,7 @@ export async function auth() {
             mkdirSync(`${os.homedir()}/.bsvutils`);
             writeFileSync(`${os.homedir()}/.bsvutils/account.bsv`, account);
         }
-        //console.clear();
+        console.clear();
         await auth();
     }
 }

@@ -1,14 +1,16 @@
 import { decrypt } from "../util/encryption.js";
-import input from '@inquirer/input';
+import password from '@inquirer/password';
 import chalk from 'chalk';
+import isBase64 from 'is-base64';
 export async function getUserInfo(account) {
     let decoded;
-    try {
+    if (isBase64(decoded)) {
         decoded = Buffer.from(account.toString('ascii'), 'base64').toString();
     }
-    catch {
+    else {
         try {
-            decoded = Buffer.from(await decrypt(account, await input({ message: 'Please enter your decryption key: ' })), 'base64').toString();
+            decoded = Buffer.from(await decrypt(account, await password({ message: 'Please enter your decryption key: ' })), 'base64').toString();
+            console.clear();
         }
         catch {
             console.log(chalk.red('Incorrect Password'));
