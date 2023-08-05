@@ -4,6 +4,7 @@ import yargs from 'yargs';
 import chalk from 'chalk';
 import { auth } from './auth/auth.js';
 import { upload } from './upload/upload.js';
+import { nft } from './nft/nft.js';
 
 let ranCommand = false;
 
@@ -34,7 +35,50 @@ yargs(process.argv.slice(2))
         ranCommand = true;
         //@ts-expect-error
         await upload(argv.file, argv.fileName, argv.uploadJson);
-    }).help().argv;
+    })
+    .command('nft', 'Bulk upload a folder full of NFTs.', (yargs) => {
+        yargs.positional('prefix', {
+            type: 'string',
+            description: 'The prefix of the name of the NFT\'s',
+            default: '#',
+        });
+
+        yargs.positional('folder', {
+            type: 'string',
+            description: 'The Folder the NFTs are in',
+            required: true,
+        });
+
+        yargs.positional('description', {
+            type: 'string',
+            description: 'The NFTs description',
+            required: true,
+        });
+
+        yargs.positional('fileformat', {
+            type: 'string',
+            description: 'The file format, excluding the "."',
+            default: 'png',
+        });
+
+        yargs.positional('digits', {
+            type: 'number',
+            description: 'The number of digits in the file name of the nfts. Must be between 1 and 20 inclusive',
+            required: true,
+        });
+
+        yargs.positional('defaultPrice', {
+            type: 'number',
+            description: 'Default Price of the NFTs in BSV',
+            default: undefined,
+        });
+    }, async function (argv) {
+        ranCommand = true;
+        //@ts-expect-error
+        await nft(argv.prefix, argv.folder, argv.description, argv.fileformat, argv.digits, argv.defaultPrice)
+    })
+    .help()
+    .argv;
 
 if (!ranCommand) {
     console.log(chalk.red('No arguments listed. Don\'t know how to use? Run bsv-utils --help'));
