@@ -10,7 +10,6 @@ import { resumeUpload, uploadFiles } from "./uploadFiles.js";
 export async function upload(file: string, fileName: string, uploadJson: string) {
     let authenticator: authenticate = await getAuthClass();
     const spinner: Spinner = createSpinner(chalk.blue('Loading your file')).start();
-    spinner.stop();
 
     const fileBuffer: Buffer = readFileSync(file);
     mkdirSync('./temp');
