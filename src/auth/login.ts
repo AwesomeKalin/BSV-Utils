@@ -4,7 +4,6 @@ import RelysiaSDK from '@relysia/sdk';
 import chalk from 'chalk';
 import { Spinner, createSpinner } from 'nanospinner';
 import { encrypt } from '../util/encryption.js';
-import { writeFileSync } from 'fs';
 
 export async function login() {
     const email: string = await input({ message: 'Relysia Email: ' });

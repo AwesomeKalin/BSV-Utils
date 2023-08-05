@@ -1,14 +1,11 @@
 import chalk from 'chalk';
-import gradient from 'gradient-string';
 import { readFileSync, writeFileSync, unlinkSync, mkdirSync } from 'fs';
 import { login } from './login.js';
-import figlet from 'figlet';
 import { getUserInfo } from './getUserInfo.js';
 import select from '@inquirer/select';
 import os from 'os';
 
 export async function auth() {
-    console.log(figlet(gradient.retro('BSV Utils'), function () { }));
     console.log(chalk.greenBright('Thank you for your interest in this library!'));
     let account: Buffer;
     try {
