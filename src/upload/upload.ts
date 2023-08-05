@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { authenticate, getAuthClass } from "../util/authenticator.js";
 import { Spinner, createSpinner } from "nanospinner";
-import { mkdirSync, readFileSync } from "fs";
+import { mkdirSync, readFileSync, unlinkSync } from "fs";
 import ngrok from 'ngrok';
 import { expressServer } from "./expressServer.js";
 import getPort from "get-port";
@@ -21,6 +21,7 @@ export async function upload(file: string, fileName: string) {
 
     server.shutdown();
     await ngrok.disconnect();
+    unlinkSync('./temp');
     console.log(chalk.greenBright(`Successfully uploaded. The transaction ID is ${txid}`));
     process.exit(0);
 }
