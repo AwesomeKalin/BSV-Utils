@@ -25,7 +25,9 @@ export async function uploadFiles(auth, fileBuffer, fileName, ngrok, spinner) {
         return await uploadFiles(auth, Buffer.from(fileJson), `${fileName}.json`, ngrok);
     }
     else {
-        spinner.stop();
+        if (spinner !== undefined) {
+            spinner.stop();
+        }
         // Upload
         let toReturn;
         const fileName = Date.now().toString();
@@ -54,7 +56,9 @@ export async function resumeUpload(auth, fileBuffer, fileName, ngrok, spinner, n
     // Split buffer
     const bufferList = chunks(fileBuffer, 921600);
     const chunk = bufferList.length;
-    spinner.stop();
+    if (spinner !== undefined) {
+        spinner.stop();
+    }
     let txid = txs;
     const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
     bar.start(chunk + 1, 0);

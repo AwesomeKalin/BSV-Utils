@@ -33,7 +33,9 @@ export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileNa
         bar.stop();
         return await uploadFiles(auth, Buffer.from(fileJson), `${fileName}.json`, ngrok);
     } else {
-        spinner.stop();
+        if (spinner !== undefined) {
+            spinner.stop();
+        }
 
         // Upload
         let toReturn: string;
@@ -70,7 +72,9 @@ export async function resumeUpload(auth: authenticate, fileBuffer: Buffer, fileN
     const bufferList: Array<Buffer> = chunks(fileBuffer, 921600);
     const chunk: number = bufferList.length;
 
-    spinner.stop();
+    if (spinner !== undefined) {
+        spinner.stop();
+    }
 
     let txid: Array<string> = txs;
     const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
