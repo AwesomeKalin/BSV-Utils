@@ -103,7 +103,7 @@ export async function nft(prefix: string, folder: string, description: string, f
     }
 }
 
-interface nftinfo {
+export interface nftinfo {
     tokenId: string,
     offerHex: string,
 }

@@ -4,7 +4,7 @@ import yargs from 'yargs';
 import chalk from 'chalk';
 import { auth } from './auth/auth.js';
 import { upload } from './upload/upload.js';
-import { nft } from './nft/nft.js';
+import { nft, nftinfo } from './nft/nft.js';
 import { readFileSync } from 'fs';
 
 let ranCommand = false;
@@ -86,7 +86,7 @@ yargs(process.argv.slice(2))
             await nft(argv.prefix, argv.folder, argv.description, argv.fileformat, argv.digits, argv.defaultPrice, 1);
         } else {
             //@ts-expect-error
-            const nftJson = JSON.parse(readFileSync(argv.nftJson));
+            const nftJson: { nfts: Array<nftinfo> } = JSON.parse(readFileSync(argv.nftJson));
             //@ts-expect-error
             await nft(argv.prefix, argv.folder, argv.description, argv.fileformat, argv.digits, argv.defaultPrice, nftJson.nfts.length, nftJson);
         }
