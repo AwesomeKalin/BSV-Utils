@@ -3,7 +3,7 @@ import { authenticate } from "../util/authenticator.js";
 
 export async function createOffer(tokenId: string, defaultPrice: number, auth: authenticate) {
     try {
-        (await axios.post('https://api.relysia.com/v1/offer', {
+        return (await axios.post('https://api.relysia.com/v1/offer', {
             dataArray: [
                 {
                     tokenId,

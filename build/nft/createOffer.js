@@ -1,7 +1,7 @@
 import axios from "axios";
 export async function createOffer(tokenId, defaultPrice, auth) {
     try {
-        (await axios.post('https://api.relysia.com/v1/offer', {
+        return (await axios.post('https://api.relysia.com/v1/offer', {
             dataArray: [
                 {
                     tokenId,
