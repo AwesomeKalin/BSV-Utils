@@ -6,7 +6,6 @@ import getPort from "get-port";
 import ngrok from 'ngrok';
 import cliProgress, { Presets } from 'cli-progress';
 import { makeid } from "../util/randomString.js";
-import axios from "axios";
 import chalk from "chalk";
 import { issueToken } from "./issueToken.js";
 import { createOffer } from "./createOffer.js";

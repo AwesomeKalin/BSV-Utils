@@ -6,6 +6,7 @@ import { auth } from './auth/auth.js';
 import { upload } from './upload/upload.js';
 import { nft, nftinfo } from './nft/nft.js';
 import { readFileSync } from 'fs';
+import { download } from './download/download.js';
 
 let ranCommand = false;
 
@@ -90,6 +91,18 @@ yargs(process.argv.slice(2))
             //@ts-expect-error
             await nft(argv.prefix, argv.folder, argv.description, argv.fileformat, argv.digits, argv.defaultPrice, nftJson.nfts.length, nftJson);
         }
+    })
+    .command('download', 'Download a B://, B://cat or K:// format file (no authentiation required)', (yargs) => {
+        yargs.positional('txid', {
+            type: 'string',
+            description: 'The transaction id of the file',
+            required: true,
+            alias: 'tx',
+        });
+    }, async function (argv) {
+        ranCommand = true;
+        //@ts-expect-error
+        await download(argv.txid);
     })
     .help()
     .argv;
