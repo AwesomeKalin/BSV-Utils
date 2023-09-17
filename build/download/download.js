@@ -10,7 +10,7 @@ export async function download(txid) {
         await download(txid);
     }
     try {
-        const manifestDecoded = JSON.parse(firstDl.data);
+        const manifestDecoded = firstDl.data;
         const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
         bar.start(manifestDecoded.txs.length, 0);
         let fileBuffer = Buffer.from("");
@@ -23,10 +23,8 @@ export async function download(txid) {
         writeFileSync(manifestDecoded.name, fileBuffer);
     }
     catch {
-        let headerLine = firstDl.headers['Content-Disposition'];
-        let startFileNameIndex = headerLine.indexOf('"') + 1;
-        let endFileNameIndex = headerLine.lastIndexOf('"');
-        let fileName = headerLine.substring(startFileNameIndex, endFileNameIndex);
+        const match = firstDl.headers['content-disposition'].match(/filename="([^"]+)"/);
+        let fileName = match[1];
         writeFileSync(fileName, firstDl.data);
     }
 }

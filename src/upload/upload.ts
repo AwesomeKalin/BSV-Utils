@@ -6,8 +6,9 @@ import ngrok from 'ngrok';
 import { expressServer } from "./expressServer.js";
 import getPort from "get-port";
 import { resumeUpload, uploadFiles } from "./uploadFiles.js";
+import { tunnel } from 'cloudflared';
 
-export async function upload(file: string, fileName: string, uploadJson: string) {
+export async function upload(file: string, fileName: string, uploadJson: string, cf: boolean) {
     let authenticator: authenticate = await getAuthClass();
     const spinner: Spinner = createSpinner(chalk.blue('Loading your file')).start();
 
@@ -15,7 +16,12 @@ export async function upload(file: string, fileName: string, uploadJson: string)
     mkdirSync('./temp');
     const port: number = await getPort();
     const server: expressServer = new expressServer(port);
-    const url: string = await ngrok.connect(port);
+    let url: string;
+    if (cf) {
+        url = await tunnel({ "--url": `localhost:${port}` }).url;
+    } else {
+        url = await ngrok.connect(port);
+    }
 
     let txid: string;
 
@@ -30,7 +36,10 @@ export async function upload(file: string, fileName: string, uploadJson: string)
         unlinkSync(uploadJson);
     }
 
-    await ngrok.disconnect();
+    if (!cf) {
+        await ngrok.disconnect();
+    }
+
     rmSync('./temp', { recursive: true, force: true });
     console.log(chalk.greenBright(`Successfully uploaded. The transaction ID is ${txid}`));
     process.exit(0);
