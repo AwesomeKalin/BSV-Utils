@@ -5,7 +5,7 @@ import cliProgress, { Presets } from 'cli-progress';
 export async function uploadFiles(auth, fileBuffer, fileName, ngrok, spinner) {
     await auth.checkAuth();
     let relysia = auth.relysia;
-    if (fileBuffer.length > 921600) {
+    if (fileBuffer.length > 19216000) {
         // Split buffer
         const bufferList = chunks(fileBuffer, 921600);
         const chunk = bufferList.length;

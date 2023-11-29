@@ -35,4 +35,4 @@ export declare function issueToken(nftManifest: {
     };
     splitable: boolean;
     data: {};
-}, auth: authenticate): any;
+}, auth: authenticate): Promise<any>;

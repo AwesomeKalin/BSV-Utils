@@ -33,7 +33,7 @@
         "yargs": "^17.7.2"
     },
     "devDependencies": {
-        "@openpgp/web-stream-tools": "^0.0.14",
+        "@openpgp/web-stream-tools": "^0.0.13",
         "@types/cli-progress": "^3.11.5",
         "@types/express": "^4.17.21",
         "@types/figlet": "^1.5.8",
