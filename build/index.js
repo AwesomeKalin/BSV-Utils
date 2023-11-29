@@ -30,16 +30,10 @@ yargs(process.argv.slice(2))
         default: undefined,
         alias: 'json',
     });
-    yargs.positional('cftunnel', {
-        type: 'boolean',
-        description: 'Use Cloudflare Tunnel instead of Ngrok',
-        default: false,
-        alias: 'cf',
-    });
 }, async function (argv) {
     ranCommand = true;
     //@ts-expect-error
-    await upload(argv.file, argv.fileName, argv.uploadJson, argv.cftunnel);
+    await upload(argv.file, argv.fileName, argv.uploadJson);
 })
     .command('nft', 'Bulk upload a folder full of NFTs.', (yargs) => {
     yargs.positional('prefix', {

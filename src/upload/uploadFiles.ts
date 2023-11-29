@@ -25,6 +25,8 @@ export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileNa
 
         for (var i = 0; i < bufferList.length; i++) {
             txid.push(await uploadFiles(auth, bufferList[i], Date.now().toString(), ngrok));
+            const tempJson: string = JSON.stringify({ txs: txid, name: fileName });
+            writeFileSync('./uploadedFile.json', tempJson);
             bar.increment(1);
         }
 
@@ -40,10 +42,10 @@ export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileNa
         // Upload
         let toReturn: string;
 
-        const fileName: string = Date.now().toString();
+        const uploadFileName: string = Date.now().toString();
         fs.writeFileSync(`./temp/${fileName}`, fileBuffer);
 
-        const url: string = `${ngrok}/${fileName}`;
+        const url: string = `${ngrok}/${uploadFileName}`;
 
         // Send TX
         await axios.post('https://api.relysia.com/upload', {

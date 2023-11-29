@@ -1,1 +1,1 @@
-export declare function upload(file: string, fileName: string, uploadJson: string, cf: boolean): Promise<void>;
+export declare function upload(file: string, fileName: string, uploadJson: string): Promise<void>;

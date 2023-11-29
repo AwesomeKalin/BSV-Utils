@@ -29,9 +29,6 @@ dependencies:
   cli-progress:
     specifier: ^3.12.0
     version: 3.12.0
-  cloudflared:
-    specifier: ^0.5.0
-    version: 0.5.0
   express:
     specifier: ^4.18.2
     version: 4.18.2
@@ -843,12 +840,6 @@ packages:
     resolution: {integrity: sha512-ROoL94jJH2dUVML2Y/5PEDNaSHgeOdSDicUyS7izcF63G6sTc/FTjLub4b8Il9S8S0beOfYt0TaA5qvFK+w0wA==}
     dependencies:
       mimic-response: 1.0.1
-    dev: false
-
-  /cloudflared@0.5.0:
-    resolution: {integrity: sha512-ILt34H2KNd15cbGm3VfLvswUHCJJ5vhDXN5M0u9BfEul4DLMQ/Y3ecOP5YUPFN9ERcVabfsMEcLbC0hN3AydTw==}
-    hasBin: true
-    requiresBuild: true
     dev: false
 
   /color-convert@2.0.1:
