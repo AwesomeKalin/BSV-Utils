@@ -11,7 +11,7 @@ export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileNa
     await auth.checkAuth();
     let relysia: RelysiaSDK = auth.relysia;
 
-    if (fileBuffer.length > 19216000) {
+    if (fileBuffer.length > 921600) {
         // Split buffer
         const bufferList: Array<Buffer> = chunks(fileBuffer, 921600);
         const chunk: number = bufferList.length;
