@@ -48,6 +48,7 @@ export async function uploadFiles(auth, fileBuffer, fileName, ngrok, spinner) {
         }).then((response2) => {
             toReturn = response2.data.data.uploadObj.txid;
         }).catch(async (error) => {
+            console.log(error);
             sleep(1);
             toReturn = await uploadFiles(auth, fileBuffer, fileName, ngrok);
         });
