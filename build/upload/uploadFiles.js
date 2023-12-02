@@ -2,6 +2,7 @@ import chunks from 'buffer-chunks';
 import axios from 'axios';
 import fs, { writeFileSync } from 'fs';
 import cliProgress, { Presets } from 'cli-progress';
+import { sleep } from '../util/sleep.js';
 export async function uploadFiles(auth, fileBuffer, fileName, ngrok, spinner) {
     await auth.checkAuth();
     let relysia = auth.relysia;
@@ -36,6 +37,7 @@ export async function uploadFiles(auth, fileBuffer, fileName, ngrok, spinner) {
         fs.writeFileSync(`./temp/${fileName}`, fileBuffer);
         const url = `${ngrok}/${uploadFileName}`;
         // Send TX
+        sleep(1);
         await axios.post('https://api.relysia.com/upload', {
             fileUrl: url,
             fileName: fileName
@@ -46,7 +48,7 @@ export async function uploadFiles(auth, fileBuffer, fileName, ngrok, spinner) {
         }).then((response2) => {
             toReturn = response2.data.data.uploadObj.txid;
         }).catch(async (error) => {
-            console.log(error);
+            sleep(1);
             toReturn = await uploadFiles(auth, fileBuffer, fileName, ngrok);
         });
         return toReturn;
