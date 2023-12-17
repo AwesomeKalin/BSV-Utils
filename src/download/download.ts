@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { SingleBar } from "cli-progress";
-import { writeFileSync } from "fs";
+import { mkdirSync, readFileSync, writeFileSync } from "fs";
 import cliProgress, { Presets } from 'cli-progress';
 
 export async function download(txid: string) {
@@ -18,17 +18,36 @@ export async function download(txid: string) {
         const bar: SingleBar = new cliProgress.SingleBar({}, Presets.shades_classic);
         bar.start(manifestDecoded.txs.length, 0);
 
-        let fileBuffer: Buffer = Buffer.from("");
+        mkdirSync('temp');
+
+        console.log(`Downloading ${manifestDecoded.name}`);
 
         for (var i = 0; i < manifestDecoded.txs.length; i++) {
             const txData: Uint8Array = new Uint8Array(await dlPart(manifestDecoded.txs[i]));
 
-			fileBuffer = Buffer.concat([fileBuffer, txData]);
+            writeFileSync(`./temp/${i}`, txData);
 
             bar.increment(1);
         }
 
         bar.stop();
+
+        console.log('Combining parts');
+
+        const bar2: SingleBar = new cliProgress.SingleBar({}, Presets.shades_classic);
+        bar2.start(manifestDecoded.txs.length, 0);
+
+        let fileBuffer: Buffer = Buffer.from("");
+
+        for (var i = 0; i < manifestDecoded.txs.length; i++) {
+            const data: Uint8Array = readFileSync(`./temp/${i}`);
+
+            fileBuffer = Buffer.concat([fileBuffer, data]);
+
+            bar2.increment(1);
+        }
+
+        bar2.stop();
 
         writeFileSync(manifestDecoded.name, fileBuffer);
     } catch {
