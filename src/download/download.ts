@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { SingleBar } from "cli-progress";
-import { mkdirSync, readFileSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, rmdirSync, writeFileSync } from "fs";
 import cliProgress, { Presets } from 'cli-progress';
 
 export async function download(txid: string) {
@@ -46,6 +46,8 @@ export async function download(txid: string) {
 
             bar2.increment(1);
         }
+
+        rmdirSync('temp');
 
         bar2.stop();
 
