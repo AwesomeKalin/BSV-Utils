@@ -1,5 +1,5 @@
 import axios from "axios";
-import { mkdirSync, readFileSync, readdirSync, rmdirSync, writeFileSync } from "fs";
+import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "fs";
 import cliProgress, { Presets } from 'cli-progress';
 export async function download(txid) {
     let firstDl;
@@ -30,7 +30,7 @@ export async function download(txid) {
             fileBuffer = Buffer.concat([fileBuffer, data]);
             bar2.increment(1);
         }
-        rmdirSync('temp');
+        rmSync('temp', { recursive: true, force: true });
         bar2.stop();
         writeFileSync(manifestDecoded.name, fileBuffer);
     }
@@ -70,7 +70,7 @@ export async function resumeDl(txid) {
         fileBuffer = Buffer.concat([fileBuffer, data]);
         bar2.increment(1);
     }
-    rmdirSync('temp');
+    rmSync('temp', { recursive: true, force: true });
     bar2.stop();
     writeFileSync(manifestDecoded.name, fileBuffer);
 }
