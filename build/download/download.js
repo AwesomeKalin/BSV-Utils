@@ -52,9 +52,9 @@ export async function resumeDl(txid) {
     const firstDl = await axios.get(`https://bico.media/${txid}`);
     const manifestDecoded = firstDl.data;
     console.log(`Downloading ${manifestDecoded.name}`);
-    const iStart = readdirSync('./temp').length - 1;
+    const iStart = readdirSync('./temp').length - 5;
     const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
-    bar.start(manifestDecoded.txs.length, iStart + 1);
+    bar.start(manifestDecoded.txs.length, iStart);
     for (var i = iStart; i < manifestDecoded.txs.length; i++) {
         const txData = new Uint8Array(await dlPart(manifestDecoded.txs[i]));
         writeFileSync(`./temp/${i}`, txData);
