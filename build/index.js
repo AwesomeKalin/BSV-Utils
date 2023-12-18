@@ -96,6 +96,14 @@ yargs(process.argv.slice(2))
     //@ts-expect-error
     await download(argv.txid);
 })
+    .command('resumeDl', 'Resume a download. Folder where parts were downloaded must NOT have been renamed', (yargs) => {
+    yargs.positional('txid', {
+        type: 'string',
+        description: 'The transaction id of the file',
+        required: true,
+        alias: 'tx',
+    });
+})
     .help()
     .argv;
 if (!ranCommand) {
