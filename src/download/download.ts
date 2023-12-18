@@ -75,10 +75,10 @@ export async function resumeDl(txid: string) {
 
     console.log(`Downloading ${manifestDecoded.name}`);
 
-    const iStart: number = readdirSync('./temp').length - 1;
+    const iStart: number = readdirSync('./temp').length - 5;
 
     const bar: SingleBar = new cliProgress.SingleBar({}, Presets.shades_classic);
-    bar.start(manifestDecoded.txs.length, iStart + 1);
+    bar.start(manifestDecoded.txs.length, iStart);
 
     for (var i = iStart; i < manifestDecoded.txs.length; i++) {
         const txData: Uint8Array = new Uint8Array(await dlPart(manifestDecoded.txs[i]));
