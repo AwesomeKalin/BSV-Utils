@@ -6,7 +6,7 @@ import { auth } from './auth/auth.js';
 import { upload } from './upload/upload.js';
 import { nft, nftinfo } from './nft/nft.js';
 import { readFileSync } from 'fs';
-import { download } from './download/download.js';
+import { download, resumeDl } from './download/download.js';
 
 let ranCommand = false;
 
@@ -111,6 +111,10 @@ yargs(process.argv.slice(2))
             required: true,
             alias: 'tx',
         });
+    }, async function (argv) {
+        ranCommand = true;
+        //@ts-expect-error
+        await resumeDl(argv.txid);
     })
     .help()
     .argv;
