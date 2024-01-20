@@ -6,699 +6,699 @@ export async function hashSettings() {
         message: 'Please select the hash algorithms you wish to use. If unsure, just leave the defaults',
         choices: [
             {
-                name: 'shake256-1k',
-                value: 'SHAKE256 with 1024 bits',
+                value: 'shake256-1k',
+                name: 'SHAKE256 with 1024 bits',
                 checked: true,
             },
             {
-                name: 'sha3-512',
-                value: 'SHA3-512',
+                value: 'sha3-512',
+                name: 'SHA3-512',
                 checked: true,
             },
             {
-                name: 'doublesha256',
-                value: 'Double SHA256',
+                value: 'doublesha256',
+                name: 'Double SHA256',
                 checked: true,
             },
             {
-                name: 'sha256',
-                value: 'SHA256',
+                value: 'sha256',
+                name: 'SHA256',
                 checked: true,
             },
             {
-                name: 'ripemd160',
-                value: 'RIPEMD-160',
+                value: 'ripemd160',
+                name: 'RIPEMD-160',
                 checked: true,
             },
             {
-                name: 'cshake256-1k',
-                value: 'cSHAKE256 with 1024 bits',
+                value: 'cshake256-1k',
+                name: 'cSHAKE256 with 1024 bits',
             },
             {
-                name: 'kmac256-1k',
-                value: 'KMAC256 with 1024 bits',
+                value: 'kmac256-1k',
+                name: 'KMAC256 with 1024 bits',
             },
             {
-                name: 'shake128-1k',
-                value: 'SHAKE128 with 1024 bits',
+                value: 'shake128-1k',
+                name: 'SHAKE128 with 1024 bits',
             },
             {
-                name: 'cshake128-1k',
-                value: 'cSHAKE128 with 1024 bits',
+                value: 'cshake128-1k',
+                name: 'cSHAKE128 with 1024 bits',
             },
             {
-                name: 'kmac128-1k',
-                value: 'KMAC128 with 1024 bits',
+                value: 'kmac128-1k',
+                name: 'KMAC128 with 1024 bits',
             },
             {
-                name: 'sha512',
-                value: 'SHA512'
+                value: 'sha512',
+                name: 'SHA512'
             },
             {
-                name: 'keccak512',
-                value: 'Keccak-512'
+                value: 'keccak512',
+                name: 'Keccak-512'
             },
             {
-                name: 'shake256-512',
-                value: 'SHAKE256 with 512 bits'
+                value: 'shake256-512',
+                name: 'SHAKE256 with 512 bits'
             },
             {
-                name: 'cshake256-512',
-                value: 'cSHAKE256 with 512 bits',
+                value: 'cshake256-512',
+                name: 'cSHAKE256 with 512 bits',
             },
             {
-                name: 'kmac256-512',
-                value: 'KMAC256 with 512 bits',
+                value: 'kmac256-512',
+                name: 'KMAC256 with 512 bits',
             },
             {
-                name: 'shake128-512',
-                value: 'SHAKE128 with 512 bits',
+                value: 'shake128-512',
+                name: 'SHAKE128 with 512 bits',
             },
             {
-                name: 'cshake128-512',
-                value: 'cSHAKE128 with 512 bits',
+                value: 'cshake128-512',
+                name: 'cSHAKE128 with 512 bits',
             },
             {
-                name: 'kmac128-512',
-                value: 'KMAC128 with 512 bits',
+                value: 'kmac128-512',
+                name: 'KMAC128 with 512 bits',
             },
             {
-                name: 'sha384',
-                value: 'SHA384',
+                value: 'sha384',
+                name: 'SHA384',
             },
             {
-                name: 'sha3-384',
-                value: 'SHA3-384',
+                value: 'sha3-384',
+                name: 'SHA3-384',
             },
             {
-                name: 'keccak384',
-                value: 'Keccak-384',
+                value: 'keccak384',
+                name: 'Keccak-384',
             },
             {
-                name: 'shake256-384',
-                value: 'SHAKE256 with 384 bits'
+                value: 'shake256-384',
+                name: 'SHAKE256 with 384 bits'
             },
             {
-                name: 'cshake256-384',
-                value: 'cSHAKE256 with 384 bits',
+                value: 'cshake256-384',
+                name: 'cSHAKE256 with 384 bits',
             },
             {
-                name: 'kmac256-384',
-                value: 'KMAC256 with 384 bits',
+                value: 'kmac256-384',
+                name: 'KMAC256 with 384 bits',
             },
             {
-                name: 'shake128-384',
-                value: 'SHAKE128 with 384 bits',
+                value: 'shake128-384',
+                name: 'SHAKE128 with 384 bits',
             },
             {
-                name: 'cshake128-384',
-                value: 'cSHAKE128 with 384 bits',
+                value: 'cshake128-384',
+                name: 'cSHAKE128 with 384 bits',
             },
             {
-                name: 'kmac128-384',
-                value: 'KMAC128 with 384 bits',
+                value: 'kmac128-384',
+                name: 'KMAC128 with 384 bits',
             },
             {
-                name: 'shake256-320',
-                value: 'SHAKE256 with 320 bits'
+                value: 'shake256-320',
+                name: 'SHAKE256 with 320 bits'
             },
             {
-                name: 'cshake256-320',
-                value: 'cSHAKE256 with 320 bits',
+                value: 'cshake256-320',
+                name: 'cSHAKE256 with 320 bits',
             },
             {
-                name: 'kmac256-320',
-                value: 'KMAC256 with 320 bits',
+                value: 'kmac256-320',
+                name: 'KMAC256 with 320 bits',
             },
             {
-                name: 'shake128-320',
-                value: 'SHAKE128 with 320 bits',
+                value: 'shake128-320',
+                name: 'SHAKE128 with 320 bits',
             },
             {
-                name: 'cshake128-320',
-                value: 'cSHAKE128 with 320 bits',
+                value: 'cshake128-320',
+                name: 'cSHAKE128 with 320 bits',
             },
             {
-                name: 'kmac128-320',
-                value: 'KMAC128 with 320 bits',
+                value: 'kmac128-320',
+                name: 'KMAC128 with 320 bits',
             },
             {
-                name: 'ripemd320',
-                value: 'RIPEMD-320',
+                value: 'ripemd320',
+                name: 'RIPEMD-320',
             },
             {
-                name: 'sha512-256',
-                value: 'SHA512/256',
+                value: 'sha512-256',
+                name: 'SHA512/256',
             },
             {
-                name: 'sha3-256',
-                value: 'SHA3-256',
+                value: 'sha3-256',
+                name: 'SHA3-256',
             },
             {
-                name: 'keccak256',
-                value: 'Keccak-256',
+                value: 'keccak256',
+                name: 'Keccak-256',
             },
             {
-                name: 'shake256-256',
-                value: 'SHAKE256 with 256 bits'
+                value: 'shake256-256',
+                name: 'SHAKE256 with 256 bits'
             },
             {
-                name: 'cshake256-256',
-                value: 'cSHAKE256 with 256 bits',
+                value: 'cshake256-256',
+                name: 'cSHAKE256 with 256 bits',
             },
             {
-                name: 'kmac256-256',
-                value: 'KMAC256 with 256 bits',
+                value: 'kmac256-256',
+                name: 'KMAC256 with 256 bits',
             },
             {
-                name: 'shake128-256',
-                value: 'SHAKE128 with 256 bits',
+                value: 'shake128-256',
+                name: 'SHAKE128 with 256 bits',
             },
             {
-                name: 'cshake128-256',
-                value: 'cSHAKE128 with 256 bits',
+                value: 'cshake128-256',
+                name: 'cSHAKE128 with 256 bits',
             },
             {
-                name: 'kmac128-256',
-                value: 'KMAC128 with 256 bits',
+                value: 'kmac128-256',
+                name: 'KMAC128 with 256 bits',
             },
             {
-                name: 'ripemd256',
-                value: 'RIPEMD-256',
+                value: 'ripemd256',
+                name: 'RIPEMD-256',
             },
             {
-                name: 'sha224',
-                value: 'SHA224',
+                value: 'sha224',
+                name: 'SHA224',
             },
             {
-                name: 'sha512-224',
-                value: 'SHA512/224',
+                value: 'sha512-224',
+                name: 'SHA512/224',
             },
             {
-                name: 'sha3-224',
-                value: 'SHA3-224',
+                value: 'sha3-224',
+                name: 'SHA3-224',
             },
             {
-                name: 'keccak224',
-                value: 'Keccak-224',
+                value: 'keccak224',
+                name: 'Keccak-224',
             },
             {
-                name: 'shake256-224',
-                value: 'SHAKE256 with 224 bits'
+                value: 'shake256-224',
+                name: 'SHAKE256 with 224 bits'
             },
             {
-                name: 'cshake256-224',
-                value: 'cSHAKE256 with 224 bits',
+                value: 'cshake256-224',
+                name: 'cSHAKE256 with 224 bits',
             },
             {
-                name: 'kmac256-224',
-                value: 'KMAC256 with 224 bits',
+                value: 'kmac256-224',
+                name: 'KMAC256 with 224 bits',
             },
             {
-                name: 'shake128-224',
-                value: 'SHAKE128 with 224 bits',
+                value: 'shake128-224',
+                name: 'SHAKE128 with 224 bits',
             },
             {
-                name: 'cshake128-224',
-                value: 'cSHAKE128 with 224 bits',
+                value: 'cshake128-224',
+                name: 'cSHAKE128 with 224 bits',
             },
             {
-                name: 'kmac128-224',
-                value: 'KMAC128 with 224 bits',
+                value: 'kmac128-224',
+                name: 'KMAC128 with 224 bits',
             },
             {
-                name: 'sha1',
-                value: 'SHA1',
+                value: 'sha1',
+                name: 'SHA1',
             },
             {
-                name: 'shake256-160',
-                value: 'SHAKE256 with 160 bits'
+                value: 'shake256-160',
+                name: 'SHAKE256 with 160 bits'
             },
             {
-                name: 'cshake256-160',
-                value: 'cSHAKE256 with 160 bits',
+                value: 'cshake256-160',
+                name: 'cSHAKE256 with 160 bits',
             },
             {
-                name: 'kmac256-160',
-                value: 'KMAC256 with 160 bits',
+                value: 'kmac256-160',
+                name: 'KMAC256 with 160 bits',
             },
             {
-                name: 'shake128-160',
-                value: 'SHAKE128 with 160 bits',
+                value: 'shake128-160',
+                name: 'SHAKE128 with 160 bits',
             },
             {
-                name: 'cshake128-160',
-                value: 'cSHAKE128 with 160 bits',
+                value: 'cshake128-160',
+                name: 'cSHAKE128 with 160 bits',
             },
             {
-                name: 'kmac128-160',
-                value: 'KMAC128 with 160 bits',
+                value: 'kmac128-160',
+                name: 'KMAC128 with 160 bits',
             },
             {
-                name: 'ripemd160',
-                value: 'RIPEMD-160',
+                value: 'ripemd160',
+                name: 'RIPEMD-160',
             },
             {
-                name: 'md2',
-                value: 'MD2',
+                value: 'md2',
+                name: 'MD2',
             },
             {
-                name: 'md4',
-                value: 'MD4',
+                value: 'md4',
+                name: 'MD4',
             },
             {
-                name: 'md5',
-                value: 'MD5',
+                value: 'md5',
+                name: 'MD5',
             },
             {
-                name: 'shake256-128',
-                value: 'SHAKE256 with 128 bits'
+                value: 'shake256-128',
+                name: 'SHAKE256 with 128 bits'
             },
             {
-                name: 'cshake256-128',
-                value: 'cSHAKE256 with 128 bits',
+                value: 'cshake256-128',
+                name: 'cSHAKE256 with 128 bits',
             },
             {
-                name: 'kmac256-128',
-                value: 'KMAC256 with 128 bits',
+                value: 'kmac256-128',
+                name: 'KMAC256 with 128 bits',
             },
             {
-                name: 'shake128-128',
-                value: 'SHAKE128 with 128 bits',
+                value: 'shake128-128',
+                name: 'SHAKE128 with 128 bits',
             },
             {
-                name: 'cshake128-128',
-                value: 'cSHAKE128 with 128 bits',
+                value: 'cshake128-128',
+                name: 'cSHAKE128 with 128 bits',
             },
             {
-                name: 'kmac128-128',
-                value: 'KMAC128 with 128 bits',
+                value: 'kmac128-128',
+                name: 'KMAC128 with 128 bits',
             },
             {
-                name: 'ripemd128',
-                value: 'RIPEMD-128',
+                value: 'ripemd128',
+                name: 'RIPEMD-128',
             },
             {
-                name: 'crc32',
-                value: 'CRC-32',
+                value: 'crc32',
+                name: 'CRC-32',
             },
             {
-                name: 'shake256-32',
-                value: 'SHAKE256 with 32 bits'
+                value: 'shake256-32',
+                name: 'SHAKE256 with 32 bits'
             },
             {
-                name: 'cshake256-32',
-                value: 'cSHAKE256 with 32 bits',
+                value: 'cshake256-32',
+                name: 'cSHAKE256 with 32 bits',
             },
             {
-                name: 'kmac256-32',
-                value: 'KMAC256 with 32 bits',
+                value: 'kmac256-32',
+                name: 'KMAC256 with 32 bits',
             },
             {
-                name: 'shake128-32',
-                value: 'SHAKE128 with 32 bits',
+                value: 'shake128-32',
+                name: 'SHAKE128 with 32 bits',
             },
             {
-                name: 'cshake128-32',
-                value: 'cSHAKE128 with 32 bits',
+                value: 'cshake128-32',
+                name: 'cSHAKE128 with 32 bits',
             },
             {
-                name: 'kmac128-32',
-                value: 'KMAC128 with 32 bits',
+                value: 'kmac128-32',
+                name: 'KMAC128 with 32 bits',
             },
             {
-                name: 'crc16',
-                value: 'CRC-16',
+                value: 'crc16',
+                name: 'CRC-16',
             },
             {
-                name: 'shake256-16',
-                value: 'SHAKE256 with 16 bits'
+                value: 'shake256-16',
+                name: 'SHAKE256 with 16 bits'
             },
             {
-                name: 'cshake256-16',
-                value: 'cSHAKE256 with 16 bits',
+                value: 'cshake256-16',
+                name: 'cSHAKE256 with 16 bits',
             },
             {
-                name: 'kmac256-16',
-                value: 'KMAC256 with 16 bits',
+                value: 'kmac256-16',
+                name: 'KMAC256 with 16 bits',
             },
             {
-                name: 'shake128-16',
-                value: 'SHAKE128 with 16 bits',
+                value: 'shake128-16',
+                name: 'SHAKE128 with 16 bits',
             },
             {
-                name: 'cshake128-16',
-                value: 'cSHAKE128 with 16 bits',
+                value: 'cshake128-16',
+                name: 'cSHAKE128 with 16 bits',
             },
             {
-                name: 'kmac128-16',
-                value: 'KMAC128 with 16 bits',
+                value: 'kmac128-16',
+                name: 'KMAC128 with 16 bits',
             },
             {
-                name: 'doubleshake256-1k',
-                value: 'Double SHAKE256 with 1024 bits',
+                value: 'doubleshake256-1k',
+                name: 'Double SHAKE256 with 1024 bits',
             },
             {
-                name: 'doublesha3-512',
-                value: 'Double SHA3-512',
+                value: 'doublesha3-512',
+                name: 'Double SHA3-512',
             },
             {
-                name: 'doubleripemd160',
-                value: 'Double RIPEMD-160',
+                value: 'doubleripemd160',
+                name: 'Double RIPEMD-160',
             },
             {
-                name: 'doublecshake256-1k',
-                value: 'Double cSHAKE256 with 1024 bits',
+                value: 'doublecshake256-1k',
+                name: 'Double cSHAKE256 with 1024 bits',
             },
             {
-                name: 'doublekmac256-1k',
-                value: 'Double KMAC256 with 1024 bits',
+                value: 'doublekmac256-1k',
+                name: 'Double KMAC256 with 1024 bits',
             },
             {
-                name: 'doubleshake128-1k',
-                value: 'Double SHAKE128 with 1024 bits',
+                value: 'doubleshake128-1k',
+                name: 'Double SHAKE128 with 1024 bits',
             },
             {
-                name: 'doublecshake128-1k',
-                value: 'Double cSHAKE128 with 1024 bits',
+                value: 'doublecshake128-1k',
+                name: 'Double cSHAKE128 with 1024 bits',
             },
             {
-                name: 'doublekmac128-1k',
-                value: 'Double KMAC128 with 1024 bits',
+                value: 'doublekmac128-1k',
+                name: 'Double KMAC128 with 1024 bits',
             },
             {
-                name: 'doublesha512',
-                value: 'Double SHA512'
+                value: 'doublesha512',
+                name: 'Double SHA512'
             },
             {
-                name: 'doublekeccak512',
-                value: 'Double Keccak-512'
+                value: 'doublekeccak512',
+                name: 'Double Keccak-512'
             },
             {
-                name: 'doubleshake256-512',
-                value: 'Double SHAKE256 with 512 bits'
+                value: 'doubleshake256-512',
+                name: 'Double SHAKE256 with 512 bits'
             },
             {
-                name: 'doublecshake256-512',
-                value: 'Double cSHAKE256 with 512 bits',
+                value: 'doublecshake256-512',
+                name: 'Double cSHAKE256 with 512 bits',
             },
             {
-                name: 'doublekmac256-512',
-                value: 'Double KMAC256 with 512 bits',
+                value: 'doublekmac256-512',
+                name: 'Double KMAC256 with 512 bits',
             },
             {
-                name: 'doubleshake128-512',
-                value: 'Double SHAKE128 with 512 bits',
+                value: 'doubleshake128-512',
+                name: 'Double SHAKE128 with 512 bits',
             },
             {
-                name: 'doublecshake128-512',
-                value: 'Double cSHAKE128 with 512 bits',
+                value: 'doublecshake128-512',
+                name: 'Double cSHAKE128 with 512 bits',
             },
             {
-                name: 'doublekmac128-512',
-                value: 'Double KMAC128 with 512 bits',
+                value: 'doublekmac128-512',
+                name: 'Double KMAC128 with 512 bits',
             },
             {
-                name: 'doublesha384',
-                value: 'Double SHA384',
+                value: 'doublesha384',
+                name: 'Double SHA384',
             },
             {
-                name: 'doublesha3-384',
-                value: 'Double SHA3-384',
+                value: 'doublesha3-384',
+                name: 'Double SHA3-384',
             },
             {
-                name: 'doublekeccak384',
-                value: 'Double Keccak-384',
+                value: 'doublekeccak384',
+                name: 'Double Keccak-384',
             },
             {
-                name: 'doubleshake256-384',
-                value: 'Double SHAKE256 with 384 bits'
+                value: 'doubleshake256-384',
+                name: 'Double SHAKE256 with 384 bits'
             },
             {
-                name: 'doublecshake256-384',
-                value: 'Double cSHAKE256 with 384 bits',
+                value: 'doublecshake256-384',
+                name: 'Double cSHAKE256 with 384 bits',
             },
             {
-                name: 'doublekmac256-384',
-                value: 'Double KMAC256 with 384 bits',
+                value: 'doublekmac256-384',
+                name: 'Double KMAC256 with 384 bits',
             },
             {
-                name: 'doubleshake128-384',
-                value: 'Double SHAKE128 with 384 bits',
+                value: 'doubleshake128-384',
+                name: 'Double SHAKE128 with 384 bits',
             },
             {
-                name: 'doublecshake128-384',
-                value: 'Double cSHAKE128 with 384 bits',
+                value: 'doublecshake128-384',
+                name: 'Double cSHAKE128 with 384 bits',
             },
             {
-                name: 'doublekmac128-384',
-                value: 'Double KMAC128 with 384 bits',
+                value: 'doublekmac128-384',
+                name: 'Double KMAC128 with 384 bits',
             },
             {
-                name: 'doubleshake256-320',
-                value: 'Double SHAKE256 with 320 bits'
+                value: 'doubleshake256-320',
+                name: 'Double SHAKE256 with 320 bits'
             },
             {
-                name: 'doublecshake256-320',
-                value: 'Double cSHAKE256 with 320 bits',
+                value: 'doublecshake256-320',
+                name: 'Double cSHAKE256 with 320 bits',
             },
             {
-                name: 'doublekmac256-320',
-                value: 'Double KMAC256 with 320 bits',
+                value: 'doublekmac256-320',
+                name: 'Double KMAC256 with 320 bits',
             },
             {
-                name: 'doubleshake128-320',
-                value: 'Double SHAKE128 with 320 bits',
+                value: 'doubleshake128-320',
+                name: 'Double SHAKE128 with 320 bits',
             },
             {
-                name: 'doublecshake128-320',
-                value: 'Double cSHAKE128 with 320 bits',
+                value: 'doublecshake128-320',
+                name: 'Double cSHAKE128 with 320 bits',
             },
             {
-                name: 'doublekmac128-320',
-                value: 'Double KMAC128 with 320 bits',
+                value: 'doublekmac128-320',
+                name: 'Double KMAC128 with 320 bits',
             },
             {
-                name: 'doubleripemd320',
-                value: 'Double RIPEMD-320',
+                value: 'doubleripemd320',
+                name: 'Double RIPEMD-320',
             },
             {
-                name: 'doublesha512-256',
-                value: 'Double SHA512/256',
+                value: 'doublesha512-256',
+                name: 'Double SHA512/256',
             },
             {
-                name: 'doublesha3-256',
-                value: 'Double SHA3-256',
+                value: 'doublesha3-256',
+                name: 'Double SHA3-256',
             },
             {
-                name: 'doublekeccak256',
-                value: 'Double Keccak-256',
+                value: 'doublekeccak256',
+                name: 'Double Keccak-256',
             },
             {
-                name: 'doubleshake256-256',
-                value: 'Double SHAKE256 with 256 bits'
+                value: 'doubleshake256-256',
+                name: 'Double SHAKE256 with 256 bits'
             },
             {
-                name: 'doublecshake256-256',
-                value: 'Double cSHAKE256 with 256 bits',
+                value: 'doublecshake256-256',
+                name: 'Double cSHAKE256 with 256 bits',
             },
             {
-                name: 'doublekmac256-256',
-                value: 'Double KMAC256 with 256 bits',
+                value: 'doublekmac256-256',
+                name: 'Double KMAC256 with 256 bits',
             },
             {
-                name: 'doubleshake128-256',
-                value: 'Double SHAKE128 with 256 bits',
+                value: 'doubleshake128-256',
+                name: 'Double SHAKE128 with 256 bits',
             },
             {
-                name: 'doublecshake128-256',
-                value: 'Double cSHAKE128 with 256 bits',
+                value: 'doublecshake128-256',
+                name: 'Double cSHAKE128 with 256 bits',
             },
             {
-                name: 'doublekmac128-256',
-                value: 'Double KMAC128 with 256 bits',
+                value: 'doublekmac128-256',
+                name: 'Double KMAC128 with 256 bits',
             },
             {
-                name: 'doubleripemd256',
-                value: 'Double RIPEMD-256',
+                value: 'doubleripemd256',
+                name: 'Double RIPEMD-256',
             },
             {
-                name: 'doublesha224',
-                value: 'Double SHA224',
+                value: 'doublesha224',
+                name: 'Double SHA224',
             },
             {
-                name: 'doublesha512-224',
-                value: 'Double SHA512/224',
+                value: 'doublesha512-224',
+                name: 'Double SHA512/224',
             },
             {
-                name: 'doublesha3-224',
-                value: 'Double SHA3-224',
+                value: 'doublesha3-224',
+                name: 'Double SHA3-224',
             },
             {
-                name: 'doublekeccak224',
-                value: 'Double Keccak-224',
+                value: 'doublekeccak224',
+                name: 'Double Keccak-224',
             },
             {
-                name: 'doubleshake256-224',
-                value: 'Double SHAKE256 with 224 bits'
+                value: 'doubleshake256-224',
+                name: 'Double SHAKE256 with 224 bits'
             },
             {
-                name: 'doublecshake256-224',
-                value: 'Double cSHAKE256 with 224 bits',
+                value: 'doublecshake256-224',
+                name: 'Double cSHAKE256 with 224 bits',
             },
             {
-                name: 'doublekmac256-224',
-                value: 'Double KMAC256 with 224 bits',
+                value: 'doublekmac256-224',
+                name: 'Double KMAC256 with 224 bits',
             },
             {
-                name: 'doubleshake128-224',
-                value: 'Double SHAKE128 with 224 bits',
+                value: 'doubleshake128-224',
+                name: 'Double SHAKE128 with 224 bits',
             },
             {
-                name: 'doublecshake128-224',
-                value: 'Double cSHAKE128 with 224 bits',
+                value: 'doublecshake128-224',
+                name: 'Double cSHAKE128 with 224 bits',
             },
             {
-                name: 'doublekmac128-224',
-                value: 'Double KMAC128 with 224 bits',
+                value: 'doublekmac128-224',
+                name: 'Double KMAC128 with 224 bits',
             },
             {
-                name: 'doublesha1',
-                value: 'Double SHA1',
+                value: 'doublesha1',
+                name: 'Double SHA1',
             },
             {
-                name: 'doubleshake256-160',
-                value: 'Double SHAKE256 with 160 bits'
+                value: 'doubleshake256-160',
+                name: 'Double SHAKE256 with 160 bits'
             },
             {
-                name: 'doublecshake256-160',
-                value: 'Double cSHAKE256 with 160 bits',
+                value: 'doublecshake256-160',
+                name: 'Double cSHAKE256 with 160 bits',
             },
             {
-                name: 'doublekmac256-160',
-                value: 'Double KMAC256 with 160 bits',
+                value: 'doublekmac256-160',
+                name: 'Double KMAC256 with 160 bits',
             },
             {
-                name: 'doubleshake128-160',
-                value: 'Double SHAKE128 with 160 bits',
+                value: 'doubleshake128-160',
+                name: 'Double SHAKE128 with 160 bits',
             },
             {
-                name: 'doublecshake128-160',
-                value: 'Double cSHAKE128 with 160 bits',
+                value: 'doublecshake128-160',
+                name: 'Double cSHAKE128 with 160 bits',
             },
             {
-                name: 'doublekmac128-160',
-                value: 'Double KMAC128 with 160 bits',
+                value: 'doublekmac128-160',
+                name: 'Double KMAC128 with 160 bits',
             },
             {
-                name: 'doubleripemd160',
-                value: 'Double RIPEMD-160',
+                value: 'doubleripemd160',
+                name: 'Double RIPEMD-160',
             },
             {
-                name: 'doublemd2',
-                value: 'Double MD2',
+                value: 'doublemd2',
+                name: 'Double MD2',
             },
             {
-                name: 'doublemd4',
-                value: 'Double MD4',
+                value: 'doublemd4',
+                name: 'Double MD4',
             },
             {
-                name: 'doublemd5',
-                value: 'Double MD5',
+                value: 'doublemd5',
+                name: 'Double MD5',
             },
             {
-                name: 'doubleshake256-128',
-                value: 'Double SHAKE256 with 128 bits'
+                value: 'doubleshake256-128',
+                name: 'Double SHAKE256 with 128 bits'
             },
             {
-                name: 'doublecshake256-128',
-                value: 'Double cSHAKE256 with 128 bits',
+                value: 'doublecshake256-128',
+                name: 'Double cSHAKE256 with 128 bits',
             },
             {
-                name: 'doublekmac256-128',
-                value: 'Double KMAC256 with 128 bits',
+                value: 'doublekmac256-128',
+                name: 'Double KMAC256 with 128 bits',
             },
             {
-                name: 'doubleshake128-128',
-                value: 'Double SHAKE128 with 128 bits',
+                value: 'doubleshake128-128',
+                name: 'Double SHAKE128 with 128 bits',
             },
             {
-                name: 'doublecshake128-128',
-                value: 'Double cSHAKE128 with 128 bits',
+                value: 'doublecshake128-128',
+                name: 'Double cSHAKE128 with 128 bits',
             },
             {
-                name: 'doublekmac128-128',
-                value: 'Double KMAC128 with 128 bits',
+                value: 'doublekmac128-128',
+                name: 'Double KMAC128 with 128 bits',
             },
             {
-                name: 'doubleripemd128',
-                value: 'Double RIPEMD-128',
+                value: 'doubleripemd128',
+                name: 'Double RIPEMD-128',
             },
             {
-                name: 'doublecrc32',
-                value: 'Double CRC-32',
+                value: 'doublecrc32',
+                name: 'Double CRC-32',
             },
             {
-                name: 'doubleshake256-32',
-                value: 'Double SHAKE256 with 32 bits'
+                value: 'doubleshake256-32',
+                name: 'Double SHAKE256 with 32 bits'
             },
             {
-                name: 'doublecshake256-32',
-                value: 'Double cSHAKE256 with 32 bits',
+                value: 'doublecshake256-32',
+                name: 'Double cSHAKE256 with 32 bits',
             },
             {
-                name: 'doublekmac256-32',
-                value: 'Double KMAC256 with 32 bits',
+                value: 'doublekmac256-32',
+                name: 'Double KMAC256 with 32 bits',
             },
             {
-                name: 'doubleshake128-32',
-                value: 'Double SHAKE128 with 32 bits',
+                value: 'doubleshake128-32',
+                name: 'Double SHAKE128 with 32 bits',
             },
             {
-                name: 'doublecshake128-32',
-                value: 'Double cSHAKE128 with 32 bits',
+                value: 'doublecshake128-32',
+                name: 'Double cSHAKE128 with 32 bits',
             },
             {
-                name: 'doublekmac128-32',
-                value: 'Double KMAC128 with 32 bits',
+                value: 'doublekmac128-32',
+                name: 'Double KMAC128 with 32 bits',
             },
             {
-                name: 'doublecrc16',
-                value: 'Double CRC-16',
+                value: 'doublecrc16',
+                name: 'Double CRC-16',
             },
             {
-                name: 'doubleshake256-16',
-                value: 'Double SHAKE256 with 16 bits'
+                value: 'doubleshake256-16',
+                name: 'Double SHAKE256 with 16 bits'
             },
             {
-                name: 'doublecshake256-16',
-                value: 'Double cSHAKE256 with 16 bits',
+                value: 'doublecshake256-16',
+                name: 'Double cSHAKE256 with 16 bits',
             },
             {
-                name: 'doublekmac256-16',
-                value: 'Double KMAC256 with 16 bits',
+                value: 'doublekmac256-16',
+                name: 'Double KMAC256 with 16 bits',
             },
             {
-                name: 'doubleshake128-16',
-                value: 'Double SHAKE128 with 16 bits',
+                value: 'doubleshake128-16',
+                name: 'Double SHAKE128 with 16 bits',
             },
             {
-                name: 'doublecshake128-16',
-                value: 'Double cSHAKE128 with 16 bits',
+                value: 'doublecshake128-16',
+                name: 'Double cSHAKE128 with 16 bits',
             },
             {
-                name: 'doublekmac128-16',
-                value: 'Double KMAC128 with 16 bits',
+                value: 'doublekmac128-16',
+                name: 'Double KMAC128 with 16 bits',
             },
             {
-                name: 'kalhash',
-                value: 'Kalhash',
+                value: 'kalhash',
+                name: 'Kalhash',
             },
             {
-                name: 'doublekalhash',
-                value: 'Double Kalhash',
+                value: 'doublekalhash',
+                name: 'Double Kalhash',
             },
         ]
     });
-    writeFileSync(`${os.homedir()}/.bsvutils/account.bsv`, JSON.stringify(answer));
+    writeFileSync(`${os.homedir()}/.bsvutils/hash.bsv`, JSON.stringify(answer));
 }
