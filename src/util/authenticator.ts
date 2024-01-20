@@ -15,7 +15,11 @@ export class authenticate {
     async auth(email: string, password: string) {
         this.email = email;
         this.accPassword = password;
-        await this.relysia.authentication.v1.auth({ email: this.email, password: this.accPassword });
+        try {
+            await this.relysia.authentication.v1.auth({ email: this.email, password: this.accPassword });
+        } catch {
+            this.auth(email, password);
+        }
         this.timestamp = Date.now();
     }
 
@@ -43,7 +47,7 @@ export async function getAuthClass(): Promise<authenticate> {
         }
     }
 
-    const accJson: {email: string, accPassword: string} = JSON.parse(decoded);
+    const accJson: { email: string, accPassword: string } = JSON.parse(decoded);
     let authenticator = new authenticate();
     authenticator.auth(accJson.email, accJson.accPassword);
 

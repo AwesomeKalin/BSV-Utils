@@ -1,1 +1,1 @@
-export declare function createProceduralSave(folder: string): Promise<void>;
+export declare function createProceduralSave(folder: string, pgp: string | undefined | null): Promise<void>;

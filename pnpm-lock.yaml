@@ -46,6 +46,18 @@ dependencies:
   is-base64:
     specifier: ^1.1.0
     version: 1.1.0
+  js-crc:
+    specifier: ^0.2.0
+    version: 0.2.0
+  js-md2:
+    specifier: ^0.2.2
+    version: 0.2.2
+  js-md4:
+    specifier: ^0.3.2
+    version: 0.3.2
+  js-sha3:
+    specifier: ^0.9.3
+    version: 0.9.3
   kalhash.js:
     specifier: ^1.0.0
     version: 1.0.0
@@ -84,6 +96,9 @@ devDependencies:
   '@types/is-base64':
     specifier: ^1.1.3
     version: 1.1.3
+  '@types/js-crc':
+    specifier: ^0.2.3
+    version: 0.2.3
   '@types/node':
     specifier: ^20.11.5
     version: 20.11.5
@@ -475,6 +490,10 @@ packages:
 
   /@types/is-base64@1.1.3:
     resolution: {integrity: sha512-8h40c+MFeMKhEw8Ebckd11MEt9sngs4AAkvcZVfDYOFDd7FeTD80pTfm3uvepbWcld1zVkHW+WA6b7UaHAOU/w==}
+    dev: true
+
+  /@types/js-crc@0.2.3:
+    resolution: {integrity: sha512-XQNB5dDWZ1S0AS/NzY0F/Bl8c8uOTC1MbTZrIj08HzkwT4POxgeA7+wWesrP4MvJEdvy+tsHya3OHzcLnQhfIg==}
     dev: true
 
   /@types/keyv@3.1.4:
@@ -3259,6 +3278,22 @@ packages:
       '@sideway/address': 4.1.4
       '@sideway/formula': 3.0.1
       '@sideway/pinpoint': 2.0.0
+    dev: false
+
+  /js-crc@0.2.0:
+    resolution: {integrity: sha512-8DdCSAOACpF8WDAjyDFBC2rj8OS4HUP9mNZBDfl8jCiPCnJG+2bkuycalxwZh6heFy6PrMvoWTp47lp6gzT65A==}
+    dev: false
+
+  /js-md2@0.2.2:
+    resolution: {integrity: sha512-GbnCVmIhUpPsda6x80PgB6G45M6Sj1mxDFKyaeSI3x6rS4BvK4tK8hZzU9n+wWTFmIjWw19ZrrOyOBSOT0Z5XQ==}
+    dev: false
+
+  /js-md4@0.3.2:
+    resolution: {integrity: sha512-/GDnfQYsltsjRswQhN9fhv3EMw2sCpUdrdxyWDOUK7eyD++r3gRhzgiQgc/x4MAv2i1iuQ4lxO5mvqM3vj4bwA==}
+    dev: false
+
+  /js-sha3@0.9.3:
+    resolution: {integrity: sha512-BcJPCQeLg6WjEx3FE591wVAevlli8lxsxm9/FzV4HXkV49TmBH38Yvrpce6fjbADGMKFrBMGTqrVz3qPIZ88Gg==}
     dev: false
 
   /js-tokens@4.0.0:

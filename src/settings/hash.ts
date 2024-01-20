@@ -17,13 +17,13 @@ export async function hashSettings() {
                 checked: true,
             },
             {
-                value: 'doublesha256',
-                name: 'Double SHA256',
+                value: 'sha256',
+                name: 'SHA256',
                 checked: true,
             },
             {
-                value: 'sha256',
-                name: 'SHA256',
+                value: 'doublesha256',
+                name: 'Double SHA256',
                 checked: true,
             },
             {
@@ -254,10 +254,6 @@ export async function hashSettings() {
             {
                 value: 'kmac128-160',
                 name: 'KMAC128 with 160 bits',
-            },
-            {
-                value: 'ripemd160',
-                name: 'RIPEMD-160',
             },
             {
                 value: 'md2',

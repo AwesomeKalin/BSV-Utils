@@ -7,6 +7,7 @@ import { nft } from './nft/nft.js';
 import { readFileSync } from 'fs';
 import { download, resumeDl } from './download/download.js';
 import { hashSettings } from './settings/hash.js';
+import { createProceduralSave } from './saving/create.js';
 let ranCommand = false;
 yargs(process.argv.slice(2))
     .scriptName('bsv-utils')
@@ -115,8 +116,14 @@ yargs(process.argv.slice(2))
         description: 'The follder in which you want to do the original save',
         required: true,
     });
+    yargs.positional('encryption', {
+        type: 'string',
+        description: 'If encryption is desired, then input the path to a PGP key here. Must contain private key. (HIGHLY RECOMMENDED!)',
+    });
 }, async function (argv) {
     ranCommand = true;
+    //@ts-expect-error
+    createProceduralSave(argv.folder, argv.encryption);
 })
     .command('hashAlgorithms', 'Select the hash algorithms to use when doing hashing', async function () {
     ranCommand = true;
