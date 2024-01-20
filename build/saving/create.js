@@ -5,6 +5,7 @@ import getPort from "get-port";
 import { expressServer } from "../upload/expressServer.js";
 import ngrok from 'ngrok';
 import { uploadFiles } from "../upload/uploadFiles.js";
+import { hash } from "../util/hash.js";
 export async function createProceduralSave(folder, pgp) {
     const auth = await getAuthClass();
     let key = null;
@@ -26,11 +27,19 @@ export async function createProceduralSave(folder, pgp) {
     let manifest;
     for (var i = 0; i < files.length; i++) {
         let fileToUpload = readFileSync(files[i]);
+        const fileToHash = fileToUpload;
         if (pgp != null) {
             fileToUpload = await encryptWithKey(fileToUpload, pgp);
         }
         console.log(`Uploading ${files[i]}`);
+        await auth.checkAuth();
         const txid = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
         console.log(`Hashing ${files[i]}`);
+        const hashes = hash(fileToHash);
+        const toPush = { name: files[i], txid, hashes };
+        manifest.push(toPush);
     }
+    let manifestToUpload = Buffer.from(JSON.stringify(manifest));
+    await auth.checkAuth();
+    const manifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
 }

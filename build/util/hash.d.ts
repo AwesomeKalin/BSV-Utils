@@ -1,5 +1,6 @@
 /// <reference types="node" resolution-mode="require"/>
-export declare function hash(file: Buffer): {
+export declare function hash(file: Buffer): hashArray;
+export type hashArray = {
     shake256_1k: string;
     sha3_512: string;
     sha256: string;
