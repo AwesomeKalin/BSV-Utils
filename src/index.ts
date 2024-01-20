@@ -7,6 +7,7 @@ import { upload } from './upload/upload.js';
 import { nft, nftinfo } from './nft/nft.js';
 import { readFileSync } from 'fs';
 import { download, resumeDl } from './download/download.js';
+import { hashSettings } from './settings/hash.js';
 
 let ranCommand = false;
 
@@ -115,6 +116,19 @@ yargs(process.argv.slice(2))
         ranCommand = true;
         //@ts-expect-error
         await resumeDl(argv.txid);
+    })
+    .command('createFolderSave', 'Deploy a contract that allows you to save files to BSV procedulary, allowing you to download any saved version', (yargs) => {
+        yargs.positional('folder', {
+            type: 'string',
+            description: 'The follder in which you want to do the original save',
+            required: true,
+        });
+    }, async function (argv) {
+        ranCommand = true;
+    })
+    .command('hashAlgorithms', 'Select the hash algorithms to use when doing hashing', async function () {
+        ranCommand = true;
+        await hashSettings();
     })
     .help()
     .argv;
