@@ -39,7 +39,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     let manifest: { name: string; txid: string; hashes: hashArray; }[] = [];
 
     for (var i = 0; i < files.length; i++) {
-        let fileToUpload: Buffer = readFileSync(files[i]);
+        let fileToUpload: Buffer = readFileSync(`${folder}/${files[i]}`);
         const fileToHash: Buffer = fileToUpload;
 
         if (pgp != null) {

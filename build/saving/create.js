@@ -31,7 +31,7 @@ export async function createProceduralSave(folder, pgp) {
     const url = await ngrok.connect(port);
     let manifest = [];
     for (var i = 0; i < files.length; i++) {
-        let fileToUpload = readFileSync(files[i]);
+        let fileToUpload = readFileSync(`${folder}/${files[i]}`);
         const fileToHash = fileToUpload;
         if (pgp != null) {
             fileToUpload = await encryptWithKey(fileToUpload, pgp);
