@@ -6,7 +6,7 @@ const { cshake128, cshake256, keccak224, keccak256, keccak384, keccak512, kmac12
 import md2 from 'js-md2';
 import md4 from 'js-md4';
 import crc from 'js-crc';
-import kalhash from 'kalhash.js';
+import { kalhash } from 'kalhash.js';
 var crc16 = crc.crc16;
 var crc32 = crc.crc32;
 export function hash(file) {
