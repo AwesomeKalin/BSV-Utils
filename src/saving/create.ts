@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, lstatSync, writeFileSync, mkdirSync } from "fs";
+import { readFileSync, readdirSync, lstatSync, mkdirSync } from "fs";
 import { encryptWithKey } from "../util/encryptWithKey.js";
 import { authenticate, getAuthClass } from "../util/authenticator.js";
 import getPort from "get-port";
@@ -6,11 +6,11 @@ import { expressServer } from "../upload/expressServer.js";
 import ngrok from 'ngrok';
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { hash, hashArray } from "../util/hash.js";
-import artifact from '../../artifacts/contracts/procedural-saving.json';
-import { ProceduralSaving } from '../contracts/procedural-saving.js';
+import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
 import { getAllAddr } from "../util/getAddr.js";
 import { Addr, bsv } from "scrypt-ts";
 import { deployContract } from "../util/deployContract.js";
+import { buildContractClass } from 'scryptlib';
 
 export async function createProceduralSave(folder: string, pgp: string | undefined | null) {
     const auth: authenticate = await getAuthClass();
@@ -67,7 +67,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
 
     console.log('Deploying contract to blockchain');
 
-    await ProceduralSaving.loadArtifact(artifact);
+    const ProceduralSaving = buildContractClass(artifact);
     const addressFrom: string = getAllAddr(auth)[0];
     let instance = new ProceduralSaving(manifestTx, Addr(addressFrom));
     const lockingScript: bsv.Script = instance.lockingScript;

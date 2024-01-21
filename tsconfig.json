@@ -1,13 +1,15 @@
 {
     "compilerOptions": {
-        "module": "node16",
+        "module": "NodeNext",
         "target": "ESNext",
         "outDir": "build",
         "rootDir": "./src",
         "declaration": true,
+        "moduleResolution": "NodeNext",
         "resolveJsonModule": true
     },
     "exclude": [
-        "./build/*"
+        "./build/*",
+        "./contracts/*"
     ]
 }

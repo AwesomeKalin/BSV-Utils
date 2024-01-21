@@ -38,8 +38,9 @@
         "nanospinner": "^1.1.0",
         "ngrok": "5.0.0-beta.2",
         "openpgp": "^5.11.0",
-        "scrypt-cli": "^0.1.66",
         "scrypt-ts": "^1.3.23",
+        "scryptlib": "^2.1.37",
+        "typescript": "^5.3.3",
         "whatsonchain": "^0.3.0",
         "yargs": "^17.7.2"
     },
@@ -55,7 +56,7 @@
         "@types/yargs": "^17.0.32",
         "eslint": "^8.56.0",
         "np": "^9.2.0",
-        "typescript": "^5.3.3"
+        "scrypt-cli": "^0.1.66"
     },
     "bin": {
         "bsv-utils": "./build/index.js"

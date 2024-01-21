@@ -6,11 +6,11 @@ import { expressServer } from "../upload/expressServer.js";
 import ngrok from 'ngrok';
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { hash } from "../util/hash.js";
-import artifact from '../../artifacts/contracts/procedural-saving.json';
-import { ProceduralSaving } from '../contracts/procedural-saving.js';
+import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
 import { getAllAddr } from "../util/getAddr.js";
 import { Addr } from "scrypt-ts";
 import { deployContract } from "../util/deployContract.js";
+import { buildContractClass } from 'scryptlib';
 export async function createProceduralSave(folder, pgp) {
     const auth = await getAuthClass();
     let key = null;
@@ -47,7 +47,7 @@ export async function createProceduralSave(folder, pgp) {
     let manifestToUpload = Buffer.from(JSON.stringify(manifest));
     const manifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
     console.log('Deploying contract to blockchain');
-    await ProceduralSaving.loadArtifact(artifact);
+    const ProceduralSaving = buildContractClass(artifact);
     const addressFrom = getAllAddr(auth)[0];
     let instance = new ProceduralSaving(manifestTx, Addr(addressFrom));
     const lockingScript = instance.lockingScript;

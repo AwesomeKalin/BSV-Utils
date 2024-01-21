@@ -1,4 +1,4 @@
-import { Addr, ByteString, PubKey, Sig, SmartContract, assert, hash256, method, prop, pubKey2Addr, toByteString } from 'scrypt-ts';
+import { Addr, ByteString, PubKey, Sig, SmartContract, assert, hash256, method, prop, pubKey2Addr } from 'scrypt-ts';
 
 export class ProceduralSaving extends SmartContract {
     //@ts-ignore
