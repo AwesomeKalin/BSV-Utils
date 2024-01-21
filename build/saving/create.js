@@ -21,7 +21,7 @@ export async function createProceduralSave(folder, pgp) {
     const dirContents = readdirSync(folder, { recursive: true });
     let files = [];
     for (var i = 0; i < dirContents.length; i++) {
-        if (lstatSync(`${folder}/${files[i]}`).isFile()) {
+        if (lstatSync(`${folder}/${dirContents[i]}`).isFile()) {
             files.push(dirContents[i]);
         }
     }
