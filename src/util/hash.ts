@@ -1,7 +1,8 @@
 import { createHash } from "crypto";
 import { readFileSync } from "fs";
 import os from 'os';
-import { cshake128, cshake256, keccak224, keccak256, keccak384, keccak512, kmac128, kmac256, shake128, shake256 } from 'js-sha3';
+import pkg from 'js-sha3';
+const { cshake128, cshake256, keccak224, keccak256, keccak384, keccak512, kmac128, kmac256, shake128, shake256 } = pkg;
 import md2 from 'js-md2';
 import md4 from 'js-md4';
 import crc from 'js-crc';
