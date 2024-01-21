@@ -26,7 +26,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     let files: string[] = [];
 
     for (var i = 0; i < dirContents.length; i++) {
-        if (lstatSync(dirContents[i]).isFile()) {
+        if (lstatSync(`${folder}/${files[i]}`).isFile()) {
             files.push(dirContents[i]);
         }
     }
