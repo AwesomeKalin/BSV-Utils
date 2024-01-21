@@ -1,7 +1,9 @@
 import { SmartContract, assert, hash256, method, prop, pubKey2Addr } from 'scrypt-ts';
-class ProceduralSaving extends SmartContract {
+export class ProceduralSaving extends SmartContract {
+    //@ts-ignore
     @prop(true)
     manifest;
+    //@ts-ignore
     @prop()
     address;
     constructor(initialManifest, address) {
@@ -9,11 +11,13 @@ class ProceduralSaving extends SmartContract {
         this.manifest = initialManifest;
         this.address = address;
     }
+    //@ts-ignore
     @method()
     unlock(sig, pubkey) {
         assert(pubKey2Addr(pubkey) == this.address, 'address check failed');
         assert(this.checkSig(sig, pubkey), 'signature check failed');
     }
+    //@ts-ignore
     @method()
     changeManifest(sig, pubkey, newManifest) {
         this.manifest = newManifest;

@@ -1,0 +1,9 @@
+{
+  "success": true,
+  "errors": [],
+  "scryptfile": "contracts/procedural-saving.scrypt",
+  "sourceMapFile": "contracts/procedural-saving.scrypt.map",
+  "ctxMethods": [
+    "changeManifest"
+  ]
+}

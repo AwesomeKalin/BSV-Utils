@@ -6,6 +6,11 @@ import { expressServer } from "../upload/expressServer.js";
 import ngrok from 'ngrok';
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { hash } from "../util/hash.js";
+import artifact from '../../artifacts/contracts/procedural-saving.json';
+import { ProceduralSaving } from '../contracts/procedural-saving.js';
+import { getAllAddr } from "../util/getAddr.js";
+import { Addr } from "scrypt-ts";
+import { deployContract } from "../util/deployContract.js";
 export async function createProceduralSave(folder, pgp) {
     const auth = await getAuthClass();
     let key = null;
@@ -24,7 +29,7 @@ export async function createProceduralSave(folder, pgp) {
     mkdirSync('./temp');
     const server = new expressServer(port);
     const url = await ngrok.connect(port);
-    let manifest;
+    let manifest = [];
     for (var i = 0; i < files.length; i++) {
         let fileToUpload = readFileSync(files[i]);
         const fileToHash = fileToUpload;
@@ -32,14 +37,19 @@ export async function createProceduralSave(folder, pgp) {
             fileToUpload = await encryptWithKey(fileToUpload, pgp);
         }
         console.log(`Uploading ${files[i]}`);
-        await auth.checkAuth();
         const txid = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
         console.log(`Hashing ${files[i]}`);
         const hashes = hash(fileToHash);
         const toPush = { name: files[i], txid, hashes };
         manifest.push(toPush);
     }
+    console.log('Uploading manifest');
     let manifestToUpload = Buffer.from(JSON.stringify(manifest));
-    await auth.checkAuth();
     const manifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
+    console.log('Deploying contract to blockchain');
+    await ProceduralSaving.loadArtifact(artifact);
+    const addressFrom = getAllAddr(auth)[0];
+    let instance = new ProceduralSaving(manifestTx, Addr(addressFrom));
+    const lockingScript = instance.lockingScript;
+    console.log(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom)}`);
 }

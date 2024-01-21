@@ -1,0 +1,32 @@
+struct __scrypt_ts_Outpoint {  bytes txid;  int outputIndex;}  struct __scrypt_ts_UTXO {  __scrypt_ts_Outpoint outpoint;  bytes script;  int value;}  struct __scrypt_ts_ScriptContext {  bytes version;  bytes hashPrevouts;  bytes hashSequence;  bytes hashOutputs;  int locktime;  int sequence;  SigHashType sigHashType;  __scrypt_ts_UTXO utxo;  SigHashPreimage preimage;}
+struct __scrypt_ts_Change {  int amount;  Ripemd160 address;}
+
+contract ProceduralSaving {
+  @state bytes manifest;
+  const Ripemd160 address;
+  __scrypt_ts_ScriptContext ctx;
+  __scrypt_ts_Change __scrypt_ts_change;
+  constructor(bytes initialManifest, Ripemd160 address) {
+    this.manifest = initialManifest;
+    this.address = address;
+  }
+  public function unlock(Sig sig, PubKey pubkey) {
+    require(hash160(pubkey) == this.address);
+    require(checkSig(sig, pubkey));
+  }
+  public function changeManifest(Sig sig, PubKey pubkey, bytes newManifest, SigHashPreimage __scrypt_ts_txPreimage, int __scrypt_ts_changeAmount, Ripemd160 __scrypt_ts_changeAddress) {
+    require(Tx.checkPreimageSigHashType(__scrypt_ts_txPreimage, SigHashType(b'41')));
+    this.ctx = ProceduralSaving.createCtx(__scrypt_ts_txPreimage);
+    this.__scrypt_ts_change = {__scrypt_ts_changeAmount, __scrypt_ts_changeAddress};
+    this.manifest = newManifest;
+    int amount = this.ctx.utxo.value;
+    bytes outputs = this.buildStateOutput(amount) + this.buildChangeOutput();
+    require(hash160(pubkey) == this.address);
+    require(checkSig(sig, pubkey));
+    require(this.ctx.hashOutputs == hash256(outputs));
+  }
+  static function createCtx(SigHashPreimage txPreimage) : __scrypt_ts_ScriptContext {  bytes version = SigHash.nVersion(txPreimage);  bytes hashPrevouts = SigHash.hashPrevouts(txPreimage);  bytes hashSequence = SigHash.hashSequence(txPreimage);  bytes hashOutputs = SigHash.hashOutputs(txPreimage);  int locktime = SigHash.nLocktime(txPreimage);  int sequence = SigHash.nSequence(txPreimage);  SigHashType sigHashType = SigHash.sigHashType(txPreimage);  bytes txid = SigHash.outpoint(txPreimage)[0 : 32];  int outputIndex = unpack(SigHash.outpoint(txPreimage)[32 :]);  __scrypt_ts_Outpoint outpoint = { txid, outputIndex };  bytes scriptCode = SigHash.scriptCode(txPreimage);  int value = SigHash.value(txPreimage);  __scrypt_ts_UTXO utxo = { outpoint, scriptCode, value };  return { version, hashPrevouts, hashSequence, hashOutputs, locktime, sequence, sigHashType, utxo, txPreimage };}
+  function timeLock(int locktime): bool {  bool res = true;  res = this.ctx.sequence < 0xffffffff;  if (    locktime < 500000000  ) {    res = res && this.ctx.locktime < 500000000;  }  return res && this.ctx.locktime >= locktime;}
+  function buildStateOutput(int amount) : bytes {  bytes script = this.getStateScript();  return Utils.buildOutput(script, amount);}
+  function buildChangeOutput() : bytes {  return this.__scrypt_ts_change.amount > 0 ? Utils.buildOutput(Utils.buildPublicKeyHashScript(this.__scrypt_ts_change.address), this.__scrypt_ts_change.amount) : b'';}
+}

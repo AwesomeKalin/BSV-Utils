@@ -1,9 +1,11 @@
 import { Addr, ByteString, PubKey, Sig, SmartContract, assert, hash256, method, prop, pubKey2Addr, toByteString } from 'scrypt-ts';
 
-class ProceduralSaving extends SmartContract {
+export class ProceduralSaving extends SmartContract {
+    //@ts-ignore
     @prop(true)
     manifest: ByteString;
 
+    //@ts-ignore
     @prop()
     readonly address: Addr;
 
@@ -13,12 +15,14 @@ class ProceduralSaving extends SmartContract {
         this.address = address;
     }
 
+    //@ts-ignore
     @method()
     public unlock(sig: Sig, pubkey: PubKey) {
         assert(pubKey2Addr(pubkey) == this.address, 'address check failed');
         assert(this.checkSig(sig, pubkey), 'signature check failed');
     }
 
+    //@ts-ignore
     @method()
     public changeManifest(sig: Sig, pubkey: PubKey, newManifest: ByteString) {
         this.manifest = newManifest;

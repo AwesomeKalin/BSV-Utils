@@ -6,11 +6,16 @@ import { expressServer } from "../upload/expressServer.js";
 import ngrok from 'ngrok';
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { hash, hashArray } from "../util/hash.js";
+import artifact from '../../artifacts/contracts/procedural-saving.json';
+import { ProceduralSaving } from '../contracts/procedural-saving.js';
+import { getAllAddr } from "../util/getAddr.js";
+import { Addr, bsv } from "scrypt-ts";
+import { deployContract } from "../util/deployContract.js";
 
 export async function createProceduralSave(folder: string, pgp: string | undefined | null) {
     const auth: authenticate = await getAuthClass();
 
-    let key: string = null;
+    let key: string | null = null;
 
     if (pgp != undefined || pgp != null) {
         key = readFileSync(pgp).toString();
@@ -31,7 +36,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     const server: expressServer = new expressServer(port);
     const url: string = await ngrok.connect(port);
 
-    let manifest: { name: string; txid: string; hashes: hashArray; }[];
+    let manifest: { name: string; txid: string; hashes: hashArray; }[] = [];
 
     for (var i = 0; i < files.length; i++) {
         let fileToUpload: Buffer = readFileSync(files[i]);
@@ -42,7 +47,6 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
         }
 
         console.log(`Uploading ${files[i]}`);
-        await auth.checkAuth();
 
         const txid: string = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
 
@@ -55,8 +59,18 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
         manifest.push(toPush);
     }
 
+    console.log('Uploading manifest');
+
     let manifestToUpload: Buffer = Buffer.from(JSON.stringify(manifest));
-    await auth.checkAuth();
 
     const manifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
+
+    console.log('Deploying contract to blockchain');
+
+    await ProceduralSaving.loadArtifact(artifact);
+    const addressFrom: string = getAllAddr(auth)[0];
+    let instance = new ProceduralSaving(manifestTx, Addr(addressFrom));
+    const lockingScript: bsv.Script = instance.lockingScript;
+
+    console.log(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom)}`);
 }
