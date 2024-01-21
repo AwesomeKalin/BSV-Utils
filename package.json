@@ -64,11 +64,10 @@
     "files": [
         "build/*"
     ],
-    "pnpm": {
-        "overrides": {
-            "browserify-sign@>=2.6.0 <=4.2.1": ">=4.2.2",
-            "axios@>=0.8.1 <1.6.0": ">=1.6.0",
-            "follow-redirects@<1.15.4": ">=1.15.4"
-        }
+    "overrides": {
+        "browserify-sign@>=2.6.0 <=4.2.1": ">=4.2.2",
+        "axios@>=0.8.1 <1.6.0": ">=1.6.0",
+        "follow-redirects@<1.15.4": ">=1.15.4",
+        "axios-extensions": "github:kuitos/axios-extensions@^3.1.17"
     }
 }
