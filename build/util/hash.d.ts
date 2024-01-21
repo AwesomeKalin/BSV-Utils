@@ -34,7 +34,6 @@ export type hashArray = {
     shake128_320: string;
     cshake128_320: string;
     kmac128_320: string;
-    ripemd320: string;
     sha512_256: string;
     sha3_256: string;
     keccak256: string;
@@ -44,7 +43,6 @@ export type hashArray = {
     shake128_256: string;
     cshake128_256: string;
     kmac128_256: string;
-    ripemd256: string;
     sha224: string;
     sha512_224: string;
     sha3_224: string;
@@ -71,7 +69,6 @@ export type hashArray = {
     shake128_128: string;
     cshake128_128: string;
     kmac128_128: string;
-    ripemd128: string;
     crc32: string;
     shake256_32: string;
     cshake256_32: string;
@@ -117,7 +114,6 @@ export type hashArray = {
     doubleshake128_320: string;
     doublecshake128_320: string;
     doublekmac128_320: string;
-    doubleripemd320: string;
     doublesha512_256: string;
     doublesha3_256: string;
     doublekeccak256: string;
@@ -127,7 +123,6 @@ export type hashArray = {
     doubleshake128_256: string;
     doublecshake128_256: string;
     doublekmac128_256: string;
-    doubleripemd256: string;
     doublesha224: string;
     doublesha512_224: string;
     doublesha3_224: string;
@@ -154,7 +149,6 @@ export type hashArray = {
     doubleshake128_128: string;
     doublecshake128_128: string;
     doublekmac128_128: string;
-    doubleripemd128: string;
     doublecrc32: string;
     doubleshake256_32: string;
     doublecshake256_32: string;

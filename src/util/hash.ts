@@ -13,7 +13,7 @@ var crc32 = crc.crc32;
 
 export function hash(file: Buffer) {
     const hashFunctions: string[] = JSON.parse(readFileSync(`${os.homedir()}/.bsvutils/hash.bsv`).toString());
-    let hashList: hashArray = { shake256_1k: null, sha3_512: null, sha256: null, doublesha256: null, ripemd160: null, cshake256_1k: null, kmac256_1k: null, shake128_1k: null, cshake128_1k: null, kmac128_1k: null, sha512: null, keccak512: null, shake256_512: null, cshake256_512: null, kmac256_512: null, shake128_512: null, cshake128_512: null, kmac128_512: null, sha384: null, sha3_384: null, keccak384: null, shake256_384: null, cshake256_384: null, kmac256_384: null, shake128_384: null, cshake128_384: null, kmac128_384: null, shake256_320: null, cshake256_320: null, kmac256_320: null, shake128_320: null, cshake128_320: null, kmac128_320: null, ripemd320: null, sha512_256: null, sha3_256: null, keccak256: null, shake256_256: null, cshake256_256: null, kmac256_256: null, shake128_256: null, cshake128_256: null, kmac128_256: null, ripemd256: null, sha224: null, sha512_224: null, sha3_224: null, keccak224: null, shake256_224: null, cshake256_224: null, kmac256_224: null, shake128_224: null, cshake128_224: null, kmac128_224: null, sha1: null, shake256_160: null, cshake256_160: null, kmac256_160: null, shake128_160: null, cshake128_160: null, kmac128_160: null, md2: null, md4: null, md5: null, shake256_128: null, cshake256_128: null, kmac256_128: null, shake128_128: null, cshake128_128: null, kmac128_128: null, ripemd128: null, crc32: null, shake256_32: null, cshake256_32: null, kmac256_32: null, shake128_32: null, cshake128_32: null, kmac128_32: null, crc16: null, shake256_16: null, cshake256_16: null, kmac256_16: null, shake128_16: null, cshake128_16: null, kmac128_16: null, doubleshake256_1k: null, doublesha3_512: null, doubleripemd160: null, doublecshake256_1k: null, doublekmac256_1k: null, doubleshake128_1k: null, doublecshake128_1k: null, doublekmac128_1k: null, doublesha512: null, doublekeccak512: null, doubleshake256_512: null, doublecshake256_512: null, doublekmac256_512: null, doubleshake128_512: null, doublecshake128_512: null, doublekmac128_512: null, doublesha384: null, doublesha3_384: null, doublekeccak384: null, doubleshake256_384: null, doublecshake256_384: null, doublekmac256_384: null, doubleshake128_384: null, doublecshake128_384: null, doublekmac128_384: null, doubleshake256_320: null, doublecshake256_320: null, doublekmac256_320: null, doubleshake128_320: null, doublecshake128_320: null, doublekmac128_320: null, doubleripemd320: null, doublesha512_256: null, doublesha3_256: null, doublekeccak256: null, doubleshake256_256: null, doublecshake256_256: null, doublekmac256_256: null, doubleshake128_256: null, doublecshake128_256: null, doublekmac128_256: null, doubleripemd256: null, doublesha224: null, doublesha512_224: null, doublesha3_224: null, doublekeccak224: null, doubleshake256_224: null, doublecshake256_224: null, doublekmac256_224: null, doubleshake128_224: null, doublecshake128_224: null, doublekmac128_224: null, doublesha1: null, doubleshake256_160: null, doublecshake256_160: null, doublekmac256_160: null, doubleshake128_160: null, doublecshake128_160: null, doublekmac128_160: null, doublemd2: null, doublemd4: null, doublemd5: null, doubleshake256_128: null, doublecshake256_128: null, doublekmac256_128: null, doubleshake128_128: null, doublecshake128_128: null, doublekmac128_128: null, doubleripemd128: null, doublecrc32: null, doubleshake256_32: null, doublecshake256_32: null, doublekmac256_32: null, doubleshake128_32: null, doublecshake128_32: null, doublekmac128_32: null, doublecrc16: null, doubleshake256_16: null, doublecshake256_16: null, doublekmac256_16: null, doubleshake128_16: null, doublecshake128_16: null, doublekmac128_16: null, kalhash: null, doublekalhash: null, };
+    let hashList: hashArray = { shake256_1k: null, sha3_512: null, sha256: null, doublesha256: null, ripemd160: null, cshake256_1k: null, kmac256_1k: null, shake128_1k: null, cshake128_1k: null, kmac128_1k: null, sha512: null, keccak512: null, shake256_512: null, cshake256_512: null, kmac256_512: null, shake128_512: null, cshake128_512: null, kmac128_512: null, sha384: null, sha3_384: null, keccak384: null, shake256_384: null, cshake256_384: null, kmac256_384: null, shake128_384: null, cshake128_384: null, kmac128_384: null, shake256_320: null, cshake256_320: null, kmac256_320: null, shake128_320: null, cshake128_320: null, kmac128_320: null, sha512_256: null, sha3_256: null, keccak256: null, shake256_256: null, cshake256_256: null, kmac256_256: null, shake128_256: null, cshake128_256: null, kmac128_256: null, sha224: null, sha512_224: null, sha3_224: null, keccak224: null, shake256_224: null, cshake256_224: null, kmac256_224: null, shake128_224: null, cshake128_224: null, kmac128_224: null, sha1: null, shake256_160: null, cshake256_160: null, kmac256_160: null, shake128_160: null, cshake128_160: null, kmac128_160: null, md2: null, md4: null, md5: null, shake256_128: null, cshake256_128: null, kmac256_128: null, shake128_128: null, cshake128_128: null, kmac128_128: null, crc32: null, shake256_32: null, cshake256_32: null, kmac256_32: null, shake128_32: null, cshake128_32: null, kmac128_32: null, crc16: null, shake256_16: null, cshake256_16: null, kmac256_16: null, shake128_16: null, cshake128_16: null, kmac128_16: null, doubleshake256_1k: null, doublesha3_512: null, doubleripemd160: null, doublecshake256_1k: null, doublekmac256_1k: null, doubleshake128_1k: null, doublecshake128_1k: null, doublekmac128_1k: null, doublesha512: null, doublekeccak512: null, doubleshake256_512: null, doublecshake256_512: null, doublekmac256_512: null, doubleshake128_512: null, doublecshake128_512: null, doublekmac128_512: null, doublesha384: null, doublesha3_384: null, doublekeccak384: null, doubleshake256_384: null, doublecshake256_384: null, doublekmac256_384: null, doubleshake128_384: null, doublecshake128_384: null, doublekmac128_384: null, doubleshake256_320: null, doublecshake256_320: null, doublekmac256_320: null, doubleshake128_320: null, doublecshake128_320: null, doublekmac128_320: null, doublesha512_256: null, doublesha3_256: null, doublekeccak256: null, doubleshake256_256: null, doublecshake256_256: null, doublekmac256_256: null, doubleshake128_256: null, doublecshake128_256: null, doublekmac128_256: null, doublesha224: null, doublesha512_224: null, doublesha3_224: null, doublekeccak224: null, doubleshake256_224: null, doublecshake256_224: null, doublekmac256_224: null, doubleshake128_224: null, doublecshake128_224: null, doublekmac128_224: null, doublesha1: null, doubleshake256_160: null, doublecshake256_160: null, doublekmac256_160: null, doubleshake128_160: null, doublecshake128_160: null, doublekmac128_160: null, doublemd2: null, doublemd4: null, doublemd5: null, doubleshake256_128: null, doublecshake256_128: null, doublekmac256_128: null, doubleshake128_128: null, doublecshake128_128: null, doublekmac128_128: null, doublecrc32: null, doubleshake256_32: null, doublecshake256_32: null, doublekmac256_32: null, doubleshake128_32: null, doublecshake128_32: null, doublekmac128_32: null, doublecrc16: null, doubleshake256_16: null, doublecshake256_16: null, doublekmac256_16: null, doubleshake128_16: null, doublecshake128_16: null, doublekmac128_16: null, kalhash: null, doublekalhash: null, };
 
     if (hashFunctions.includes('shake256-1k')) {
         const hash = createHash('shake256', { outputLength: 128 });
@@ -174,13 +174,6 @@ export function hash(file: Buffer) {
         hashList.kmac128_320 = kmac128('', file, 320, '');
     }
 
-    if (hashFunctions.includes('ripemd320')) {
-        const hash = createHash('ripemd', { outputLength: 40 });
-        hash.update(file);
-
-        hashList.ripemd320 = hash.copy().digest('hex');
-    }
-
     if (hashFunctions.includes('sha512-256')) {
         const hash = createHash('sha512-256');
         hash.update(file);
@@ -221,13 +214,6 @@ export function hash(file: Buffer) {
 
     if (hashFunctions.includes('kmac128-256')) {
         hashList.kmac128_256 = kmac128('', file, 256, '');
-    }
-
-    if (hashFunctions.includes('ripemd256')) {
-        const hash = createHash('ripemd', { outputLength: 32 });
-        hash.update(file);
-
-        hashList.ripemd256 = hash.copy().digest('hex');
     }
 
     if (hashFunctions.includes('sha224')) {
@@ -347,13 +333,6 @@ export function hash(file: Buffer) {
 
     if (hashFunctions.includes('kmac128-128')) {
         hashList.kmac128_128 = kmac128('', file, 128, '');
-    }
-
-    if (hashFunctions.includes('ripemd128')) {
-        const hash = createHash('ripemd', { outputLength: 16 });
-        hash.update(file);
-
-        hashList.ripemd128 = hash.copy().digest('hex');
     }
 
     if (hashFunctions.includes('crc32')) {
@@ -572,16 +551,6 @@ export function hash(file: Buffer) {
         hashList.doublekmac128_320 = kmac128('', kmac128('', file, 320, ''), 320, '');
     }
 
-    if (hashFunctions.includes('doubleripemd320')) {
-        const hash1 = createHash('ripemd', { outputLength: 40 });
-        hash1.update(file);
-
-        const hash = createHash('ripemd', { outputLength: 40 });
-        hash.update(hash1.copy().digest('hex'));
-
-        hashList.doubleripemd320 = hash.copy().digest('hex');
-    }
-
     if (hashFunctions.includes('doublesha512-256')) {
         const hash1 = createHash('sha512-256');
         hash1.update(file);
@@ -628,16 +597,6 @@ export function hash(file: Buffer) {
 
     if (hashFunctions.includes('doublekmac128-256')) {
         hashList.doublekmac128_256 = kmac128('', kmac128('', file, 256, ''), 256, '');
-    }
-
-    if (hashFunctions.includes('doubleripemd256')) {
-        const hash1 = createHash('ripemd', { outputLength: 32 });
-        hash1.update(file);
-
-        const hash = createHash('ripemd', { outputLength: 32 });
-        hash.update(hash1.copy().digest('hex'));
-
-        hashList.doubleripemd256 = hash.copy().digest('hex');
     }
 
     if (hashFunctions.includes('doublesha224')) {
@@ -774,16 +733,6 @@ export function hash(file: Buffer) {
         hashList.doublekmac128_128 = kmac128('', kmac128('', file, 128, ''), 128, '');
     }
 
-    if (hashFunctions.includes('doubleripemd128')) {
-        const hash1 = createHash('ripemd', { outputLength: 16 });
-        hash1.update(file);
-
-        const hash = createHash('ripemd', { outputLength: 16 });
-        hash.update(hash1.copy().digest('hex'));
-
-        hashList.doubleripemd128 = hash.copy().digest('hex');
-    }
-
     if (hashFunctions.includes('doublecrc32')) {
         hashList.doublecrc32 = crc32(crc32(file));
     }
@@ -851,4 +800,4 @@ export function hash(file: Buffer) {
     return hashList;
 }
 
-export type hashArray = { shake256_1k: string; sha3_512: string; sha256: string; doublesha256: string; ripemd160: string; cshake256_1k: string; kmac256_1k: string; shake128_1k: string; cshake128_1k: string; kmac128_1k: string; sha512: string; keccak512: string; shake256_512: string; cshake256_512: string; kmac256_512: string; shake128_512: string; cshake128_512: string; kmac128_512: string; sha384: string; sha3_384: string; keccak384: string; shake256_384: string; cshake256_384: string; kmac256_384: string; shake128_384: string; cshake128_384: string; kmac128_384: string; shake256_320: string; cshake256_320: string; kmac256_320: string; shake128_320: string; cshake128_320: string; kmac128_320: string; ripemd320: string; sha512_256: string; sha3_256: string; keccak256: string; shake256_256: string; cshake256_256: string; kmac256_256: string; shake128_256: string; cshake128_256: string; kmac128_256: string; ripemd256: string; sha224: string; sha512_224: string; sha3_224: string; keccak224: string; shake256_224: string; cshake256_224: string; kmac256_224: string; shake128_224: string; cshake128_224: string; kmac128_224: string; sha1: string; shake256_160: string; cshake256_160: string; kmac256_160: string; shake128_160: string; cshake128_160: string; kmac128_160: string; md2: any; md4: any; md5: string; shake256_128: string; cshake256_128: string; kmac256_128: string; shake128_128: string; cshake128_128: string; kmac128_128: string; ripemd128: string; crc32: string; shake256_32: string; cshake256_32: string; kmac256_32: string; shake128_32: string; cshake128_32: string; kmac128_32: string; crc16: string; shake256_16: string; cshake256_16: string; kmac256_16: string; shake128_16: string; cshake128_16: string; kmac128_16: string; doubleshake256_1k: string; doublesha3_512: string; doubleripemd160: string; doublecshake256_1k: string; doublekmac256_1k: string; doubleshake128_1k: string; doublecshake128_1k: string; doublekmac128_1k: string; doublesha512: string; doublekeccak512: string; doubleshake256_512: string; doublecshake256_512: string; doublekmac256_512: string; doubleshake128_512: string; doublecshake128_512: string; doublekmac128_512: string; doublesha384: string; doublesha3_384: string; doublekeccak384: string; doubleshake256_384: string; doublecshake256_384: string; doublekmac256_384: string; doubleshake128_384: string; doublecshake128_384: string; doublekmac128_384: string; doubleshake256_320: string; doublecshake256_320: string; doublekmac256_320: string; doubleshake128_320: string; doublecshake128_320: string; doublekmac128_320: string; doubleripemd320: string; doublesha512_256: string; doublesha3_256: string; doublekeccak256: string; doubleshake256_256: string; doublecshake256_256: string; doublekmac256_256: string; doubleshake128_256: string; doublecshake128_256: string; doublekmac128_256: string; doubleripemd256: string; doublesha224: string; doublesha512_224: string; doublesha3_224: string; doublekeccak224: string; doubleshake256_224: string; doublecshake256_224: string; doublekmac256_224: string; doubleshake128_224: string; doublecshake128_224: string; doublekmac128_224: string; doublesha1: string; doubleshake256_160: string; doublecshake256_160: string; doublekmac256_160: string; doubleshake128_160: string; doublecshake128_160: string; doublekmac128_160: string; doublemd2: any; doublemd4: any; doublemd5: string; doubleshake256_128: string; doublecshake256_128: string; doublekmac256_128: string; doubleshake128_128: string; doublecshake128_128: string; doublekmac128_128: string; doubleripemd128: string; doublecrc32: string; doubleshake256_32: string; doublecshake256_32: string; doublekmac256_32: string; doubleshake128_32: string; doublecshake128_32: string; doublekmac128_32: string; doublecrc16: string; doubleshake256_16: string; doublecshake256_16: string; doublekmac256_16: string; doubleshake128_16: string; doublecshake128_16: string; doublekmac128_16: string; kalhash: any; doublekalhash: any; }
+export type hashArray = { shake256_1k: string; sha3_512: string; sha256: string; doublesha256: string; ripemd160: string; cshake256_1k: string; kmac256_1k: string; shake128_1k: string; cshake128_1k: string; kmac128_1k: string; sha512: string; keccak512: string; shake256_512: string; cshake256_512: string; kmac256_512: string; shake128_512: string; cshake128_512: string; kmac128_512: string; sha384: string; sha3_384: string; keccak384: string; shake256_384: string; cshake256_384: string; kmac256_384: string; shake128_384: string; cshake128_384: string; kmac128_384: string; shake256_320: string; cshake256_320: string; kmac256_320: string; shake128_320: string; cshake128_320: string; kmac128_320: string; sha512_256: string; sha3_256: string; keccak256: string; shake256_256: string; cshake256_256: string; kmac256_256: string; shake128_256: string; cshake128_256: string; kmac128_256: string; sha224: string; sha512_224: string; sha3_224: string; keccak224: string; shake256_224: string; cshake256_224: string; kmac256_224: string; shake128_224: string; cshake128_224: string; kmac128_224: string; sha1: string; shake256_160: string; cshake256_160: string; kmac256_160: string; shake128_160: string; cshake128_160: string; kmac128_160: string; md2: any; md4: any; md5: string; shake256_128: string; cshake256_128: string; kmac256_128: string; shake128_128: string; cshake128_128: string; kmac128_128: string; crc32: string; shake256_32: string; cshake256_32: string; kmac256_32: string; shake128_32: string; cshake128_32: string; kmac128_32: string; crc16: string; shake256_16: string; cshake256_16: string; kmac256_16: string; shake128_16: string; cshake128_16: string; kmac128_16: string; doubleshake256_1k: string; doublesha3_512: string; doubleripemd160: string; doublecshake256_1k: string; doublekmac256_1k: string; doubleshake128_1k: string; doublecshake128_1k: string; doublekmac128_1k: string; doublesha512: string; doublekeccak512: string; doubleshake256_512: string; doublecshake256_512: string; doublekmac256_512: string; doubleshake128_512: string; doublecshake128_512: string; doublekmac128_512: string; doublesha384: string; doublesha3_384: string; doublekeccak384: string; doubleshake256_384: string; doublecshake256_384: string; doublekmac256_384: string; doubleshake128_384: string; doublecshake128_384: string; doublekmac128_384: string; doubleshake256_320: string; doublecshake256_320: string; doublekmac256_320: string; doubleshake128_320: string; doublecshake128_320: string; doublekmac128_320: string; doublesha512_256: string; doublesha3_256: string; doublekeccak256: string; doubleshake256_256: string; doublecshake256_256: string; doublekmac256_256: string; doubleshake128_256: string; doublecshake128_256: string; doublekmac128_256: string; doublesha224: string; doublesha512_224: string; doublesha3_224: string; doublekeccak224: string; doubleshake256_224: string; doublecshake256_224: string; doublekmac256_224: string; doubleshake128_224: string; doublecshake128_224: string; doublekmac128_224: string; doublesha1: string; doubleshake256_160: string; doublecshake256_160: string; doublekmac256_160: string; doubleshake128_160: string; doublecshake128_160: string; doublekmac128_160: string; doublemd2: any; doublemd4: any; doublemd5: string; doubleshake256_128: string; doublecshake256_128: string; doublekmac256_128: string; doubleshake128_128: string; doublecshake128_128: string; doublekmac128_128: string; doublecrc32: string; doubleshake256_32: string; doublecshake256_32: string; doublekmac256_32: string; doubleshake128_32: string; doublecshake128_32: string; doublekmac128_32: string; doublecrc16: string; doubleshake256_16: string; doublecshake256_16: string; doublekmac256_16: string; doubleshake128_16: string; doublecshake128_16: string; doublekmac128_16: string; kalhash: any; doublekalhash: any; }

@@ -144,10 +144,6 @@ export async function hashSettings() {
                 name: 'KMAC128 with 320 bits',
             },
             {
-                value: 'ripemd320',
-                name: 'RIPEMD-320',
-            },
-            {
                 value: 'sha512-256',
                 name: 'SHA512/256',
             },
@@ -182,10 +178,6 @@ export async function hashSettings() {
             {
                 value: 'kmac128-256',
                 name: 'KMAC128 with 256 bits',
-            },
-            {
-                value: 'ripemd256',
-                name: 'RIPEMD-256',
             },
             {
                 value: 'sha224',
@@ -290,10 +282,6 @@ export async function hashSettings() {
             {
                 value: 'kmac128-128',
                 name: 'KMAC128 with 128 bits',
-            },
-            {
-                value: 'ripemd128',
-                name: 'RIPEMD-128',
             },
             {
                 value: 'crc32',
@@ -476,10 +464,6 @@ export async function hashSettings() {
                 name: 'Double KMAC128 with 320 bits',
             },
             {
-                value: 'doubleripemd320',
-                name: 'Double RIPEMD-320',
-            },
-            {
                 value: 'doublesha512-256',
                 name: 'Double SHA512/256',
             },
@@ -514,10 +498,6 @@ export async function hashSettings() {
             {
                 value: 'doublekmac128-256',
                 name: 'Double KMAC128 with 256 bits',
-            },
-            {
-                value: 'doubleripemd256',
-                name: 'Double RIPEMD-256',
             },
             {
                 value: 'doublesha224',
@@ -588,10 +568,6 @@ export async function hashSettings() {
                 name: 'Double KMAC128 with 160 bits',
             },
             {
-                value: 'doubleripemd160',
-                name: 'Double RIPEMD-160',
-            },
-            {
                 value: 'doublemd2',
                 name: 'Double MD2',
             },
@@ -626,10 +602,6 @@ export async function hashSettings() {
             {
                 value: 'doublekmac128-128',
                 name: 'Double KMAC128 with 128 bits',
-            },
-            {
-                value: 'doubleripemd128',
-                name: 'Double RIPEMD-128',
             },
             {
                 value: 'doublecrc32',
