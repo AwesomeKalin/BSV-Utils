@@ -6,8 +6,8 @@ const { cshake128, cshake256, keccak224, keccak256, keccak384, keccak512, kmac12
 import md4 from 'js-md4';
 import crc from 'js-crc';
 import { kalhash } from 'kalhash.js';
-import Md2 from "crypto-api/src/hasher/md2.mjs";
-import { toHex } from "crypto-api/src/encoder/hex.mjs";
+import Md2 from "../crypto-api/md2.js";
+import { toHex } from "../crypto-api/hex.js";
 
 var crc16 = crc.crc16;
 var crc32 = crc.crc32;
@@ -301,7 +301,7 @@ export function hash(file: Buffer) {
         let hasher = new Md2();
         hasher.update(file);
 
-        hashList.md2 = toHex(hasher.finalise());
+        hashList.md2 = toHex(hasher.finalize());
     }
 
     if (hashFunctions.includes('md4')) {
@@ -700,9 +700,9 @@ export function hash(file: Buffer) {
         hasher.update(file);
 
         let hasher2 = new Md2();
-        hasher2.update(toHex(hasher.finalise()));
+        hasher2.update(toHex(hasher.finalize()));
 
-        hashList.doublemd2 = toHex(hasher2.finalise());
+        hashList.doublemd2 = toHex(hasher2.finalize());
     }
 
     if (hashFunctions.includes('doublemd4')) {
