@@ -3,10 +3,11 @@ import { readFileSync } from "fs";
 import os from 'os';
 import pkg from 'js-sha3';
 const { cshake128, cshake256, keccak224, keccak256, keccak384, keccak512, kmac128, kmac256, shake128, shake256 } = pkg;
-import md2 from 'js-md2';
 import md4 from 'js-md4';
 import crc from 'js-crc';
 import { kalhash } from 'kalhash.js';
+import Md2 from "crypto-api/src/hasher/md2.mjs";
+import { toHex } from "crypto-api/src/encoder/hex.mjs";
 
 var crc16 = crc.crc16;
 var crc32 = crc.crc32;
@@ -297,7 +298,10 @@ export function hash(file: Buffer) {
     }
 
     if (hashFunctions.includes('md2')) {
-        hashList.md2 = md2(file);
+        let hasher = new Md2();
+        hasher.update(file);
+
+        hashList.md2 = toHex(hasher.finalise());
     }
 
     if (hashFunctions.includes('md4')) {
@@ -692,7 +696,13 @@ export function hash(file: Buffer) {
     }
 
     if (hashFunctions.includes('doublemd2')) {
-        hashList.doublemd2 = md2(md2(file));
+        let hasher = new Md2();
+        hasher.update(file);
+
+        let hasher2 = new Md2();
+        hasher2.update(toHex(hasher.finalise()));
+
+        hashList.doublemd2 = toHex(hasher2.finalise());
     }
 
     if (hashFunctions.includes('doublemd4')) {
