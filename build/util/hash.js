@@ -3,11 +3,11 @@ import { readFileSync } from "fs";
 import os from 'os';
 import pkg from 'js-sha3';
 const { cshake128, cshake256, keccak224, keccak256, keccak384, keccak512, kmac128, kmac256, shake128, shake256 } = pkg;
-import md4 from 'js-md4';
 import crc from 'js-crc';
 import { kalhash } from 'kalhash.js';
 import Md2 from "../crypto-api/md2.js";
 import { toHex } from "../crypto-api/hex.js";
+import Md4 from '../crypto-api/md4.js';
 var crc16 = crc.crc16;
 var crc32 = crc.crc32;
 export function hash(file) {
@@ -226,7 +226,9 @@ export function hash(file) {
         hashList.md2 = toHex(hasher.finalize());
     }
     if (hashFunctions.includes('md4')) {
-        hashList.md4 = md4(file);
+        let hasher = new Md4();
+        hasher.update(file);
+        hashList.md4 = toHex(hasher.finalize());
     }
     if (hashFunctions.includes('md5')) {
         const hash = createHash('md5');
@@ -332,7 +334,7 @@ export function hash(file) {
     if (hashFunctions.includes('doublesha512')) {
         const hash1 = createHash('sha512');
         hash1.update(file);
-        const hash = createHash('doublesha512');
+        const hash = createHash('sha512');
         hash.update(hash1.copy().digest('hex'));
         hashList.doublesha512 = hash.copy().digest('hex');
     }
@@ -520,7 +522,11 @@ export function hash(file) {
         hashList.doublemd2 = toHex(hasher2.finalize());
     }
     if (hashFunctions.includes('doublemd4')) {
-        hashList.doublemd4 = md4(md4(file));
+        let hasher = new Md4();
+        hasher.update(file);
+        let hasher1 = new Md4();
+        hasher1.update(toHex(hasher.finalize()));
+        hashList.doublemd4 = toHex(hasher1.finalize());
     }
     if (hashFunctions.includes('doublemd5')) {
         const hash1 = createHash('md5');

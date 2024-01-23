@@ -47,9 +47,6 @@ dependencies:
   js-crc:
     specifier: ^0.2.0
     version: 0.2.0
-  js-md4:
-    specifier: ^0.3.2
-    version: 0.3.2
   js-sha3:
     specifier: ^0.9.3
     version: 0.9.3
@@ -3394,10 +3391,6 @@ packages:
 
   /js-crc@0.2.0:
     resolution: {integrity: sha512-8DdCSAOACpF8WDAjyDFBC2rj8OS4HUP9mNZBDfl8jCiPCnJG+2bkuycalxwZh6heFy6PrMvoWTp47lp6gzT65A==}
-    dev: false
-
-  /js-md4@0.3.2:
-    resolution: {integrity: sha512-/GDnfQYsltsjRswQhN9fhv3EMw2sCpUdrdxyWDOUK7eyD++r3gRhzgiQgc/x4MAv2i1iuQ4lxO5mvqM3vj4bwA==}
     dev: false
 
   /js-sha3@0.9.3:
