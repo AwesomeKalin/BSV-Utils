@@ -4,10 +4,11 @@ import os from 'os';
 import pkg from 'js-sha3';
 const { cshake128, cshake256, keccak224, keccak256, keccak384, keccak512, kmac128, kmac256, shake128, shake256 } = pkg;
 import crc from 'js-crc';
-import { kalhash } from 'kalhash.js';
+import { kalhash } from '../crypto-api/kalhash.js';
 import Md2 from "../crypto-api/md2.js";
 import { toHex } from "../crypto-api/hex.js";
 import Md4 from '../crypto-api/md4.js';
+import { kalhash as kalstring } from 'kalhash.js';
 var crc16 = crc.crc16;
 var crc32 = crc.crc32;
 export function hash(file) {
@@ -599,7 +600,7 @@ export function hash(file) {
         hashList.kalhash = kalhash(file);
     }
     if (hashFunctions.includes('doublekalhash')) {
-        hashList.doublekalhash = kalhash(kalhash(file));
+        hashList.doublekalhash = kalstring(kalhash(file));
     }
     return hashList;
 }
