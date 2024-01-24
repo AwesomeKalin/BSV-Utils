@@ -44,7 +44,7 @@ export async function deployContract(auth, lockingScript, address) {
     await woc.broadcast(tx.serialize());
     return tx.hash;
 }
-async function getPrivateKey(auth) {
+export async function getPrivateKey(auth) {
     await auth.checkAuth();
     let relysia = auth.relysia;
     let mnemonicGetter;

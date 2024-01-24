@@ -1,4 +1,4 @@
-import { Addr, ByteString, PubKey, Sig, SmartContract, assert, hash256, method, prop, pubKey2Addr } from 'scrypt-ts';
+import { ByteString, PubKey, Ripemd160, Sig, SmartContract, assert, hash256, method, prop, pubKey2Addr } from 'scrypt-ts';
 
 export class ProceduralSaving extends SmartContract {
     //@ts-ignore
@@ -7,9 +7,9 @@ export class ProceduralSaving extends SmartContract {
 
     //@ts-ignore
     @prop()
-    readonly address: Addr;
+    readonly address: Ripemd160;
 
-    constructor(initialManifest: ByteString, address: Addr) {
+    constructor(initialManifest: ByteString, address: Ripemd160) {
         super(...arguments);
         this.manifest = initialManifest;
         this.address = address;

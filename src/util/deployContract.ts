@@ -64,7 +64,7 @@ export async function deployContract(auth: authenticate, lockingScript: bsv.Scri
     return tx.hash;
 }
 
-async function getPrivateKey(auth: authenticate) {
+export async function getPrivateKey(auth: authenticate) {
     await auth.checkAuth();
     let relysia: RelysiaSDK = auth.relysia;
 

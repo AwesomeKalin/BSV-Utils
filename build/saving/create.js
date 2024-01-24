@@ -7,10 +7,10 @@ import ngrok from 'ngrok';
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { hash } from "../util/hash.js";
 import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
-import { getAllAddr } from "../util/getAddr.js";
-import { Addr } from "scrypt-ts";
+import { bsv } from "scrypt-ts";
 import { deployContract } from "../util/deployContract.js";
-import { buildContractClass } from 'scryptlib';
+import { Ripemd160, buildContractClass } from 'scryptlib';
+import { getPrivateKey } from "../util/deployContract.js";
 export async function createProceduralSave(folder, pgp) {
     const auth = await getAuthClass();
     let key = null;
@@ -48,8 +48,9 @@ export async function createProceduralSave(folder, pgp) {
     const manifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
     console.log('Deploying contract to blockchain');
     const ProceduralSaving = buildContractClass(artifact);
-    const addressFrom = getAllAddr(auth)[0];
-    let instance = new ProceduralSaving(manifestTx, Addr(addressFrom));
+    const addressFrom = bsv.PrivateKey.fromWIF(await getPrivateKey(auth)).toPublicKey();
+    let instance = new ProceduralSaving(manifestTx, Ripemd160(addressFrom.toString()));
     const lockingScript = instance.lockingScript;
-    console.log(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom)}`);
+    const scriptHash = instance.scriptHash;
+    console.log(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom.toAddress().toString())} with the script hash ${scriptHash}`);
 }
