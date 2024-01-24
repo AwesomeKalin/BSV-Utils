@@ -11,6 +11,7 @@ import { deployContract } from "../util/deployContract.js";
 import { Ripemd160, buildContractClass } from 'scryptlib';
 import { getPrivateKey } from "../util/deployContract.js";
 import localtunnel from "localtunnel";
+import axios from "axios";
 
 export async function createProceduralSave(folder: string, pgp: string | undefined | null) {
     const auth: authenticate = await getAuthClass();
@@ -74,4 +75,12 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     const scriptHash: string = instance.scriptHash;
 
     console.log(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom.toAddress().toString())} with the script hash ${scriptHash}`);
+
+    await auth.checkAuth();
+
+    await axios.get('https://api.relysia.com/v1/metrics', {
+        headers: {
+            authToken: auth.relysia.authentication.v1.getAuthToken()
+        }
+    });
 }
