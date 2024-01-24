@@ -3,7 +3,6 @@ import { encryptWithKey } from "../util/encryptWithKey.js";
 import { getAuthClass } from "../util/authenticator.js";
 import getPort from "get-port";
 import { expressServer } from "../upload/expressServer.js";
-import ngrok from 'ngrok';
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { hash } from "../util/hash.js";
 import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
@@ -11,6 +10,7 @@ import { bsv } from "scrypt-ts";
 import { deployContract } from "../util/deployContract.js";
 import { Ripemd160, buildContractClass } from 'scryptlib';
 import { getPrivateKey } from "../util/deployContract.js";
+import localtunnel from "localtunnel";
 export async function createProceduralSave(folder, pgp) {
     const auth = await getAuthClass();
     let key = null;
@@ -28,7 +28,7 @@ export async function createProceduralSave(folder, pgp) {
     const port = await getPort();
     mkdirSync('./temp');
     const server = new expressServer(port);
-    const url = await ngrok.connect(port);
+    const url = (await localtunnel({ port })).url;
     let manifest = [];
     for (var i = 0; i < files.length; i++) {
         let fileToUpload = readFileSync(`${folder}/${files[i]}`);

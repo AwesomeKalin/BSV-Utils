@@ -3,12 +3,12 @@ import { uploadFiles } from "../upload/uploadFiles.js";
 import { getAuthClass } from "../util/authenticator.js";
 import { expressServer } from "../upload/expressServer.js";
 import getPort from "get-port";
-import ngrok from 'ngrok';
 import cliProgress, { Presets } from 'cli-progress';
 import { makeid } from "../util/randomString.js";
 import chalk from "chalk";
 import { issueToken } from "./issueToken.js";
 import { createOffer } from "./createOffer.js";
+import localtunnel from "localtunnel";
 export async function nft(prefix, folder, description, fileformat, digits, defaultPrice, toUpload, nftManifestList = { nfts: [] }) {
     const folderLength = readdirSync(folder).length;
     const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
@@ -17,7 +17,7 @@ export async function nft(prefix, folder, description, fileformat, digits, defau
     const port = await getPort();
     mkdirSync('./temp');
     const server = new expressServer(port);
-    const url = await ngrok.connect(port);
+    const url = (await localtunnel({ port })).url;
     while (true) {
         const zerosToPad = digits - (toUpload.toString().length);
         const fileNameToUpload = `${'0'.repeat(zerosToPad)}${toUpload.toString()}`;
@@ -27,7 +27,6 @@ export async function nft(prefix, folder, description, fileformat, digits, defau
             txid = await uploadFiles(auth, readFileSync(filePathToUpload), `${fileNameToUpload}.${fileformat}`, url, undefined);
         }
         catch {
-            await ngrok.disconnect();
             rmSync('./temp', { recursive: true, force: true });
             bar.stop();
             console.log(chalk.greenBright('Successfully uploaded and created atomic swap offers for NFTs. A JSON full of the NFTs can be found in nfts.json'));

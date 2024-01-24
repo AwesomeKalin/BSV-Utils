@@ -2,10 +2,10 @@ import chalk from "chalk";
 import { authenticate, getAuthClass } from "../util/authenticator.js";
 import { Spinner, createSpinner } from "nanospinner";
 import { mkdirSync, readFileSync, rmSync, unlinkSync } from "fs";
-import ngrok from 'ngrok';
 import { expressServer } from "./expressServer.js";
 import getPort from "get-port";
 import { resumeUpload, uploadFiles } from "./uploadFiles.js";
+import localtunnel from "localtunnel";
 
 export async function upload(file: string, fileName: string, uploadJson: string) {
     let authenticator: authenticate = await getAuthClass();
@@ -16,7 +16,7 @@ export async function upload(file: string, fileName: string, uploadJson: string)
     const port: number = await getPort();
     const server: expressServer = new expressServer(port);
     let url: string;
-    url = await ngrok.connect(port);
+    url = (await localtunnel({ port })).url;
 
     let txid: string;
 
@@ -30,8 +30,6 @@ export async function upload(file: string, fileName: string, uploadJson: string)
 
         unlinkSync(uploadJson);
     }
-
-    await ngrok.disconnect();
 
     rmSync('./temp', { recursive: true, force: true });
     console.log(chalk.greenBright(`Successfully uploaded. The transaction ID is ${txid}`));

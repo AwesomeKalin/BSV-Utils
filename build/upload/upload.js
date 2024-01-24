@@ -2,10 +2,10 @@ import chalk from "chalk";
 import { getAuthClass } from "../util/authenticator.js";
 import { createSpinner } from "nanospinner";
 import { mkdirSync, readFileSync, rmSync, unlinkSync } from "fs";
-import ngrok from 'ngrok';
 import { expressServer } from "./expressServer.js";
 import getPort from "get-port";
 import { resumeUpload, uploadFiles } from "./uploadFiles.js";
+import localtunnel from "localtunnel";
 export async function upload(file, fileName, uploadJson) {
     let authenticator = await getAuthClass();
     const spinner = createSpinner(chalk.blue('Loading your file')).start();
@@ -14,7 +14,7 @@ export async function upload(file, fileName, uploadJson) {
     const port = await getPort();
     const server = new expressServer(port);
     let url;
-    url = await ngrok.connect(port);
+    url = (await localtunnel({ port })).url;
     let txid;
     if (uploadJson === undefined) {
         txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);
@@ -25,7 +25,6 @@ export async function upload(file, fileName, uploadJson) {
         txid = await resumeUpload(authenticator, fileBuffer, parsedJson.name, url, spinner, uploadedParts, parsedJson.txs);
         unlinkSync(uploadJson);
     }
-    await ngrok.disconnect();
     rmSync('./temp', { recursive: true, force: true });
     console.log(chalk.greenBright(`Successfully uploaded. The transaction ID is ${txid}`));
     process.exit(0);
