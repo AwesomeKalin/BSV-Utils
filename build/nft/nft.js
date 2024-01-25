@@ -17,7 +17,8 @@ export async function nft(prefix, folder, description, fileformat, digits, defau
     const port = await getPort();
     mkdirSync('./temp');
     const server = new expressServer(port);
-    const url = (await localtunnel({ port })).url;
+    const tunnel = await localtunnel({ port });
+    const url = tunnel.url;
     while (true) {
         const zerosToPad = digits - (toUpload.toString().length);
         const fileNameToUpload = `${'0'.repeat(zerosToPad)}${toUpload.toString()}`;

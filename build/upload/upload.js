@@ -13,8 +13,8 @@ export async function upload(file, fileName, uploadJson) {
     mkdirSync('./temp');
     const port = await getPort();
     const server = new expressServer(port);
-    let url;
-    url = (await localtunnel({ port })).url;
+    const tunnel = await localtunnel({ port });
+    const url = tunnel.url;
     let txid;
     if (uploadJson === undefined) {
         txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);

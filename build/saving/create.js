@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, lstatSync, mkdirSync } from "fs";
+import { readFileSync, readdirSync, lstatSync, mkdirSync, rmSync } from "fs";
 import { encryptWithKey } from "../util/encryptWithKey.js";
 import { getAuthClass } from "../util/authenticator.js";
 import getPort from "get-port";
@@ -12,6 +12,8 @@ import { Ripemd160, buildContractClass } from 'scryptlib';
 import { getPrivateKey } from "../util/deployContract.js";
 import localtunnel from "localtunnel";
 import axios from "axios";
+import chalk from "chalk";
+import { sleep } from "../util/sleep.js";
 export async function createProceduralSave(folder, pgp) {
     const auth = await getAuthClass();
     let key = null;
@@ -29,7 +31,14 @@ export async function createProceduralSave(folder, pgp) {
     const port = await getPort();
     mkdirSync('./temp');
     const server = new expressServer(port);
-    const url = (await localtunnel({ port })).url;
+    sleep(60);
+    const tunnel = await localtunnel({ port }).catch(err => {
+        throw err;
+    });
+    const url = tunnel.url;
+    tunnel.on('error', err => {
+        throw err;
+    });
     let manifest = [];
     for (var i = 0; i < files.length; i++) {
         let fileToUpload = readFileSync(`${folder}/${files[i]}`);
@@ -53,11 +62,12 @@ export async function createProceduralSave(folder, pgp) {
     let instance = new ProceduralSaving(manifestTx, Ripemd160(addressFrom.toString()));
     const lockingScript = instance.lockingScript;
     const scriptHash = instance.scriptHash;
-    console.log(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom.toAddress().toString())} with the script hash ${scriptHash}`);
+    console.log(chalk.greenBright(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom.toAddress().toString())} with the script hash ${scriptHash}`));
     await auth.checkAuth();
     await axios.get('https://api.relysia.com/v1/metrics', {
         headers: {
-            authToken: auth.relysia.authentication.v1.getAuthToken()
+            authToken: auth.relysia.authentication.v1.getAuthToken(),
         }
     });
+    rmSync('./temp', { recursive: true, force: true });
 }

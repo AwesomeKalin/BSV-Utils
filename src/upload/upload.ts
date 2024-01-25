@@ -15,8 +15,8 @@ export async function upload(file: string, fileName: string, uploadJson: string)
     mkdirSync('./temp');
     const port: number = await getPort();
     const server: expressServer = new expressServer(port);
-    let url: string;
-    url = (await localtunnel({ port })).url;
+    const tunnel: localtunnel.Tunnel = await localtunnel({ port });
+    const url: string = tunnel.url;
 
     let txid: string;
 

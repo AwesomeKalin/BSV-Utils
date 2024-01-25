@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, lstatSync, mkdirSync } from "fs";
+import { readFileSync, readdirSync, lstatSync, mkdirSync, rmSync } from "fs";
 import { encryptWithKey } from "../util/encryptWithKey.js";
 import { authenticate, getAuthClass } from "../util/authenticator.js";
 import getPort from "get-port";
@@ -12,6 +12,7 @@ import { Ripemd160, buildContractClass } from 'scryptlib';
 import { getPrivateKey } from "../util/deployContract.js";
 import localtunnel from "localtunnel";
 import axios from "axios";
+import chalk from "chalk";
 
 export async function createProceduralSave(folder: string, pgp: string | undefined | null) {
     const auth: authenticate = await getAuthClass();
@@ -21,7 +22,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     if (pgp != undefined || pgp != null) {
         key = readFileSync(pgp).toString();
     }
-    
+
     //@ts-expect-error
     const dirContents: string[] = readdirSync(folder, { recursive: true });
     let files: string[] = [];
@@ -35,7 +36,8 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     const port: number = await getPort();
     mkdirSync('./temp');
     const server: expressServer = new expressServer(port);
-    const url: string = (await localtunnel({ port })).url;
+    const tunnel: localtunnel.Tunnel = await localtunnel({ port });
+    const url: string = tunnel.url;
 
     let manifest: { name: string; txid: string; hashes: hashArray; }[] = [];
 
@@ -74,13 +76,15 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     const lockingScript: bsv.Script = instance.lockingScript;
     const scriptHash: string = instance.scriptHash;
 
-    console.log(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom.toAddress().toString())} with the script hash ${scriptHash}`);
+    console.log(chalk.greenBright(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom.toAddress().toString())} with the script hash ${scriptHash}`));
 
     await auth.checkAuth();
 
     await axios.get('https://api.relysia.com/v1/metrics', {
         headers: {
-            authToken: auth.relysia.authentication.v1.getAuthToken()
+            authToken: auth.relysia.authentication.v1.getAuthToken(),
         }
     });
+
+    rmSync('./temp', { recursive: true, force: true });
 }
