@@ -1,5 +1,4 @@
 import axios from "axios";
-import WhatsOnChain from 'whatsonchain';
 export async function getTxInput(auth, address) {
     await auth.checkAuth();
     let relysia = auth.relysia;
@@ -65,9 +64,8 @@ export async function getTxInput(auth, address) {
         });
         token = createToken.data.data.tokenId;
     }
-    const woc = new WhatsOnChain('mainnet');
     const rawtx = await rawTxGetter(auth, token, address);
-    return await woc.decodeTx(rawtx);
+    return await wocdecode(rawtx);
 }
 export async function rawTxGetter(auth, tokenId, to) {
     await auth.checkAuth();
@@ -101,4 +99,15 @@ export async function rawTxGetter(auth, tokenId, to) {
     catch {
     }
     return rawTxResponse.data.data.rawTxs[0];
+}
+async function wocdecode(txhex) {
+    try {
+        return (await axios.post('https://api.whatsonchain.com/v1/bsv/main/tx/decode', {
+            txhex,
+        })).data;
+    }
+    catch (e) {
+        console.log(e);
+        await wocdecode(txhex);
+    }
 }

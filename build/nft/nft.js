@@ -8,7 +8,7 @@ import { makeid } from "../util/randomString.js";
 import chalk from "chalk";
 import { issueToken } from "./issueToken.js";
 import { createOffer } from "./createOffer.js";
-import localtunnel from "localtunnel";
+import { tunnelmole } from "tunnelmole";
 export async function nft(prefix, folder, description, fileformat, digits, defaultPrice, toUpload, nftManifestList = { nfts: [] }) {
     const folderLength = readdirSync(folder).length;
     const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
@@ -17,8 +17,7 @@ export async function nft(prefix, folder, description, fileformat, digits, defau
     const port = await getPort();
     mkdirSync('./temp');
     const server = new expressServer(port);
-    const tunnel = await localtunnel({ port });
-    const url = tunnel.url;
+    const url = await tunnelmole({ port });
     while (true) {
         const zerosToPad = digits - (toUpload.toString().length);
         const fileNameToUpload = `${'0'.repeat(zerosToPad)}${toUpload.toString()}`;

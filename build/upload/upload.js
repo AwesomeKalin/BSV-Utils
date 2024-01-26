@@ -5,7 +5,7 @@ import { mkdirSync, readFileSync, rmSync, unlinkSync } from "fs";
 import { expressServer } from "./expressServer.js";
 import getPort from "get-port";
 import { resumeUpload, uploadFiles } from "./uploadFiles.js";
-import localtunnel from "localtunnel";
+import { tunnelmole } from "tunnelmole";
 export async function upload(file, fileName, uploadJson) {
     let authenticator = await getAuthClass();
     const spinner = createSpinner(chalk.blue('Loading your file')).start();
@@ -13,8 +13,7 @@ export async function upload(file, fileName, uploadJson) {
     mkdirSync('./temp');
     const port = await getPort();
     const server = new expressServer(port);
-    const tunnel = await localtunnel({ port });
-    const url = tunnel.url;
+    const url = await tunnelmole({ port });
     let txid;
     if (uploadJson === undefined) {
         txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);

@@ -2,7 +2,6 @@ import { bsv } from "scrypt-ts";
 import { getTxInput } from "./getInput.js";
 import axios from "axios";
 import { getBSVAddressFromMnemonic } from "./mnemonicToPrivateKey.js";
-import WhatsOnChain from 'whatsonchain';
 export async function deployContract(auth, lockingScript, address) {
     await auth.checkAuth();
     const decodedTx = await getTxInput(auth, address);
@@ -40,8 +39,7 @@ export async function deployContract(auth, lockingScript, address) {
         satsNeeded += feeNeeded;
     }
     tx = tx.seal().sign(await getPrivateKey(auth));
-    const woc = new WhatsOnChain('mainnet');
-    await woc.broadcast(tx.serialize());
+    await wocBroadcast(tx.serialize());
     return tx.hash;
 }
 export async function getPrivateKey(auth) {
@@ -61,4 +59,14 @@ export async function getPrivateKey(auth) {
         return await getPrivateKey(auth);
     }
     return getBSVAddressFromMnemonic(mnemonic);
+}
+async function wocBroadcast(txhex) {
+    try {
+        await axios.post('https://api.whatsonchain.com/v1/bsv/main/tx/raw', {
+            txhex,
+        });
+    }
+    catch {
+        wocBroadcast(txhex);
+    }
 }

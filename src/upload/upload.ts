@@ -6,6 +6,7 @@ import { expressServer } from "./expressServer.js";
 import getPort from "get-port";
 import { resumeUpload, uploadFiles } from "./uploadFiles.js";
 import localtunnel from "localtunnel";
+import { tunnelmole } from "tunnelmole";
 
 export async function upload(file: string, fileName: string, uploadJson: string) {
     let authenticator: authenticate = await getAuthClass();
@@ -15,8 +16,7 @@ export async function upload(file: string, fileName: string, uploadJson: string)
     mkdirSync('./temp');
     const port: number = await getPort();
     const server: expressServer = new expressServer(port);
-    const tunnel: localtunnel.Tunnel = await localtunnel({ port });
-    const url: string = tunnel.url;
+    const url: string = await tunnelmole({ port });
 
     let txid: string;
 
