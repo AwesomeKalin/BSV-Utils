@@ -5,7 +5,6 @@ import { getTxInput } from "./getInput.js";
 import RelysiaSDK from '@relysia/sdk';
 import axios, { AxiosResponse } from "axios";
 import { getBSVAddressFromMnemonic } from "./mnemonicToPrivateKey.js";
-import WhatsOnChain from 'whatsonchain';
 
 export async function deployContract(auth: authenticate, lockingScript: bsv.Script, address: string) {
     await auth.checkAuth();
@@ -57,9 +56,7 @@ export async function deployContract(auth: authenticate, lockingScript: bsv.Scri
 
     tx = tx.seal().sign(await getPrivateKey(auth));
 
-    const woc = new WhatsOnChain('mainnet');
-
-    await woc.broadcast(tx.serialize());
+    await wocBroadcast(tx.serialize());
 
     return tx.hash;
 }
@@ -92,5 +89,15 @@ interface Mnemonic {
         status: string;
         msg: string;
         mnemonic: string;
+    }
+}
+
+async function wocBroadcast(txhex: string) {
+    try {
+        await axios.post('https://api.whatsonchain.com/v1/bsv/main/tx/raw', {
+            txhex,
+        });
+    } catch {
+        wocBroadcast(txhex);
     }
 }

@@ -9,6 +9,7 @@ import chalk from "chalk";
 import { issueToken } from "./issueToken.js";
 import { createOffer } from "./createOffer.js";
 import localtunnel from "localtunnel";
+import { tunnelmole } from "tunnelmole";
 
 export async function nft(prefix: string, folder: string, description: string, fileformat: string, digits: number, defaultPrice: number, toUpload: number, nftManifestList: { nfts: Array<nftinfo> } = { nfts: [] }) {
     const folderLength: number = readdirSync(folder).length;
@@ -20,8 +21,7 @@ export async function nft(prefix: string, folder: string, description: string, f
     const port: number = await getPort();
     mkdirSync('./temp');
     const server: expressServer = new expressServer(port);
-    const tunnel: localtunnel.Tunnel = await localtunnel({ port });
-    const url: string = tunnel.url;
+    const url: string = await tunnelmole({ port });
 
     while (true) {
         const zerosToPad: number = digits - (toUpload.toString().length);

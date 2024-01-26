@@ -10,10 +10,9 @@ import { bsv } from "scrypt-ts";
 import { deployContract } from "../util/deployContract.js";
 import { Ripemd160, buildContractClass } from 'scryptlib';
 import { getPrivateKey } from "../util/deployContract.js";
-import localtunnel from "localtunnel";
 import axios from "axios";
 import chalk from "chalk";
-import { sleep } from "../util/sleep.js";
+import { tunnelmole } from 'tunnelmole';
 export async function createProceduralSave(folder, pgp) {
     const auth = await getAuthClass();
     let key = null;
@@ -31,14 +30,7 @@ export async function createProceduralSave(folder, pgp) {
     const port = await getPort();
     mkdirSync('./temp');
     const server = new expressServer(port);
-    sleep(60);
-    const tunnel = await localtunnel({ port }).catch(err => {
-        throw err;
-    });
-    const url = tunnel.url;
-    tunnel.on('error', err => {
-        throw err;
-    });
+    const url = await tunnelmole({ port });
     let manifest = [];
     for (var i = 0; i < files.length; i++) {
         let fileToUpload = readFileSync(`${folder}/${files[i]}`);

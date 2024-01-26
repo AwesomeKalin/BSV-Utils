@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from "axios";
 import { authenticate } from "./authenticator.js";
 import RelysiaSDK from '@relysia/sdk';
-import WhatsOnChain from 'whatsonchain';
+import { WOCDecode } from "../types/WOCDecode.js";
 
 export async function getTxInput(auth: authenticate, address: string) {
     await auth.checkAuth();
@@ -69,11 +69,9 @@ export async function getTxInput(auth: authenticate, address: string) {
         token = createToken.data.data.tokenId;
     }
 
-    const woc = new WhatsOnChain('mainnet');
-
     const rawtx: string = await rawTxGetter(auth, token, address);
 
-    return await woc.decodeTx(rawtx);
+    return await wocdecode(rawtx);
 }
 
 export async function rawTxGetter(auth: authenticate, tokenId: string, to: string) {
@@ -207,5 +205,16 @@ interface RawTx {
         status: string;
         msg: string;
         rawTxs: string[];
+    }
+}
+
+async function wocdecode(txhex: string) {
+    try {
+        return (await axios.post<WOCDecode>('https://api.whatsonchain.com/v1/bsv/main/tx/decode', {
+            txhex,
+        })).data;
+    } catch (e) {
+        console.log(e);
+        await wocdecode(txhex);
     }
 }
