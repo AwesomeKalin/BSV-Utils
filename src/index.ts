@@ -9,6 +9,7 @@ import { readFileSync } from 'fs';
 import { download, resumeDl } from './download/download.js';
 import { hashSettings } from './settings/hash.js';
 import { createProceduralSave } from './saving/create.js';
+import { deleteFolderSave } from './saving/delete.js';
 
 let ranCommand = false;
 
@@ -123,6 +124,7 @@ yargs(process.argv.slice(2))
             type: 'string',
             description: 'The follder in which you want to do the original save',
             required: true,
+            alias: 'dir',
         });
         yargs.positional('encryption', {
             type: 'string',
@@ -136,6 +138,18 @@ yargs(process.argv.slice(2))
     .command('hashAlgorithms', 'Select the hash algorithms to use when doing hashing', async function () {
         ranCommand = true;
         await hashSettings();
+    })
+    .command('deleteFolderSave', 'Delete the contract created with bsv-utils createFolderSave', (yargs) => {
+        yargs.positional('txid', {
+            type: 'string',
+            description: 'The transaction id of the contract',
+            required: true,
+            alias: 'tx',
+        });
+    }, async function (argv) {
+        ranCommand = true;
+        //@ts-expect-error
+        await deleteFolderSave(argv.txid);
     })
     .help()
     .argv;
