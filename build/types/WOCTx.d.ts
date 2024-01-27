@@ -1,4 +1,4 @@
-export interface WOCDecode {
+export interface WOCTx {
     txid: string;
     hash: string;
     version: number;
@@ -6,9 +6,14 @@ export interface WOCDecode {
     locktime: number;
     vin: Vin[];
     vout: Vout[];
-    hex: string;
+    blockhash: string;
+    confirmations: number;
+    time: number;
+    blocktime: number;
+    blockheight: number;
 }
 interface Vin {
+    coinbase: string;
     txid: string;
     vout: number;
     scriptSig: ScriptSig;
@@ -29,5 +34,6 @@ interface ScriptPubKey {
     reqSigs: number;
     type: string;
     addresses: string[];
+    isTruncated: boolean;
 }
 export {};

@@ -2,6 +2,8 @@ import axios, { AxiosResponse } from "axios";
 import { authenticate } from "./authenticator.js";
 import RelysiaSDK from '@relysia/sdk';
 import { WOCDecode } from "../types/WOCDecode.js";
+import { sleep } from "./sleep.js";
+import { WOCTx } from "../types/WOCTx.js";
 
 export async function getTxInput(auth: authenticate, address: string) {
     await auth.checkAuth();
@@ -15,7 +17,8 @@ export async function getTxInput(auth: authenticate, address: string) {
                 authToken: relysia.authentication.v1.getAuthToken(),
             }
         });
-    } catch {
+    } catch (e) {
+        console.log(e);
         return await getTxInput(auth, address);
     }
 
@@ -71,7 +74,7 @@ export async function getTxInput(auth: authenticate, address: string) {
 
     const rawtx: string = await rawTxGetter(auth, token, address);
 
-    return await wocdecode(rawtx);
+    return await getInputTx(await wocdecode(rawtx));
 }
 
 export async function rawTxGetter(auth: authenticate, tokenId: string, to: string) {
@@ -94,7 +97,8 @@ export async function rawTxGetter(auth: authenticate, tokenId: string, to: strin
                 authToken: relysia.authentication.v1.getAuthToken(),
             }
         });
-    } catch {
+    } catch (e) {
+        console.log(e)
         return await rawTxGetter(auth, tokenId, to);
     }
 
@@ -108,7 +112,7 @@ export async function rawTxGetter(auth: authenticate, tokenId: string, to: strin
 
     }
 
-    return rawTxResponse.data.data.rawTxs[0];
+    return rawTxResponse.data.data.rawTxs[0].rawtx;
 }
 
 interface Balance {
@@ -204,11 +208,12 @@ interface RawTx {
     data: {
         status: string;
         msg: string;
-        rawTxs: string[];
+        rawTxs: { rawtx: string }[];
     }
 }
 
 async function wocdecode(txhex: string) {
+    sleep(0.4);
     try {
         return (await axios.post<WOCDecode>('https://api.whatsonchain.com/v1/bsv/main/tx/decode', {
             txhex,
@@ -216,5 +221,17 @@ async function wocdecode(txhex: string) {
     } catch (e) {
         console.log(e);
         await wocdecode(txhex);
+    }
+}
+
+async function getInputTx(decoded: WOCDecode) {
+    const inputHash: string = decoded.vin[1].txid;
+    const voutIndex: number = decoded.vin[1].vout;
+    sleep(0.4);
+
+    try {
+        return { tx: (await axios.get<WOCTx>(`https://api.whatsonchain.com/v1/bsv/main/tx/hash/${inputHash}`)).data, voutIndex };
+    } catch {
+        return await getInputTx(decoded);
     }
 }

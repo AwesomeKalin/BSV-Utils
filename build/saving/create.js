@@ -53,8 +53,8 @@ export async function createProceduralSave(folder, pgp) {
     const addressFrom = bsv.PrivateKey.fromWIF(await getPrivateKey(auth)).toPublicKey();
     let instance = new ProceduralSaving(manifestTx, Ripemd160(addressFrom.toString()));
     const lockingScript = instance.lockingScript;
-    const scriptHash = instance.scriptHash;
-    console.log(chalk.greenBright(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom.toAddress().toString())} with the script hash ${scriptHash}`));
+    const contract = await deployContract(auth, lockingScript, addressFrom.toAddress().toString());
+    console.log(chalk.greenBright(`Contract deployed at ${contract}`));
     await auth.checkAuth();
     await axios.get('https://api.relysia.com/v1/metrics', {
         headers: {
@@ -62,4 +62,5 @@ export async function createProceduralSave(folder, pgp) {
         }
     });
     rmSync('./temp', { recursive: true, force: true });
+    return;
 }

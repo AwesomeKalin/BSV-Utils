@@ -73,9 +73,10 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     const addressFrom: bsv.PublicKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth)).toPublicKey();
     let instance = new ProceduralSaving(manifestTx, Ripemd160(addressFrom.toString()));
     const lockingScript: bsv.Script = instance.lockingScript;
-    const scriptHash: string = instance.scriptHash;
 
-    console.log(chalk.greenBright(`Contract deployed at ${await deployContract(auth, lockingScript, addressFrom.toAddress().toString())} with the script hash ${scriptHash}`));
+    const contract = await deployContract(auth, lockingScript, addressFrom.toAddress().toString())
+
+    console.log(chalk.greenBright(`Contract deployed at ${contract}`));
 
     await auth.checkAuth();
 
@@ -86,4 +87,6 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     });
 
     rmSync('./temp', { recursive: true, force: true });
+
+    return;
 }

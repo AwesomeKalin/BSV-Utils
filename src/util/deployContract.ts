@@ -1,24 +1,31 @@
 import { bsv } from "scrypt-ts";
-import { WOCDecode } from "../types/WOCDecode.js";
 import { authenticate } from "./authenticator.js";
 import { getTxInput } from "./getInput.js";
 import RelysiaSDK from '@relysia/sdk';
 import axios, { AxiosResponse } from "axios";
 import { getBSVAddressFromMnemonic } from "./mnemonicToPrivateKey.js";
+import { sleep } from "./sleep.js";
+import { WOCTx } from "../types/WOCTx.js";
 
 export async function deployContract(auth: authenticate, lockingScript: bsv.Script, address: string) {
     await auth.checkAuth();
 
-    const decodedTx: WOCDecode = await getTxInput(auth, address);
-    const inputTxHash: string = decodedTx.vin[1].txid;
-    const inputScript: string = decodedTx.vin[1].scriptSig.asm;
-    const inputSats: number = decodedTx.vin[1].voutDetails.value / 100000000;
+    console.log('Getting initial tx input');
+
+    const decoded = await getTxInput(auth, address);
+    const decodedTx: WOCTx = decoded.tx;
+    const voutIndex: number = decoded.voutIndex;
+    const inputTxHash: string = decodedTx.hash;
+    const inputScript: string = decodedTx.vout[voutIndex].scriptPubKey.asm;
+    const inputSats: number = decodedTx.vout[voutIndex].value * 100000000;
+
+    console.log('Input found!');
 
     let tx = new bsv.Transaction();
 
     tx.from({
         txId: inputTxHash,
-        outputIndex: 1,
+        outputIndex: voutIndex,
         script: bsv.Script.fromASM(inputScript).toHex(),
         satoshis: inputSats
     });
@@ -36,27 +43,38 @@ export async function deployContract(auth: authenticate, lockingScript: bsv.Scri
     let feeNeeded: number = tx.getFee();
     let satsNeeded: number = (feeNeeded + 1) - inputSats;
 
+    console.log('Adding additional inputs, if needed');
+
     while (satsNeeded > 0) {
-        const input: WOCDecode = await getTxInput(auth, address);
-        const txHash: string = input.vin[1].txid;
-        const script: string = input.vin[1].scriptSig.asm;
-        const sats: number = input.vin[1].voutDetails.value / 100000000;
+        const inputTx = await getTxInput(auth, address);
+        const input: WOCTx = inputTx.tx;
+        const inputIndex: number = inputTx.voutIndex;
+        const txHash: string = input.hash;
+        const script: string = input.vout[inputIndex].scriptPubKey.asm;
+        const sats: number = input.vout[inputIndex].value * 100000000;
 
         tx.from({
             txId: txHash,
-            outputIndex: 1,
-            script,
+            outputIndex: inputIndex,
+            script: bsv.Script.fromASM(script).toHex(),
             satoshis: sats,
         });
 
         satsNeeded -= feeNeeded;
+        satsNeeded -= sats;
         feeNeeded = tx.getFee();
         satsNeeded += feeNeeded;
     }
 
+    console.log('Inputs added');
+
     tx = tx.seal().sign(await getPrivateKey(auth));
 
+    console.log('Transaction signed, broadcasting to blockchain');
+
     await wocBroadcast(tx.serialize());
+
+    const txhash: string = tx.id;
 
     return tx.hash;
 }
@@ -64,6 +82,8 @@ export async function deployContract(auth: authenticate, lockingScript: bsv.Scri
 export async function getPrivateKey(auth: authenticate) {
     await auth.checkAuth();
     let relysia: RelysiaSDK = auth.relysia;
+
+    console.log('Getting mnemonic');
 
     let mnemonicGetter: AxiosResponse<Mnemonic>;
     let mnemonic: string;
@@ -80,6 +100,8 @@ export async function getPrivateKey(auth: authenticate) {
         return await getPrivateKey(auth);
     }
 
+    console.log('Got mnemonic, getting private key');
+
     return getBSVAddressFromMnemonic(mnemonic);
 }
 
@@ -93,6 +115,7 @@ interface Mnemonic {
 }
 
 async function wocBroadcast(txhex: string) {
+    sleep(0.4);
     try {
         await axios.post('https://api.whatsonchain.com/v1/bsv/main/tx/raw', {
             txhex,

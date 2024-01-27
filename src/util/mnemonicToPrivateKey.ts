@@ -9,5 +9,7 @@ export function getBSVAddressFromMnemonic(mnemonic: string) {
 
   const address = child.publicKey.toAddress(bsv.Networks.mainnet);
 
+  console.log('Got private key');
+
   return child.privateKey.toWIF();
 }

@@ -5,5 +5,6 @@ export function getBSVAddressFromMnemonic(mnemonic) {
     const hdPrivateKey = bsv.HDPrivateKey.fromSeed(seed, bsv.Networks.mainnet);
     const child = hdPrivateKey.deriveChild("m/44'/0'/0'/0/0");
     const address = child.publicKey.toAddress(bsv.Networks.mainnet);
+    console.log('Got private key');
     return child.privateKey.toWIF();
 }
