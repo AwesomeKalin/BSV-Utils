@@ -62,5 +62,5 @@ export async function createProceduralSave(folder, pgp) {
         }
     });
     rmSync('./temp', { recursive: true, force: true });
-    return;
+    process.exit(0);
 }

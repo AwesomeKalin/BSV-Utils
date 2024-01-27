@@ -88,5 +88,5 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
 
     rmSync('./temp', { recursive: true, force: true });
 
-    return;
+    process.exit(0);
 }

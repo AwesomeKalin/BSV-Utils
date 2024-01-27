@@ -11,7 +11,7 @@ contract ProceduralSaving {
     this.address = address;
   }
   public function unlock(Sig sig, PubKey pubkey) {
-    require(hash160(pubkey) == this.address);
+    require(Ripemd160(pubkey) == this.address);
     require(checkSig(sig, pubkey));
   }
   public function changeManifest(Sig sig, PubKey pubkey, bytes newManifest, SigHashPreimage __scrypt_ts_txPreimage, int __scrypt_ts_changeAmount, Ripemd160 __scrypt_ts_changeAddress) {
@@ -21,7 +21,7 @@ contract ProceduralSaving {
     this.manifest = newManifest;
     int amount = this.ctx.utxo.value;
     bytes outputs = this.buildStateOutput(amount) + this.buildChangeOutput();
-    require(hash160(pubkey) == this.address);
+    require(Ripemd160(pubkey) == this.address);
     require(checkSig(sig, pubkey));
     require(this.ctx.hashOutputs == hash256(outputs));
   }

@@ -1,4 +1,4 @@
-import { ByteString, PubKey, Ripemd160, Sig, SmartContract, assert, hash256, method, prop, pubKey2Addr } from 'scrypt-ts';
+import { ByteString, PubKey, Ripemd160, Sig, SmartContract, assert, hash256, method, prop } from 'scrypt-ts';
 
 export class ProceduralSaving extends SmartContract {
     //@ts-ignore
@@ -18,7 +18,7 @@ export class ProceduralSaving extends SmartContract {
     //@ts-ignore
     @method()
     public unlock(sig: Sig, pubkey: PubKey) {
-        assert(pubKey2Addr(pubkey) == this.address, 'address check failed');
+        assert(Ripemd160(pubkey) == this.address, 'address check failed');
         assert(this.checkSig(sig, pubkey), 'signature check failed');
     }
 
@@ -30,7 +30,7 @@ export class ProceduralSaving extends SmartContract {
         const amount: bigint = this.ctx.utxo.value;
         const outputs: ByteString = this.buildStateOutput(amount) + this.buildChangeOutput();
 
-        assert(pubKey2Addr(pubkey) == this.address, 'address check failed');
+        assert(Ripemd160(pubkey) == this.address, 'address check failed');
         assert(this.checkSig(sig, pubkey), 'signature check failed');
 
         assert(this.ctx.hashOutputs == hash256(outputs), 'hashOutputs mismatch');
