@@ -56,7 +56,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
 
         const hashes: hashArray = hash(fileToHash);
 
-        const toPush = { name: files[i], txid, hashes };
+        const toPush: ManifestEntry = { name: files[i], txid, hashes };
 
         manifest.push(toPush);
     }
@@ -64,6 +64,10 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     console.log('Uploading manifest');
 
     let manifestToUpload: Buffer = Buffer.from(JSON.stringify(manifest));
+
+    if (pgp != null) {
+        manifestToUpload = await encryptWithKey(manifestToUpload, pgp);
+    }
 
     const manifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
 

@@ -46,6 +46,9 @@ export async function createProceduralSave(folder, pgp) {
     }
     console.log('Uploading manifest');
     let manifestToUpload = Buffer.from(JSON.stringify(manifest));
+    if (pgp != null) {
+        manifestToUpload = await encryptWithKey(manifestToUpload, pgp);
+    }
     const manifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
     console.log('Deploying contract to blockchain');
     const ProceduralSaving = buildContractClass(artifact);

@@ -166,3 +166,4 @@ export type hashArray = {
     kalhash: any;
     doublekalhash: any;
 };
+export declare function compareHashes(entry: hashArray, original: hashArray): boolean;

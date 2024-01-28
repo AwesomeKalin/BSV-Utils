@@ -604,3 +604,326 @@ export function hash(file) {
     }
     return hashList;
 }
+export function compareHashes(entry, original) {
+    if (original.shake256_1k !== null && original.shake256_1k === entry.shake256_1k)
+        return true;
+    if (original.sha3_512 !== null && original.sha3_512 === entry.sha3_512)
+        return true;
+    if (original.sha256 !== null && original.sha256 === entry.sha256)
+        return true;
+    if (original.doublesha256 !== null && original.doublesha256 === entry.doublesha256)
+        return true;
+    if (original.ripemd160 !== null && original.ripemd160 === entry.ripemd160)
+        return true;
+    if (original.cshake256_1k !== null && original.cshake256_1k === entry.cshake256_1k)
+        return true;
+    if (original.kmac256_1k !== null && original.kmac256_1k === entry.kmac256_1k)
+        return true;
+    if (original.shake128_1k !== null && original.shake128_1k === entry.shake128_1k)
+        return true;
+    if (original.cshake128_1k !== null && original.cshake128_1k === entry.cshake128_1k)
+        return true;
+    if (original.kmac128_1k !== null && original.kmac128_1k === entry.kmac128_1k)
+        return true;
+    if (original.sha512 !== null && original.sha512 === entry.sha512)
+        return true;
+    if (original.keccak512 !== null && original.keccak512 === entry.keccak512)
+        return true;
+    if (original.shake256_512 !== null && original.shake256_512 === entry.shake256_512)
+        return true;
+    if (original.cshake256_512 !== null && original.cshake256_512 === entry.cshake256_512)
+        return true;
+    if (original.kmac256_512 !== null && original.kmac256_512 === entry.kmac256_512)
+        return true;
+    if (original.shake128_512 !== null && original.shake128_512 === entry.shake128_512)
+        return true;
+    if (original.cshake128_512 !== null && original.cshake128_512 === entry.cshake128_512)
+        return true;
+    if (original.kmac128_512 !== null && original.kmac128_512 === entry.kmac128_512)
+        return true;
+    if (original.sha384 !== null && original.sha384 === entry.sha384)
+        return true;
+    if (original.keccak384 !== null && original.keccak384 === entry.keccak384)
+        return true;
+    if (original.shake256_384 !== null && original.shake256_384 === entry.shake256_384)
+        return true;
+    if (original.cshake256_384 !== null && original.cshake256_384 === entry.cshake256_384)
+        return true;
+    if (original.kmac256_384 !== null && original.kmac256_384 === entry.kmac256_384)
+        return true;
+    if (original.shake128_384 !== null && original.shake128_384 === entry.shake128_384)
+        return true;
+    if (original.cshake128_384 !== null && original.cshake128_384 === entry.cshake128_384)
+        return true;
+    if (original.kmac128_384 !== null && original.kmac128_384 === entry.kmac128_384)
+        return true;
+    if (original.shake256_320 !== null && original.shake256_320 === entry.shake256_320)
+        return true;
+    if (original.cshake256_320 !== null && original.cshake256_320 === entry.cshake256_320)
+        return true;
+    if (original.kmac256_320 !== null && original.kmac256_320 === entry.kmac256_320)
+        return true;
+    if (original.shake128_320 !== null && original.shake128_320 === entry.shake128_320)
+        return true;
+    if (original.cshake128_320 !== null && original.cshake128_320 === entry.cshake128_320)
+        return true;
+    if (original.kmac128_320 !== null && original.kmac128_320 === entry.kmac128_320)
+        return true;
+    if (original.sha512_256 !== null && original.sha512_256 === entry.sha512_256)
+        return true;
+    if (original.sha3_256 !== null && original.sha3_256 === entry.sha3_256)
+        return true;
+    if (original.keccak256 !== null && original.keccak256 === entry.keccak256)
+        return true;
+    if (original.shake256_256 !== null && original.shake256_256 === entry.shake256_256)
+        return true;
+    if (original.cshake256_256 !== null && original.cshake256_256 === entry.cshake256_256)
+        return true;
+    if (original.kmac256_256 !== null && original.kmac256_256 === entry.kmac256_256)
+        return true;
+    if (original.shake128_256 !== null && original.shake128_256 === entry.shake128_256)
+        return true;
+    if (original.cshake128_256 !== null && original.cshake128_256 === entry.cshake128_256)
+        return true;
+    if (original.kmac128_256 !== null && original.kmac128_256 === entry.kmac128_256)
+        return true;
+    if (original.sha224 !== null && original.sha224 === entry.sha224)
+        return true;
+    if (original.sha512_224 !== null && original.sha512_224 === entry.sha512_224)
+        return true;
+    if (original.sha3_224 !== null && original.sha3_224 === entry.sha3_224)
+        return true;
+    if (original.keccak224 !== null && original.keccak224 === entry.keccak224)
+        return true;
+    if (original.shake256_224 !== null && original.shake256_224 === entry.shake256_224)
+        return true;
+    if (original.cshake256_224 !== null && original.cshake256_224 === entry.cshake256_224)
+        return true;
+    if (original.kmac256_224 !== null && original.kmac256_224 === entry.kmac256_224)
+        return true;
+    if (original.shake128_224 !== null && original.shake128_224 === entry.shake128_224)
+        return true;
+    if (original.cshake128_224 !== null && original.cshake128_224 === entry.cshake128_224)
+        return true;
+    if (original.kmac128_224 !== null && original.kmac128_224 === entry.kmac128_224)
+        return true;
+    if (original.sha1 !== null && original.sha1 === entry.sha1)
+        return true;
+    if (original.shake256_160 !== null && original.shake256_160 === entry.shake256_160)
+        return true;
+    if (original.cshake256_160 !== null && original.cshake256_160 === entry.cshake256_160)
+        return true;
+    if (original.kmac256_160 !== null && original.kmac256_160 === entry.kmac256_160)
+        return true;
+    if (original.shake128_160 !== null && original.shake128_160 === entry.shake128_160)
+        return true;
+    if (original.cshake128_160 !== null && original.cshake128_160 === entry.cshake128_160)
+        return true;
+    if (original.kmac128_160 !== null && original.kmac128_160 === entry.kmac128_160)
+        return true;
+    if (original.md2 !== null && original.md2 === entry.md2)
+        return true;
+    if (original.md4 !== null && original.md4 === entry.md4)
+        return true;
+    if (original.md5 !== null && original.md5 === entry.md5)
+        return true;
+    if (original.shake256_128 !== null && original.shake256_128 === entry.shake256_128)
+        return true;
+    if (original.cshake256_128 !== null && original.cshake256_128 === entry.cshake256_128)
+        return true;
+    if (original.kmac256_128 !== null && original.kmac256_128 === entry.kmac256_128)
+        return true;
+    if (original.shake128_128 !== null && original.shake128_128 === entry.shake128_128)
+        return true;
+    if (original.cshake128_128 !== null && original.cshake128_128 === entry.cshake128_128)
+        return true;
+    if (original.kmac128_128 !== null && original.kmac128_128 === entry.kmac128_128)
+        return true;
+    if (original.crc32 !== null && original.crc32 === entry.crc32)
+        return true;
+    if (original.shake256_32 !== null && original.shake256_32 === entry.shake256_32)
+        return true;
+    if (original.cshake256_32 !== null && original.cshake256_32 === entry.cshake256_32)
+        return true;
+    if (original.kmac256_32 !== null && original.kmac256_32 === entry.kmac256_32)
+        return true;
+    if (original.shake128_32 !== null && original.shake128_32 === entry.shake128_32)
+        return true;
+    if (original.cshake128_32 !== null && original.cshake128_32 === entry.cshake128_32)
+        return true;
+    if (original.kmac128_32 !== null && original.kmac128_32 === entry.kmac128_32)
+        return true;
+    if (original.crc16 !== null && original.crc16 === entry.crc16)
+        return true;
+    if (original.shake256_16 !== null && original.shake256_16 === entry.shake256_16)
+        return true;
+    if (original.cshake256_16 !== null && original.cshake256_16 === entry.cshake256_16)
+        return true;
+    if (original.kmac256_16 !== null && original.kmac256_16 === entry.kmac256_16)
+        return true;
+    if (original.shake128_16 !== null && original.shake128_16 === entry.shake128_16)
+        return true;
+    if (original.cshake128_16 !== null && original.cshake128_16 === entry.cshake128_16)
+        return true;
+    if (original.kmac128_16 !== null && original.kmac128_16 === entry.kmac128_16)
+        return true;
+    if (original.doubleshake256_1k !== null && original.doubleshake256_1k === entry.doubleshake256_1k)
+        return true;
+    if (original.doublesha3_512 !== null && original.doublesha3_512 === entry.doublesha3_512)
+        return true;
+    if (original.doubleripemd160 !== null && original.doubleripemd160 === entry.doubleripemd160)
+        return true;
+    if (original.doublecshake256_1k !== null && original.doublecshake256_1k === entry.doublecshake256_1k)
+        return true;
+    if (original.doublekmac256_1k !== null && original.doublekmac256_1k === entry.doublekmac256_1k)
+        return true;
+    if (original.doubleshake128_1k !== null && original.doubleshake128_1k === entry.doubleshake128_1k)
+        return true;
+    if (original.doublecshake128_1k !== null && original.doublecshake128_1k === entry.doublecshake128_1k)
+        return true;
+    if (original.doublekmac128_1k !== null && original.doublekmac128_1k === entry.doublekmac128_1k)
+        return true;
+    if (original.doublesha512 !== null && original.doublesha512 === entry.doublesha512)
+        return true;
+    if (original.doublekeccak512 !== null && original.doublekeccak512 === entry.doublekeccak512)
+        return true;
+    if (original.doubleshake256_512 !== null && original.doubleshake256_512 === entry.doubleshake256_512)
+        return true;
+    if (original.doublecshake256_512 !== null && original.doublecshake256_512 === entry.doublecshake256_512)
+        return true;
+    if (original.doublekmac256_512 !== null && original.doublekmac256_512 === entry.doublekmac256_512)
+        return true;
+    if (original.doubleshake128_512 !== null && original.doubleshake128_512 === entry.doubleshake128_512)
+        return true;
+    if (original.doublecshake128_512 !== null && original.doublecshake128_512 === entry.doublecshake128_512)
+        return true;
+    if (original.doublekmac128_512 !== null && original.doublekmac128_512 === entry.doublekmac128_512)
+        return true;
+    if (original.doublesha384 !== null && original.doublesha384 === entry.doublesha384)
+        return true;
+    if (original.doublekeccak384 !== null && original.doublekeccak384 === entry.doublekeccak384)
+        return true;
+    if (original.doubleshake256_384 !== null && original.doubleshake256_384 === entry.doubleshake256_384)
+        return true;
+    if (original.doublecshake256_384 !== null && original.doublecshake256_384 === entry.doublecshake256_384)
+        return true;
+    if (original.doublekmac256_384 !== null && original.doublekmac256_384 === entry.doublekmac256_384)
+        return true;
+    if (original.doubleshake128_384 !== null && original.doubleshake128_384 === entry.doubleshake128_384)
+        return true;
+    if (original.doublecshake128_384 !== null && original.doublecshake128_384 === entry.doublecshake128_384)
+        return true;
+    if (original.doublekmac128_384 !== null && original.doublekmac128_384 === entry.doublekmac128_384)
+        return true;
+    if (original.doubleshake256_320 !== null && original.doubleshake256_320 === entry.doubleshake256_320)
+        return true;
+    if (original.doublecshake256_320 !== null && original.doublecshake256_320 === entry.doublecshake256_320)
+        return true;
+    if (original.doublekmac256_320 !== null && original.doublekmac256_320 === entry.doublekmac256_320)
+        return true;
+    if (original.doubleshake128_320 !== null && original.doubleshake128_320 === entry.doubleshake128_320)
+        return true;
+    if (original.doublecshake128_320 !== null && original.doublecshake128_320 === entry.doublecshake128_320)
+        return true;
+    if (original.doublekmac128_320 !== null && original.doublekmac128_320 === entry.doublekmac128_320)
+        return true;
+    if (original.doublesha512_256 !== null && original.doublesha512_256 === entry.doublesha512_256)
+        return true;
+    if (original.doublesha3_256 !== null && original.doublesha3_256 === entry.doublesha3_256)
+        return true;
+    if (original.doublekeccak256 !== null && original.doublekeccak256 === entry.doublekeccak256)
+        return true;
+    if (original.doubleshake256_256 !== null && original.doubleshake256_256 === entry.doubleshake256_256)
+        return true;
+    if (original.doublecshake256_256 !== null && original.doublecshake256_256 === entry.doublecshake256_256)
+        return true;
+    if (original.doublekmac256_256 !== null && original.doublekmac256_256 === entry.doublekmac256_256)
+        return true;
+    if (original.doubleshake128_256 !== null && original.doubleshake128_256 === entry.doubleshake128_256)
+        return true;
+    if (original.doublecshake128_256 !== null && original.doublecshake128_256 === entry.doublecshake128_256)
+        return true;
+    if (original.doublekmac128_256 !== null && original.doublekmac128_256 === entry.doublekmac128_256)
+        return true;
+    if (original.doublesha224 !== null && original.doublesha224 === entry.doublesha224)
+        return true;
+    if (original.doublesha512_224 !== null && original.doublesha512_224 === entry.doublesha512_224)
+        return true;
+    if (original.doublesha3_224 !== null && original.doublesha3_224 === entry.doublesha3_224)
+        return true;
+    if (original.doublekeccak224 !== null && original.doublekeccak224 === entry.doublekeccak224)
+        return true;
+    if (original.doubleshake256_224 !== null && original.doubleshake256_224 === entry.doubleshake256_224)
+        return true;
+    if (original.doublecshake256_224 !== null && original.doublecshake256_224 === entry.doublecshake256_224)
+        return true;
+    if (original.doublekmac256_224 !== null && original.doublekmac256_224 === entry.doublekmac256_224)
+        return true;
+    if (original.doubleshake128_224 !== null && original.doubleshake128_224 === entry.doubleshake128_224)
+        return true;
+    if (original.doublecshake128_224 !== null && original.doublecshake128_224 === entry.doublecshake128_224)
+        return true;
+    if (original.doublekmac128_224 !== null && original.doublekmac128_224 === entry.doublekmac128_224)
+        return true;
+    if (original.doublesha1 !== null && original.doublesha1 === entry.doublesha1)
+        return true;
+    if (original.doubleshake256_160 !== null && original.doubleshake256_160 === entry.doubleshake256_160)
+        return true;
+    if (original.doublecshake256_160 !== null && original.doublecshake256_160 === entry.doublecshake256_160)
+        return true;
+    if (original.doublekmac256_160 !== null && original.doublekmac256_160 === entry.doublekmac256_160)
+        return true;
+    if (original.doubleshake128_160 !== null && original.doubleshake128_160 === entry.doubleshake128_160)
+        return true;
+    if (original.doublecshake128_160 !== null && original.doublecshake128_160 === entry.doublecshake128_160)
+        return true;
+    if (original.doublekmac128_160 !== null && original.doublekmac128_160 === entry.doublekmac128_160)
+        return true;
+    if (original.doublemd2 !== null && original.doublemd2 === entry.doublemd2)
+        return true;
+    if (original.doublemd4 !== null && original.doublemd4 === entry.doublemd4)
+        return true;
+    if (original.doublemd5 !== null && original.doublemd5 === entry.doublemd5)
+        return true;
+    if (original.doubleshake256_128 !== null && original.doubleshake256_128 === entry.doubleshake256_128)
+        return true;
+    if (original.doublecshake256_128 !== null && original.doublecshake256_128 === entry.doublecshake256_128)
+        return true;
+    if (original.doublekmac256_128 !== null && original.doublekmac256_128 === entry.doublekmac256_128)
+        return true;
+    if (original.doubleshake128_128 !== null && original.doubleshake128_128 === entry.doubleshake128_128)
+        return true;
+    if (original.doublecshake128_128 !== null && original.doublecshake128_128 === entry.doublecshake128_128)
+        return true;
+    if (original.doublekmac128_128 !== null && original.doublekmac128_128 === entry.doublekmac128_128)
+        return true;
+    if (original.doublecrc32 !== null && original.doublecrc32 === entry.doublecrc32)
+        return true;
+    if (original.doubleshake256_32 !== null && original.doubleshake256_32 === entry.doubleshake256_32)
+        return true;
+    if (original.doublecshake256_32 !== null && original.doublecshake256_32 === entry.doublecshake256_32)
+        return true;
+    if (original.doublekmac256_32 !== null && original.doublekmac256_32 === entry.doublekmac256_32)
+        return true;
+    if (original.doubleshake128_32 !== null && original.doubleshake128_32 === entry.doubleshake128_32)
+        return true;
+    if (original.doublecshake128_32 !== null && original.doublecshake128_32 === entry.doublecshake128_32)
+        return true;
+    if (original.doublekmac128_32 !== null && original.doublekmac128_32 === entry.doublekmac128_32)
+        return true;
+    if (original.doublecrc16 !== null && original.doublecrc16 === entry.doublecrc16)
+        return true;
+    if (original.doubleshake256_16 !== null && original.doubleshake256_16 === entry.doubleshake256_16)
+        return true;
+    if (original.doublecshake256_16 !== null && original.doublecshake256_16 === entry.doublecshake256_16)
+        return true;
+    if (original.doublekmac256_16 !== null && original.doublekmac256_16 === entry.doublekmac256_16)
+        return true;
+    if (original.doubleshake128_16 !== null && original.doubleshake128_16 === entry.doubleshake128_16)
+        return true;
+    if (original.doublecshake128_16 !== null && original.doublecshake128_16 === entry.doublecshake128_16)
+        return true;
+    if (original.doublekmac128_16 !== null && original.doublekmac128_16 === entry.doublekmac128_16)
+        return true;
+    return false;
+}
