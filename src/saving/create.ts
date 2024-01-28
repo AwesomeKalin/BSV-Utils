@@ -78,14 +78,6 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
 
     console.log(chalk.greenBright(`Contract deployed at ${contract}`));
 
-    await auth.checkAuth();
-
-    await axios.get('https://api.relysia.com/v1/metrics', {
-        headers: {
-            authToken: auth.relysia.authentication.v1.getAuthToken(),
-        }
-    });
-
     rmSync('./temp', { recursive: true, force: true });
 
     process.exit(0);

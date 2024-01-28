@@ -10,7 +10,6 @@ import { bsv } from "scrypt-ts";
 import { deployContract } from "../util/deployContract.js";
 import { Ripemd160, buildContractClass } from 'scryptlib';
 import { getPrivateKey } from "../util/deployContract.js";
-import axios from "axios";
 import chalk from "chalk";
 import { tunnelmole } from 'tunnelmole';
 export async function createProceduralSave(folder, pgp) {
@@ -55,12 +54,6 @@ export async function createProceduralSave(folder, pgp) {
     const lockingScript = instance.lockingScript;
     const contract = await deployContract(auth, lockingScript, addressFrom.toAddress().toString());
     console.log(chalk.greenBright(`Contract deployed at ${contract}`));
-    await auth.checkAuth();
-    await axios.get('https://api.relysia.com/v1/metrics', {
-        headers: {
-            authToken: auth.relysia.authentication.v1.getAuthToken(),
-        }
-    });
     rmSync('./temp', { recursive: true, force: true });
     process.exit(0);
 }

@@ -1,26 +1,30 @@
-import { Ripemd160, SmartContract, assert, hash256, ripemd160 } from 'scrypt-ts';
+import { ByteString, PubKey, Ripemd160, Sig, SmartContract, assert, hash256, method, prop } from 'scrypt-ts';
 
 export class ProceduralSaving extends SmartContract {
-    manifest;
+    @prop(true)
+    manifest: ByteString;
 
-    address;
+    @prop()
+    readonly address: Ripemd160;
 
-    constructor(initialManifest, address) {
+    constructor(initialManifest: ByteString, address: Ripemd160) {
         super(...arguments);
         this.manifest = initialManifest;
         this.address = address;
     }
 
-    unlock(sig, pubkey) {
+    @method()
+    public unlock(sig: Sig, pubkey: PubKey) {
         assert(Ripemd160(pubkey) == this.address, 'address check failed');
         assert(this.checkSig(sig, pubkey), 'signature check failed');
     }
 
-    changeManifest(sig, pubkey, newManifest) {
+    @method()
+    public changeManifest(sig: Sig, pubkey: PubKey, newManifest: ByteString) {
         this.manifest = newManifest;
 
-        const amount = this.ctx.utxo.value;
-        const outputs = this.buildStateOutput(amount) + this.buildChangeOutput();
+        const amount: bigint = this.ctx.utxo.value;
+        const outputs: ByteString = this.buildStateOutput(amount) + this.buildChangeOutput();
 
         assert(Ripemd160(pubkey) == this.address, 'address check failed');
         assert(this.checkSig(sig, pubkey), 'signature check failed');

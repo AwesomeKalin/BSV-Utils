@@ -4,9 +4,9 @@ import artifact from '../../artifacts/contracts/procedural-saving.json' with { t
 import { bsv } from "scryptlib";
 import { sleep } from "../util/sleep.js";
 import axios from "axios";
-import { MethodCallOptions, PubKey, Sig, SignatureHashType, TestWallet, WhatsonchainProvider, findSig, findSigs, pubKey2Addr, ripemd160 } from "scrypt-ts";
-import { getPrivateKey } from "../util/deployContract.js";
-import { ProceduralSaving } from "../contracts/procedural-saving.js";
+import { MethodCallOptions, PubKey, Sig, SignatureHashType, SignatureResponse, TestWallet, WhatsonchainProvider, findSig, findSigs, pubKey2Addr, ripemd160 } from "scrypt-ts";
+import { broadcastWithFee, getPrivateKey } from "../util/deployContract.js";
+import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 
 export async function deleteFolderSave(txid: string) {
     const auth: authenticate = await getAuthClass();
@@ -14,19 +14,18 @@ export async function deleteFolderSave(txid: string) {
     txid = await getLatestVersionOfContract(txid);
 
     const tx = await getRawTx(txid);
-    await ProceduralSaving.loadArtifact(artifact);
+    ProceduralSaving.loadArtifact(artifact);
     const instance: ProceduralSaving = ProceduralSaving.fromTx(new bsv.Transaction(tx), 0);
 
     const privKey: bsv.PrivateKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
     const signer: TestWallet = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     await instance.connect(signer);
 
-    const nextInstance: ProceduralSaving = instance.next();
-    nextInstance.methods.unlock((sigResps) => findSig(sigResps, privKey.toPublicKey(), SignatureHashType.ANYONECANPAY_ALL), PubKey(privKey.toPublicKey().toString()), {
+    let { tx: callTX } = await instance.methods.unlock((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey(), SignatureHashType.ANYONECANPAY_NONE), PubKey(privKey.toPublicKey().toString()), {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
         pubKeyOrAddrToSign: {
             pubKeyOrAddr: privKey.toPublicKey(),
-            sigHashType: SignatureHashType.ANYONECANPAY_ALL,
+            sigHashType: SignatureHashType.ANYONECANPAY_NONE,
         },
         // This flag ensures the call tx is only created locally and not broadcasted.
         partiallySigned: true,
@@ -34,9 +33,10 @@ export async function deleteFolderSave(txid: string) {
         autoPayFee: false,
     } as MethodCallOptions<ProceduralSaving>);
 
-    console.log(instance);
-    console.log('Seperator');
-    console.log(nextInstance);
+    callTX.feePerKb(1);
+    callTX.change(privKey.toAddress().toString());
+
+    console.log(`Deleted folder save at ${await broadcastWithFee(auth, callTX, 0, privKey.toAddress().toString())}`);
 }
 
 export async function getRawTx(txid: string) {

@@ -26,33 +26,7 @@ export async function deployContract(auth, lockingScript, address) {
     }));
     tx.feePerKb(1);
     tx.change(address);
-    let feeNeeded = tx.getFee();
-    let satsNeeded = (feeNeeded + 1) - inputSats;
-    console.log('Adding additional inputs, if needed');
-    while (satsNeeded > 0) {
-        const inputTx = await getTxInput(auth, address);
-        const input = inputTx.tx;
-        const inputIndex = inputTx.voutIndex;
-        const txHash = input.hash;
-        const script = input.vout[inputIndex].scriptPubKey.asm;
-        const sats = input.vout[inputIndex].value * 100000000;
-        tx.from({
-            txId: txHash,
-            outputIndex: inputIndex,
-            script: bsv.Script.fromASM(script).toHex(),
-            satoshis: sats,
-        });
-        satsNeeded -= feeNeeded;
-        satsNeeded -= sats;
-        feeNeeded = tx.getFee();
-        satsNeeded += feeNeeded;
-    }
-    console.log('Inputs added');
-    tx = tx.seal().sign(await getPrivateKey(auth));
-    console.log('Transaction signed, broadcasting to blockchain');
-    await wocBroadcast(tx.serialize());
-    const txhash = tx.id;
-    return tx.hash;
+    return await broadcastWithFee(auth, tx, inputSats, address);
 }
 export async function getPrivateKey(auth) {
     await auth.checkAuth();
@@ -84,4 +58,38 @@ async function wocBroadcast(txhex) {
     catch {
         wocBroadcast(txhex);
     }
+}
+export async function broadcastWithFee(auth, tx, inputSats, address) {
+    let feeNeeded = tx.getFee();
+    let satsNeeded = (feeNeeded + 1) - inputSats;
+    console.log('Adding additional inputs, if needed');
+    while (satsNeeded > 0) {
+        const inputTx = await getTxInput(auth, address);
+        const input = inputTx.tx;
+        const inputIndex = inputTx.voutIndex;
+        const txHash = input.hash;
+        const script = input.vout[inputIndex].scriptPubKey.asm;
+        const sats = input.vout[inputIndex].value * 100000000;
+        tx.from({
+            txId: txHash,
+            outputIndex: inputIndex,
+            script: bsv.Script.fromASM(script).toHex(),
+            satoshis: sats,
+        });
+        satsNeeded -= feeNeeded;
+        satsNeeded -= sats;
+        feeNeeded = tx.getFee();
+        satsNeeded += feeNeeded;
+    }
+    console.log('Inputs added');
+    tx = tx.seal().sign(await getPrivateKey(auth));
+    console.log('Transaction signed, broadcasting to blockchain');
+    await wocBroadcast(tx.uncheckedSerialize());
+    await auth.checkAuth();
+    await axios.get('https://api.relysia.com/v1/metrics', {
+        headers: {
+            authToken: auth.relysia.authentication.v1.getAuthToken(),
+        }
+    });
+    return tx.hash;
 }
