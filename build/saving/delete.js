@@ -7,9 +7,15 @@ import axios from "axios";
 import { PubKey, SignatureHashType, TestWallet, WhatsonchainProvider, findSig } from "scrypt-ts";
 import { broadcastWithFee, getPrivateKey } from "../util/deployContract.js";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
+import chalk from "chalk";
 export async function deleteFolderSave(txid) {
     const auth = await getAuthClass();
-    txid = await getLatestVersionOfContract(txid);
+    try {
+        txid = await getLatestVersionOfContract(txid);
+    }
+    catch {
+        console.log(chalk.red('This procedural save has already been deleted!'));
+    }
     const tx = await getRawTx(txid);
     ProceduralSaving.loadArtifact(artifact);
     const instance = ProceduralSaving.fromTx(new bsv.Transaction(tx), 0);

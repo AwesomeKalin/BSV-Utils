@@ -17,7 +17,7 @@ export async function getLatestVersionOfContract(txid) {
     }
     const txCheck = await getFullTx(checkIfSpent.data.txid);
     if (txCheck.vout[0].scriptPubKey.type !== 'nonstandard') {
-        return txid;
+        throw 'Not a contract!';
     }
     else {
         return await getLatestVersionOfContract(checkIfSpent.data.txid);

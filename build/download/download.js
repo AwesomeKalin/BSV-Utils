@@ -32,12 +32,12 @@ export async function download(txid) {
         }
         rmSync('temp', { recursive: true, force: true });
         bar2.stop();
-        writeFileSync(manifestDecoded.name, fileBuffer);
+        return { file: fileBuffer, name: manifestDecoded.name };
     }
     catch {
         const match = firstDl.headers['content-disposition'].match(/filename="([^"]+)"/);
         let fileName = match[1];
-        writeFileSync(fileName, firstDl.data);
+        return { file: firstDl.data, name: fileName };
     }
 }
 async function dlPart(txId) {

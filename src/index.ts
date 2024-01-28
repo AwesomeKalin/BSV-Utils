@@ -5,11 +5,12 @@ import chalk from 'chalk';
 import { auth } from './auth/auth.js';
 import { upload } from './upload/upload.js';
 import { nft, nftinfo } from './nft/nft.js';
-import { readFileSync } from 'fs';
+import { readFileSync, writeFileSync } from 'fs';
 import { download, resumeDl } from './download/download.js';
 import { hashSettings } from './settings/hash.js';
 import { createProceduralSave } from './saving/create.js';
 import { deleteFolderSave } from './saving/delete.js';
+import { updateProceduralSave } from './saving/update.js';
 
 let ranCommand = false;
 
@@ -105,7 +106,9 @@ yargs(process.argv.slice(2))
     }, async function (argv) {
         ranCommand = true;
         //@ts-expect-error
-        await download(argv.txid);
+        const {file, name} = await download(argv.txid);
+
+        writeFileSync(name, file);
     })
     .command('resumeDl', 'Resume a download. Folder where parts were downloaded must NOT have been renamed', (yargs) => {
         yargs.positional('txid', {
@@ -117,7 +120,9 @@ yargs(process.argv.slice(2))
     }, async function (argv) {
         ranCommand = true;
         //@ts-expect-error
-        await resumeDl(argv.txid);
+        const {file, name} = await resumeDl(argv.txid);
+
+        writeFileSync(name, file);
     })
     .command('createFolderSave', 'Deploy a contract that allows you to save files to BSV procedulary, allowing you to download any saved version', (yargs) => {
         yargs.positional('folder', {
@@ -142,7 +147,7 @@ yargs(process.argv.slice(2))
     .command('deleteFolderSave', 'Delete the contract created with bsv-utils createFolderSave', (yargs) => {
         yargs.positional('txid', {
             type: 'string',
-            description: 'The transaction id of the contract',
+            description: 'The transaction id of the contract. Does not have to be the latest',
             required: true,
             alias: 'tx',
         });
@@ -150,6 +155,33 @@ yargs(process.argv.slice(2))
         ranCommand = true;
         //@ts-expect-error
         await deleteFolderSave(argv.txid);
+    })
+    .command('updateFolderSave', 'Update a procedural folder save.', (yargs) => {
+        yargs.positional('txid', {
+            type: 'string',
+            description: 'The transaction id of the contract. Does not have to be the latest',
+            required: true,
+            alias: 'tx',
+        });
+        yargs.positional('folder', {
+            type: 'string',
+            description: 'The folder in which the files you want to add are',
+            required: true,
+            alias: 'dir',
+        });
+        yargs.positional('encryption', {
+            type: 'string',
+            description: 'If encryption is used on this save, then input the path to a PGP key here. Must contain private key',
+        });
+        yargs.positional('interval', {
+            type: 'number',
+            description: 'How often you want to update in seconds. Set to 0 for just a single update',
+            default: 0,
+        });
+    }, async function (argv) {
+        ranCommand = true;
+        //@ts-expect-error
+        await updateProceduralSave(argv.txid, argv.folder, argv.encryption, argv.interval);
     })
     .help()
     .argv;

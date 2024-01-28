@@ -20,7 +20,7 @@ export async function getLatestVersionOfContract(txid: string) {
     const txCheck: WOCTx = await getFullTx(checkIfSpent.data.txid);
 
     if (txCheck.vout[0].scriptPubKey.type !== 'nonstandard') {
-        return txid;
+        throw 'Not a contract!';
     } else {
         return await getLatestVersionOfContract(checkIfSpent.data.txid);
     }

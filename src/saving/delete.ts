@@ -4,14 +4,19 @@ import artifact from '../../artifacts/contracts/procedural-saving.json' with { t
 import { bsv } from "scryptlib";
 import { sleep } from "../util/sleep.js";
 import axios from "axios";
-import { MethodCallOptions, PubKey, Sig, SignatureHashType, SignatureResponse, TestWallet, WhatsonchainProvider, findSig, findSigs, pubKey2Addr, ripemd160 } from "scrypt-ts";
+import { MethodCallOptions, PubKey, SignatureHashType, SignatureResponse, TestWallet, WhatsonchainProvider, findSig } from "scrypt-ts";
 import { broadcastWithFee, getPrivateKey } from "../util/deployContract.js";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
+import chalk from "chalk";
 
 export async function deleteFolderSave(txid: string) {
     const auth: authenticate = await getAuthClass();
 
-    txid = await getLatestVersionOfContract(txid);
+    try {
+        txid = await getLatestVersionOfContract(txid);
+    } catch {
+        console.log(chalk.red('This procedural save has already been deleted!'));
+    }
 
     const tx = await getRawTx(txid);
     ProceduralSaving.loadArtifact(artifact);

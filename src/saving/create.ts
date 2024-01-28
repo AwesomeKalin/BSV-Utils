@@ -10,9 +10,9 @@ import { bsv } from "scrypt-ts";
 import { deployContract } from "../util/deployContract.js";
 import { Ripemd160, buildContractClass } from 'scryptlib';
 import { getPrivateKey } from "../util/deployContract.js";
-import axios from "axios";
 import chalk from "chalk";
 import { tunnelmole } from 'tunnelmole';
+import { ManifestEntry } from "../types/Manifest.js";
 
 export async function createProceduralSave(folder: string, pgp: string | undefined | null) {
     const auth: authenticate = await getAuthClass();
@@ -38,7 +38,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     const server: expressServer = new expressServer(port);
     const url: string = await tunnelmole({ port });
 
-    let manifest: { name: string; txid: string; hashes: hashArray; }[] = [];
+    let manifest: ManifestEntry[] = [];
 
     for (var i = 0; i < files.length; i++) {
         let fileToUpload: Buffer = readFileSync(`${folder}/${files[i]}`);
