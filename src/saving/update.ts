@@ -128,16 +128,22 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
 
     const newManifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
 
-    let { tx: callTX } = await instance.methods.changeManifest((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey(), SignatureHashType.ANYONECANPAY_NONE), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
+    const nextInstance: ProceduralSaving = instance.next();
+    nextInstance.updateManifest(newManifestTx);
+
+    let { tx: callTX } = await instance.methods.changeManifest((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
         pubKeyOrAddrToSign: {
             pubKeyOrAddr: privKey.toPublicKey(),
-            sigHashType: SignatureHashType.ANYONECANPAY_NONE,
         },
         // This flag ensures the call tx is only created locally and not broadcasted.
         partiallySigned: true,
         // Prevents automatic addition of fee inputs.
         autoPayFee: false,
+        next: {
+            instance: nextInstance,
+            balance: instance.balance,
+        }
     } as MethodCallOptions<ProceduralSaving>);
 
     callTX.feePerKb(1);

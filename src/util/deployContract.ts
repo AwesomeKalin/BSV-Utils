@@ -122,6 +122,8 @@ export async function broadcastWithFee(auth: authenticate, tx: bsv.Transaction, 
 
     console.log('Transaction signed, broadcasting to blockchain');
 
+    console.log(tx.uncheckedSerialize());
+
     await wocBroadcast(tx.uncheckedSerialize());
 
     await auth.checkAuth();

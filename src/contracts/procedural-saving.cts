@@ -1,4 +1,4 @@
-import { ByteString, PubKey, Ripemd160, Sig, SmartContract, assert, hash256, method, prop } from 'scrypt-ts';
+import { ByteString, PubKey, Ripemd160, Sig, SigHash, SmartContract, assert, hash256, method, prop } from 'scrypt-ts';
 
 export class ProceduralSaving extends SmartContract {
     @prop(true)
@@ -19,16 +19,21 @@ export class ProceduralSaving extends SmartContract {
         assert(this.checkSig(sig, pubkey), 'signature check failed');
     }
 
-    @method()
+    @method(SigHash.ANYONECANPAY_SINGLE)
     public changeManifest(sig: Sig, pubkey: PubKey, newManifest: ByteString) {
-        this.manifest = newManifest;
-
-        const amount: bigint = this.ctx.utxo.value;
-        const outputs: ByteString = this.buildStateOutput(amount) + this.buildChangeOutput();
+        this.updateManifest(newManifest);
 
         assert(Ripemd160(pubkey) == this.address, 'address check failed');
         assert(this.checkSig(sig, pubkey), 'signature check failed');
 
-        assert(this.ctx.hashOutputs == hash256(outputs), 'hashOutputs mismatch');
+        const amount: bigint = this.ctx.utxo.value;
+        const output: ByteString = this.buildStateOutput(amount);
+
+        assert(this.ctx.hashOutputs == hash256(output), 'hashOutputs mismatch');
+    }
+
+    @method()
+    updateManifest(newManifest: ByteString): void {
+        this.manifest = newManifest;
     }
 }

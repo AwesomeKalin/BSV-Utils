@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { getAuthClass } from "../util/authenticator.js";
 import { getLatestVersionOfContract } from "../util/getLatestVersionOfContract.js";
-import { SignatureHashType, TestWallet, WhatsonchainProvider, findSig } from "scrypt-ts";
+import { TestWallet, WhatsonchainProvider, findSig } from "scrypt-ts";
 import { PubKey, bsv } from "scryptlib";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 import { broadcastWithFee, getPrivateKey } from "../util/deployContract.js";
@@ -100,16 +100,21 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
         manifestToUpload = await encryptWithKey(manifestToUpload, key);
     }
     const newManifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
-    let { tx: callTX } = await instance.methods.changeManifest((sigResps) => findSig(sigResps, privKey.toPublicKey(), SignatureHashType.ANYONECANPAY_NONE), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
+    const nextInstance = instance.next();
+    nextInstance.updateManifest(newManifestTx);
+    let { tx: callTX } = await instance.methods.changeManifest((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
         pubKeyOrAddrToSign: {
             pubKeyOrAddr: privKey.toPublicKey(),
-            sigHashType: SignatureHashType.ANYONECANPAY_NONE,
         },
         // This flag ensures the call tx is only created locally and not broadcasted.
         partiallySigned: true,
         // Prevents automatic addition of fee inputs.
         autoPayFee: false,
+        next: {
+            instance: nextInstance,
+            balance: instance.balance,
+        }
     });
     callTX.feePerKb(1);
     callTX.change(privKey.toAddress().toString());

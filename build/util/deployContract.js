@@ -84,6 +84,7 @@ export async function broadcastWithFee(auth, tx, inputSats, address) {
     console.log('Inputs added');
     tx = tx.seal().sign(await getPrivateKey(auth));
     console.log('Transaction signed, broadcasting to blockchain');
+    console.log(tx.uncheckedSerialize());
     await wocBroadcast(tx.uncheckedSerialize());
     await auth.checkAuth();
     await axios.get('https://api.relysia.com/v1/metrics', {

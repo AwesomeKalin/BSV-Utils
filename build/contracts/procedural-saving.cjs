@@ -21,12 +21,15 @@ class ProceduralSaving extends scrypt_ts_1.SmartContract {
         (0, scrypt_ts_1.assert)(this.checkSig(sig, pubkey), 'signature check failed');
     }
     changeManifest(sig, pubkey, newManifest) {
-        this.manifest = newManifest;
-        const amount = this.ctx.utxo.value;
-        const outputs = this.buildStateOutput(amount) + this.buildChangeOutput();
+        this.updateManifest(newManifest);
         (0, scrypt_ts_1.assert)((0, scrypt_ts_1.Ripemd160)(pubkey) == this.address, 'address check failed');
         (0, scrypt_ts_1.assert)(this.checkSig(sig, pubkey), 'signature check failed');
-        (0, scrypt_ts_1.assert)(this.ctx.hashOutputs == (0, scrypt_ts_1.hash256)(outputs), 'hashOutputs mismatch');
+        const amount = this.ctx.utxo.value;
+        const output = this.buildStateOutput(amount);
+        (0, scrypt_ts_1.assert)(this.ctx.hashOutputs == (0, scrypt_ts_1.hash256)(output), 'hashOutputs mismatch');
+    }
+    updateManifest(newManifest) {
+        this.manifest = newManifest;
     }
 }
 exports.ProceduralSaving = ProceduralSaving;
@@ -40,5 +43,8 @@ __decorate([
     (0, scrypt_ts_1.method)()
 ], ProceduralSaving.prototype, "unlock", null);
 __decorate([
-    (0, scrypt_ts_1.method)()
+    (0, scrypt_ts_1.method)(scrypt_ts_1.SigHash.ANYONECANPAY_SINGLE)
 ], ProceduralSaving.prototype, "changeManifest", null);
+__decorate([
+    (0, scrypt_ts_1.method)()
+], ProceduralSaving.prototype, "updateManifest", null);

@@ -5,4 +5,5 @@ export declare class ProceduralSaving extends SmartContract {
     constructor(initialManifest: ByteString, address: Ripemd160);
     unlock(sig: Sig, pubkey: PubKey): void;
     changeManifest(sig: Sig, pubkey: PubKey, newManifest: ByteString): void;
+    updateManifest(newManifest: ByteString): void;
 }
