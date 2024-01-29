@@ -41,8 +41,9 @@ export async function updateProceduralSave(txid, folder, pgp, interval) {
         }, interval * 1000);
     }
     else {
-        txid = await updater(auth, txid, privKey, signer, key, url, folder);
-        console.log(`Updated folder save at ${txid}`);
+        await updater(auth, txid, privKey, signer, key, url, folder);
+        rmSync('temp', { recursive: true, force: true });
+        process.exit(0);
     }
 }
 async function updater(auth, txid, privKey, signer, key, url, folder) {
@@ -54,7 +55,7 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
     let manifest;
     console.log('Downloading old manifest');
     if (key === null) {
-        manifest = JSON.parse((await download(manifestTx)).file);
+        manifest = (await download(manifestTx)).file;
     }
     else {
         const file = (await download(manifestTx)).file;
@@ -71,7 +72,7 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
             files.push(dirContents[i]);
         }
     }
-    let newManifest;
+    let newManifest = [];
     for (var i = 0; i < files.length; i++) {
         let fileToUpload = readFileSync(`${folder}/${files[i]}`);
         const fileToHash = fileToUpload;
@@ -89,7 +90,7 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
         const toPush = { name: files[i], txid: fileTx, hashes };
         newManifest.push(toPush);
     }
-    if (manifest === newManifest) {
+    if (manifest.toString() === newManifest.toString()) {
         console.log('No files updated');
         return txid;
     }

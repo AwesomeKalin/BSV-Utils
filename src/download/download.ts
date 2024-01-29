@@ -23,7 +23,7 @@ export async function download(txid: string) {
         mkdirSync('temp');
 
         for (var i = 0; i < manifestDecoded.txs.length; i++) {
-            const txData: Uint8Array = new Uint8Array(await dlPart(manifestDecoded.txs[i]));
+            const txData: Uint8Array = new Uint8Array((await download(manifestDecoded.txs[i])).file);
 
             writeFileSync(`./temp/${i}`, txData);
 
@@ -60,14 +60,6 @@ export async function download(txid: string) {
     }
 }
 
-async function dlPart(txId: string) {
-    try {
-        return (await axios.get(`https://bico.media/${txId}`, { responseType: 'arraybuffer', responseEncoding: 'binary' })).data;
-    } catch {
-        return dlPart(txId);
-    }
-}
-
 export async function resumeDl(txid: string) {
     const firstDl: AxiosResponse = await axios.get(`https://bico.media/${txid}`);
 
@@ -81,7 +73,7 @@ export async function resumeDl(txid: string) {
     bar.start(manifestDecoded.txs.length, iStart);
 
     for (var i = iStart; i < manifestDecoded.txs.length; i++) {
-        const txData: Uint8Array = new Uint8Array(await dlPart(manifestDecoded.txs[i]));
+        const txData: Uint8Array = new Uint8Array((await download(manifestDecoded.txs[i])).file);
 
         writeFileSync(`./temp/${i}`, txData);
 

@@ -47,8 +47,9 @@ export async function updateProceduralSave(txid: string, folder: string, pgp: st
             console.log(`Updated folder save at ${txid}`);
         }, interval * 1000);
     } else {
-        txid = await updater(auth, txid, privKey, signer, key, url, folder);
-        console.log(`Updated folder save at ${txid}`);
+        await updater(auth, txid, privKey, signer, key, url, folder);
+        rmSync('temp', { recursive: true, force: true });
+        process.exit(0);
     }
 }
 
@@ -64,7 +65,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     console.log('Downloading old manifest');
 
     if (key === null) {
-        manifest = JSON.parse((await download(manifestTx)).file);
+        manifest = (await download(manifestTx)).file;
     } else {
         const file: Buffer = (await download(manifestTx)).file;
         manifest = JSON.parse(await decryptWithKey(file, key));
@@ -86,7 +87,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         }
     }
 
-    let newManifest: ManifestEntry[];
+    let newManifest: ManifestEntry[] = [];
 
     for (var i = 0; i < files.length; i++) {
         let fileToUpload: Buffer = readFileSync(`${folder}/${files[i]}`);
@@ -114,7 +115,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         newManifest.push(toPush);
     }
 
-    if (manifest === newManifest) {
+    if (manifest.toString() === newManifest.toString()) {
         console.log('No files updated');
         return txid;
     }

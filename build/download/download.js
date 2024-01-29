@@ -16,7 +16,7 @@ export async function download(txid) {
         bar.start(manifestDecoded.txs.length, 0);
         mkdirSync('temp');
         for (var i = 0; i < manifestDecoded.txs.length; i++) {
-            const txData = new Uint8Array(await dlPart(manifestDecoded.txs[i]));
+            const txData = new Uint8Array((await download(manifestDecoded.txs[i])).file);
             writeFileSync(`./temp/${i}`, txData);
             bar.increment(1);
         }
@@ -40,14 +40,6 @@ export async function download(txid) {
         return { file: firstDl.data, name: fileName };
     }
 }
-async function dlPart(txId) {
-    try {
-        return (await axios.get(`https://bico.media/${txId}`, { responseType: 'arraybuffer', responseEncoding: 'binary' })).data;
-    }
-    catch {
-        return dlPart(txId);
-    }
-}
 export async function resumeDl(txid) {
     const firstDl = await axios.get(`https://bico.media/${txid}`);
     const manifestDecoded = firstDl.data;
@@ -56,7 +48,7 @@ export async function resumeDl(txid) {
     const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
     bar.start(manifestDecoded.txs.length, iStart);
     for (var i = iStart; i < manifestDecoded.txs.length; i++) {
-        const txData = new Uint8Array(await dlPart(manifestDecoded.txs[i]));
+        const txData = new Uint8Array((await download(manifestDecoded.txs[i])).file);
         writeFileSync(`./temp/${i}`, txData);
         bar.increment(1);
     }
