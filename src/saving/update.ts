@@ -69,10 +69,6 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     } else {
         const file: Buffer = (await download(manifestTx)).file;
         manifest = JSON.parse(await decryptWithKey(file, key));
-
-        rmSync('./temp', { recursive: true, force: true });
-
-        process.exit(0);
     }
 
     console.log('Downloaded!');
@@ -88,6 +84,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     }
 
     let newManifest: ManifestEntry[] = [];
+    let changed: boolean = false;
 
     for (var i = 0; i < files.length; i++) {
         let fileToUpload: Buffer = readFileSync(`${folder}/${files[i]}`);
@@ -109,13 +106,14 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
             }
 
             fileTx = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
+            changed = true;
         }
 
         const toPush: ManifestEntry = { name: files[i], txid: fileTx, hashes };
         newManifest.push(toPush);
     }
 
-    if (manifest.toString() === newManifest.toString()) {
+    if (!changed) {
         console.log('No files updated');
         return txid;
     }
