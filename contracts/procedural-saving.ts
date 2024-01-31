@@ -1,4 +1,4 @@
-import { ByteString, PubKey, Ripemd160, Sig, SmartContract, assert, hash256, method, prop, SigHash } from 'scrypt-ts';
+import { ByteString, PubKey, Ripemd160, Sig, SigHash, SmartContract, assert, bsv, hash256, method, prop } from 'scrypt-ts';
 
 export class ProceduralSaving extends SmartContract {
     //@ts-ignore
@@ -25,7 +25,7 @@ export class ProceduralSaving extends SmartContract {
     //@ts-ignore
     @method(SigHash.ANYONECANPAY_SINGLE)
     public changeManifest(sig: Sig, pubkey: PubKey, newManifest: ByteString) {
-        this.updateManifest(newManifest);
+        this.manifest = newManifest;
 
         assert(Ripemd160(pubkey) == this.address, 'address check failed');
         assert(this.checkSig(sig, pubkey), 'signature check failed');
@@ -36,9 +36,25 @@ export class ProceduralSaving extends SmartContract {
         assert(this.ctx.hashOutputs == hash256(output), 'hashOutputs mismatch');
     }
 
-    //@ts-ignore
-    @method()
-    updateManifest(newManifest: ByteString): void {
-        this.manifest = newManifest;
+    static buildTxForChangeManifest(current: ProceduralSaving, newManifest: ByteString) {
+        const nextInstance = current.next();
+        nextInstance.manifest = newManifest;
+
+        const unsignedTx: bsv.Transaction = new bsv.Transaction().addInput(current.buildContractInput()).addOutput(new bsv.Transaction.Output({
+            script: nextInstance.lockingScript,
+            satoshis: current.balance,
+        }));
+
+        return Promise.resolve({
+            tx: unsignedTx,
+            atInputIndex: 0,
+            nexts: [
+                {
+                    instance: nextInstance,
+                    atOutputIndex: 0,
+                    balance: current.balance,
+                },
+            ],
+        })
     }
 }

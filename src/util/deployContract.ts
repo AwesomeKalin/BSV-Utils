@@ -1,5 +1,5 @@
 import { bsv } from "scrypt-ts";
-import { authenticate } from "./authenticator.js";
+import { authenticate, getAuthClass } from "./authenticator.js";
 import { getTxInput } from "./getInput.js";
 import RelysiaSDK from '@relysia/sdk';
 import axios, { AxiosResponse } from "axios";
@@ -90,6 +90,28 @@ async function wocBroadcast(txhex: string) {
 }
 
 export async function broadcastWithFee(auth: authenticate, tx: bsv.Transaction, inputSats: number, address: string) {
+    tx = await addInputsToTx(tx, inputSats)
+
+    tx = tx.seal().sign(await getPrivateKey(auth));
+
+    console.log('Transaction signed, broadcasting to blockchain');
+
+    await wocBroadcast(tx.uncheckedSerialize());
+
+    await auth.checkAuth();
+
+    await axios.get('https://api.relysia.com/v1/metrics', {
+        headers: {
+            authToken: auth.relysia.authentication.v1.getAuthToken(),
+        }
+    });
+
+    return tx.hash;
+}
+
+export async function addInputsToTx(tx: bsv.Transaction, inputSats: number) {
+    const auth: authenticate = await getAuthClass();
+    const address: string = new bsv.PrivateKey(await getPrivateKey(auth)).toAddress().toString();
     let feeNeeded: number = tx.getFee();
     let satsNeeded: number = (feeNeeded + 1) - inputSats;
 
@@ -118,21 +140,5 @@ export async function broadcastWithFee(auth: authenticate, tx: bsv.Transaction, 
 
     console.log('Inputs added');
 
-    tx = tx.seal().sign(await getPrivateKey(auth));
-
-    console.log('Transaction signed, broadcasting to blockchain');
-
-    console.log(tx.uncheckedSerialize());
-
-    await wocBroadcast(tx.uncheckedSerialize());
-
-    await auth.checkAuth();
-
-    await axios.get('https://api.relysia.com/v1/metrics', {
-        headers: {
-            authToken: auth.relysia.authentication.v1.getAuthToken(),
-        }
-    });
-
-    return tx.hash;
+    return tx;
 }

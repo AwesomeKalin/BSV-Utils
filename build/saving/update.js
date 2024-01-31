@@ -101,7 +101,7 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
     }
     const newManifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
     const nextInstance = instance.next();
-    nextInstance.updateManifest(newManifestTx);
+    nextInstance.manifest = newManifestTx;
     let { tx: callTX } = await instance.methods.changeManifest((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
         pubKeyOrAddrToSign: {

@@ -15,16 +15,12 @@ contract ProceduralSaving {
   public function changeManifest(Sig sig, PubKey pubkey, bytes newManifest, SigHashPreimage __scrypt_ts_txPreimage) {
     require(Tx.checkPreimageSigHashType(__scrypt_ts_txPreimage, SigHashType(b'c3')));
     this.ctx = ProceduralSaving.createCtx(__scrypt_ts_txPreimage);
-    this.updateManifest(newManifest);
+    this.manifest = newManifest;
     require(Ripemd160(pubkey) == this.address);
     require(checkSig(sig, pubkey));
     int amount = this.ctx.utxo.value;
     bytes output = this.buildStateOutput(amount);
     require(this.ctx.hashOutputs == hash256(output));
-  }
-  function updateManifest(bytes newManifest) : bool {
-    this.manifest = newManifest;
-    return true;
   }
   static function createCtx(SigHashPreimage txPreimage) : __scrypt_ts_ScriptContext {  bytes version = SigHash.nVersion(txPreimage);  bytes hashPrevouts = SigHash.hashPrevouts(txPreimage);  bytes hashSequence = SigHash.hashSequence(txPreimage);  bytes hashOutputs = SigHash.hashOutputs(txPreimage);  int locktime = SigHash.nLocktime(txPreimage);  int sequence = SigHash.nSequence(txPreimage);  SigHashType sigHashType = SigHash.sigHashType(txPreimage);  bytes txid = SigHash.outpoint(txPreimage)[0 : 32];  int outputIndex = unpack(SigHash.outpoint(txPreimage)[32 :]);  __scrypt_ts_Outpoint outpoint = { txid, outputIndex };  bytes scriptCode = SigHash.scriptCode(txPreimage);  int value = SigHash.value(txPreimage);  __scrypt_ts_UTXO utxo = { outpoint, scriptCode, value };  return { version, hashPrevouts, hashSequence, hashOutputs, locktime, sequence, sigHashType, utxo, txPreimage };}
   function timeLock(int locktime): bool {  bool res = true;  res = this.ctx.sequence < 0xffffffff;  if (    locktime < 500000000  ) {    res = res && this.ctx.locktime < 500000000;  }  return res && this.ctx.locktime >= locktime;}

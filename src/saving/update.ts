@@ -129,7 +129,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     const newManifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
 
     const nextInstance: ProceduralSaving = instance.next();
-    nextInstance.updateManifest(newManifestTx);
+    nextInstance.manifest = newManifestTx;
 
     let { tx: callTX } = await instance.methods.changeManifest((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
@@ -148,7 +148,6 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
 
     callTX.feePerKb(1);
     callTX.change(privKey.toAddress().toString());
-
     const nextTxId: string = await broadcastWithFee(auth, callTX, 0, privKey.toAddress().toString());
 
     console.log(`Updated contract on blockchain: ${nextTxId}`);
