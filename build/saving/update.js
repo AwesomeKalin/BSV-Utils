@@ -4,7 +4,7 @@ import { getLatestVersionOfContract } from "../util/getLatestVersionOfContract.j
 import { TestWallet, WhatsonchainProvider, findSig } from "scrypt-ts";
 import { PubKey, bsv } from "scryptlib";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
-import { broadcastWithFee, getPrivateKey } from "../util/deployContract.js";
+import { getPrivateKey } from "../util/deployContract.js";
 import { getRawTx } from "./delete.js";
 import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
 import { mkdirSync, readFileSync, readdirSync, lstatSync, rmSync } from "fs";
@@ -16,6 +16,7 @@ import { decryptWithKey, encryptWithKey } from "../util/encryptWithKey.js";
 import { hash } from "../util/hash.js";
 import { compareHashes } from "../util/hash.js";
 import { uploadFiles } from "../upload/uploadFiles.js";
+import { getTxInput } from "../util/getInput.js";
 export async function updateProceduralSave(txid, folder, pgp, interval) {
     const auth = await getAuthClass();
     try {
@@ -100,25 +101,25 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
         manifestToUpload = await encryptWithKey(manifestToUpload, key);
     }
     const newManifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
+    console.log('Uploaded!');
     const nextInstance = instance.next();
     nextInstance.manifest = newManifestTx;
+    console.log('Deploying');
+    await getTxInput(auth, privKey.toAddress().toString());
+    await getTxInput(auth, privKey.toAddress().toString());
     let { tx: callTX } = await instance.methods.changeManifest((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
         pubKeyOrAddrToSign: {
             pubKeyOrAddr: privKey.toPublicKey(),
         },
-        // This flag ensures the call tx is only created locally and not broadcasted.
-        partiallySigned: true,
         // Prevents automatic addition of fee inputs.
-        autoPayFee: false,
+        autoPayFee: true,
         next: {
             instance: nextInstance,
             balance: instance.balance,
         }
     });
-    callTX.feePerKb(1);
-    callTX.change(privKey.toAddress().toString());
-    const nextTxId = await broadcastWithFee(auth, callTX, 0, privKey.toAddress().toString());
+    const nextTxId = callTX.id;
     console.log(`Updated contract on blockchain: ${nextTxId}`);
     return nextTxId;
 }

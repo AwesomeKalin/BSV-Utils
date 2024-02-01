@@ -17,6 +17,7 @@ import { decryptWithKey, encryptWithKey } from "../util/encryptWithKey.js";
 import { hash, hashArray } from "../util/hash.js";
 import { compareHashes } from "../util/hash.js";
 import { uploadFiles } from "../upload/uploadFiles.js";
+import { getTxInput } from "../util/getInput.js";
 
 export async function updateProceduralSave(txid: string, folder: string, pgp: string, interval: number) {
     const auth: authenticate = await getAuthClass();
@@ -128,27 +129,28 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
 
     const newManifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
 
+    console.log('Uploaded!');
+
     const nextInstance: ProceduralSaving = instance.next();
     nextInstance.manifest = newManifestTx;
+
+    console.log('Deploying');
+
+    await getTxInput(auth, privKey.toAddress().toString());
+    await getTxInput(auth, privKey.toAddress().toString());
 
     let { tx: callTX } = await instance.methods.changeManifest((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
         pubKeyOrAddrToSign: {
             pubKeyOrAddr: privKey.toPublicKey(),
         },
-        // This flag ensures the call tx is only created locally and not broadcasted.
-        partiallySigned: true,
-        // Prevents automatic addition of fee inputs.
-        autoPayFee: false,
         next: {
             instance: nextInstance,
             balance: instance.balance,
         }
     } as MethodCallOptions<ProceduralSaving>);
 
-    callTX.feePerKb(1);
-    callTX.change(privKey.toAddress().toString());
-    const nextTxId: string = await broadcastWithFee(auth, callTX, 0, privKey.toAddress().toString());
+    const nextTxId: string = callTX.id;
 
     console.log(`Updated contract on blockchain: ${nextTxId}`);
 

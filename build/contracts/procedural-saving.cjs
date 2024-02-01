@@ -28,27 +28,6 @@ class ProceduralSaving extends scrypt_ts_1.SmartContract {
         const output = this.buildStateOutput(amount);
         (0, scrypt_ts_1.assert)(this.ctx.hashOutputs == (0, scrypt_ts_1.hash256)(output), 'hashOutputs mismatch');
     }
-    static async buildTxForChangeManifest(current, newManifest) {
-        const nextInstance = current.next();
-        //@ts-expect-error
-        nextInstance.manifest = newManifest.next.instance.manifest;
-        let unsignedTx = new scrypt_ts_1.bsv.Transaction().addInput(current.buildContractInput()).addOutput(new scrypt_ts_1.bsv.Transaction.Output({
-            script: nextInstance.lockingScript,
-            satoshis: current.balance,
-        })).feePerKb(1).change(new scrypt_ts_1.bsv.PrivateKey(await (await import('../util/deployContract.js')).getPrivateKey(await (await import('../util/authenticator.js')).getAuthClass())).toAddress());
-        unsignedTx = await (await import('../util/deployContract.js')).addInputsToTx(unsignedTx, 0);
-        return Promise.resolve({
-            tx: unsignedTx,
-            atInputIndex: 0,
-            nexts: [
-                {
-                    instance: nextInstance,
-                    atOutputIndex: 0,
-                    balance: current.balance,
-                },
-            ],
-        });
-    }
 }
 exports.ProceduralSaving = ProceduralSaving;
 __decorate([

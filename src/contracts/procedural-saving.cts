@@ -1,4 +1,4 @@
-import { ByteString, PubKey, Ripemd160, Sig, SigHash, SmartContract, assert, bsv, hash256, method, prop } from 'scrypt-ts';
+import { ByteString, MethodCallOptions, PubKey, Ripemd160, Sig, SigHash, SmartContract, assert, bsv, hash256, method, prop } from 'scrypt-ts';
 
 export class ProceduralSaving extends SmartContract {
     @prop(true)
@@ -30,30 +30,5 @@ export class ProceduralSaving extends SmartContract {
         const output: ByteString = this.buildStateOutput(amount);
 
         assert(this.ctx.hashOutputs == hash256(output), 'hashOutputs mismatch');
-    }
-
-    static async buildTxForChangeManifest(current: ProceduralSaving, newManifest: ByteString) {
-        const nextInstance = current.next();
-        //@ts-expect-error
-        nextInstance.manifest = newManifest.next.instance.manifest;
-
-        let unsignedTx: bsv.Transaction = new bsv.Transaction().addInput(current.buildContractInput()).addOutput(new bsv.Transaction.Output({
-            script: nextInstance.lockingScript,
-            satoshis: current.balance,
-        })).feePerKb(1).change(new bsv.PrivateKey(await (await import('../util/deployContract.js')).getPrivateKey(await (await import('../util/authenticator.js')).getAuthClass())).toAddress());
-
-        unsignedTx = await (await import('../util/deployContract.js')).addInputsToTx(unsignedTx, 0);
-
-        return Promise.resolve({
-            tx: unsignedTx,
-            atInputIndex: 0,
-            nexts: [
-                {
-                    instance: nextInstance,
-                    atOutputIndex: 0,
-                    balance: current.balance,
-                },
-            ],
-        })
     }
 }
