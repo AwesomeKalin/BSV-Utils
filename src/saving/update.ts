@@ -21,6 +21,7 @@ import { getTxInput } from "../util/getInput.js";
 
 export async function updateProceduralSave(txid: string, folder: string, pgp: string, interval: number) {
     const auth: authenticate = await getAuthClass();
+    ProceduralSaving.loadArtifact(artifact);
 
     try {
         txid = await getLatestVersionOfContract(txid);
@@ -29,7 +30,6 @@ export async function updateProceduralSave(txid: string, folder: string, pgp: st
     }
 
     const privKey: bsv.PrivateKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
-    const signer: TestWallet = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
 
     let key: string | null = null;
 
@@ -44,19 +44,19 @@ export async function updateProceduralSave(txid: string, folder: string, pgp: st
 
     if (interval !== 0) {
         setInterval(async () => {
-            txid = await updater(auth, txid, privKey, signer, key, url, folder);
+            txid = await updater(auth, txid, privKey, key, url, folder);
             console.log(`Updated folder save at ${txid}`);
         }, interval * 1000);
     } else {
-        await updater(auth, txid, privKey, signer, key, url, folder);
+        await updater(auth, txid, privKey, key, url, folder);
         rmSync('temp', { recursive: true, force: true });
         process.exit(0);
     }
 }
 
-async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey, signer: TestWallet, key: string | null, url: string, folder: string) {
+async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey, key: string | null, url: string, folder: string) {
+    const signer: TestWallet = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     const tx = await getRawTx(txid);
-    ProceduralSaving.loadArtifact(artifact);
     const instance: ProceduralSaving = ProceduralSaving.fromTx(new bsv.Transaction(tx), 0);
 
     await instance.connect(signer);
@@ -129,6 +129,8 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
 
     const newManifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
 
+    console.log(newManifestTx);
+
     console.log('Uploaded!');
 
     const nextInstance: ProceduralSaving = instance.next();
@@ -136,8 +138,23 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
 
     console.log('Deploying');
 
-    await getTxInput(auth, privKey.toAddress().toString());
-    await getTxInput(auth, privKey.toAddress().toString());
+    let { tx: checkTx } = await instance.methods.changeManifest((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
+        // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
+        pubKeyOrAddrToSign: {
+            pubKeyOrAddr: privKey.toPublicKey(),
+        },
+        changeAddress: privKey.toAddress(),
+        next: {
+            instance: nextInstance,
+            balance: instance.balance,
+        },
+        // Do not broadcast to blockchain
+        partiallySigned: true,
+    } as MethodCallOptions<ProceduralSaving>);
+
+    for (var i = 0; i < checkTx.getFee() + 2; i++) {
+        await getTxInput(auth, privKey.toAddress().toString());
+    }
 
     let { tx: callTX } = await instance.methods.changeManifest((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
@@ -148,7 +165,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         next: {
             instance: nextInstance,
             balance: instance.balance,
-        }
+        },
     } as MethodCallOptions<ProceduralSaving>);
 
     const nextTxId: string = callTX.id;

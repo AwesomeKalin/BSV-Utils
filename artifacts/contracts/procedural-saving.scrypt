@@ -11,16 +11,16 @@ contract ProceduralSaving {
     this.address = address;
   }
   public function unlock(Sig sig, PubKey pubkey) {
-    require(Ripemd160(pubkey) == this.address);
+    require(hash160(pubkey) == this.address);
     require(checkSig(sig, pubkey));
   }
   public function changeManifest(Sig sig, PubKey pubkey, bytes newManifest, SigHashPreimage __scrypt_ts_txPreimage, int __scrypt_ts_changeAmount, Ripemd160 __scrypt_ts_changeAddress) {
     require(Tx.checkPreimageSigHashType(__scrypt_ts_txPreimage, SigHashType(b'41')));
     this.ctx = ProceduralSaving.createCtx(__scrypt_ts_txPreimage);
     this.__scrypt_ts_change = {__scrypt_ts_changeAmount, __scrypt_ts_changeAddress};
-    this.updateManifest(newManifest);
-    require(Ripemd160(pubkey) == this.address);
+    require(hash160(pubkey) == this.address);
     require(checkSig(sig, pubkey));
+    this.updateManifest(newManifest);
     int amount = this.ctx.utxo.value;
     bytes output = this.buildStateOutput(amount) + this.buildChangeOutput();
     require(this.ctx.hashOutputs == hash256(output));

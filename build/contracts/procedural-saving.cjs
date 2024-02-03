@@ -17,13 +17,13 @@ class ProceduralSaving extends scrypt_ts_1.SmartContract {
         this.address = address;
     }
     unlock(sig, pubkey) {
-        (0, scrypt_ts_1.assert)((0, scrypt_ts_1.Ripemd160)(pubkey) == this.address, 'address check failed');
+        (0, scrypt_ts_1.assert)((0, scrypt_ts_1.pubKey2Addr)(pubkey) == this.address, 'address check failed');
         (0, scrypt_ts_1.assert)(this.checkSig(sig, pubkey), 'signature check failed');
     }
     changeManifest(sig, pubkey, newManifest) {
-        this.updateManifest(newManifest);
-        (0, scrypt_ts_1.assert)((0, scrypt_ts_1.Ripemd160)(pubkey) == this.address, 'address check failed');
+        (0, scrypt_ts_1.assert)((0, scrypt_ts_1.pubKey2Addr)(pubkey) == this.address, 'address check failed');
         (0, scrypt_ts_1.assert)(this.checkSig(sig, pubkey), 'signature check failed');
+        this.updateManifest(newManifest);
         const amount = this.ctx.utxo.value;
         const output = this.buildStateOutput(amount) + this.buildChangeOutput();
         (0, scrypt_ts_1.assert)(this.ctx.hashOutputs == (0, scrypt_ts_1.hash256)(output), 'hashOutputs mismatch');

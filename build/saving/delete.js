@@ -17,13 +17,23 @@ export async function deleteFolderSave(txid) {
     catch {
         console.log(chalk.red('This procedural save has already been deleted!'));
     }
-    const tx = await getRawTx(txid);
     ProceduralSaving.loadArtifact(artifact);
-    const instance = ProceduralSaving.fromTx(new bsv.Transaction(tx), 0);
     const privKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
     const signer = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
+    const tx = new bsv.Transaction(await getRawTx(txid));
+    const instance = ProceduralSaving.fromTx(tx, 0);
     await instance.connect(signer);
-    await getTxInput(auth, privKey.toAddress().toString());
+    let { tx: checkTx } = await instance.methods.unlock((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), {
+        // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
+        pubKeyOrAddrToSign: {
+            pubKeyOrAddr: privKey.toPublicKey(),
+        },
+        // Do not broadcast to blockchain
+        partiallySigned: true,
+    });
+    for (var i = 0; i < checkTx.getFee() + 2; i++) {
+        await getTxInput(auth, privKey.toAddress().toString());
+    }
     let { tx: callTX } = await instance.methods.unlock((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
         pubKeyOrAddrToSign: {

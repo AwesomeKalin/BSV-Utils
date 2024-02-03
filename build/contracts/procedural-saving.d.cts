@@ -1,8 +1,8 @@
-import { ByteString, PubKey, Ripemd160, Sig, SmartContract } from 'scrypt-ts';
+import { Addr, ByteString, PubKey, Sig, SmartContract } from 'scrypt-ts';
 export declare class ProceduralSaving extends SmartContract {
     manifest: ByteString;
-    readonly address: Ripemd160;
-    constructor(initialManifest: ByteString, address: Ripemd160);
+    readonly address: Addr;
+    constructor(initialManifest: ByteString, address: Addr);
     unlock(sig: Sig, pubkey: PubKey): void;
     changeManifest(sig: Sig, pubkey: PubKey, newManifest: ByteString): void;
     updateManifest(newManifest: ByteString): void;

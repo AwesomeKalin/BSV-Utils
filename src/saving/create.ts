@@ -6,7 +6,7 @@ import { expressServer } from "../upload/expressServer.js";
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { hash, hashArray } from "../util/hash.js";
 import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
-import { TestWallet, WhatsonchainProvider, bsv } from "scrypt-ts";
+import { Addr, TestWallet, WhatsonchainProvider, bsv } from "scrypt-ts";
 import { deployContract } from "../util/deployContract.js";
 import { Ripemd160, buildContractClass } from 'scryptlib';
 import { getPrivateKey } from "../util/deployContract.js";
@@ -75,9 +75,9 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
 
     console.log('Deploying contract to blockchain');
 
-    ProceduralSaving.loadArtifact(artifact)
-    const addressFrom: bsv.PublicKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth)).toPublicKey();
-    let instance = new ProceduralSaving(manifestTx, Ripemd160(addressFrom.toString()));
+    ProceduralSaving.loadArtifact(artifact);
+    const privKey: bsv.PrivateKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
+    let instance = new ProceduralSaving(manifestTx, Addr(privKey.toAddress().toByteString()));
     const lockingScript: bsv.Script = instance.lockingScript;
 
     const tx = new bsv.Transaction().addOutput(
@@ -87,7 +87,6 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
         })
     );
 
-    const privKey: bsv.PrivateKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
     const signer: TestWallet = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     instance.connect(signer);
 

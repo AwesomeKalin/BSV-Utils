@@ -19,6 +19,7 @@ import { uploadFiles } from "../upload/uploadFiles.js";
 import { getTxInput } from "../util/getInput.js";
 export async function updateProceduralSave(txid, folder, pgp, interval) {
     const auth = await getAuthClass();
+    ProceduralSaving.loadArtifact(artifact);
     try {
         txid = await getLatestVersionOfContract(txid);
     }
@@ -26,7 +27,6 @@ export async function updateProceduralSave(txid, folder, pgp, interval) {
         console.log(chalk.red('This procedural save has been deleted!'));
     }
     const privKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
-    const signer = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     let key = null;
     if (pgp != undefined || pgp != null) {
         key = readFileSync(pgp).toString();
@@ -37,19 +37,19 @@ export async function updateProceduralSave(txid, folder, pgp, interval) {
     const url = await tunnelmole({ port });
     if (interval !== 0) {
         setInterval(async () => {
-            txid = await updater(auth, txid, privKey, signer, key, url, folder);
+            txid = await updater(auth, txid, privKey, key, url, folder);
             console.log(`Updated folder save at ${txid}`);
         }, interval * 1000);
     }
     else {
-        await updater(auth, txid, privKey, signer, key, url, folder);
+        await updater(auth, txid, privKey, key, url, folder);
         rmSync('temp', { recursive: true, force: true });
         process.exit(0);
     }
 }
-async function updater(auth, txid, privKey, signer, key, url, folder) {
+async function updater(auth, txid, privKey, key, url, folder) {
+    const signer = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     const tx = await getRawTx(txid);
-    ProceduralSaving.loadArtifact(artifact);
     const instance = ProceduralSaving.fromTx(new bsv.Transaction(tx), 0);
     await instance.connect(signer);
     const manifestTx = instance.manifest;
@@ -101,12 +101,27 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
         manifestToUpload = await encryptWithKey(manifestToUpload, key);
     }
     const newManifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
+    console.log(newManifestTx);
     console.log('Uploaded!');
     const nextInstance = instance.next();
     nextInstance.updateManifest(newManifestTx);
     console.log('Deploying');
-    await getTxInput(auth, privKey.toAddress().toString());
-    await getTxInput(auth, privKey.toAddress().toString());
+    let { tx: checkTx } = await instance.methods.changeManifest((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
+        // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
+        pubKeyOrAddrToSign: {
+            pubKeyOrAddr: privKey.toPublicKey(),
+        },
+        changeAddress: privKey.toAddress(),
+        next: {
+            instance: nextInstance,
+            balance: instance.balance,
+        },
+        // Do not broadcast to blockchain
+        partiallySigned: true,
+    });
+    for (var i = 0; i < checkTx.getFee() + 2; i++) {
+        await getTxInput(auth, privKey.toAddress().toString());
+    }
     let { tx: callTX } = await instance.methods.changeManifest((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
         pubKeyOrAddrToSign: {
@@ -116,7 +131,7 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
         next: {
             instance: nextInstance,
             balance: instance.balance,
-        }
+        },
     });
     const nextTxId = callTX.id;
     console.log(`Updated contract on blockchain: ${nextTxId}`);
