@@ -103,7 +103,7 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
     const newManifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
     console.log('Uploaded!');
     const nextInstance = instance.next();
-    nextInstance.manifest = newManifestTx;
+    nextInstance.updateManifest(newManifestTx);
     console.log('Deploying');
     await getTxInput(auth, privKey.toAddress().toString());
     await getTxInput(auth, privKey.toAddress().toString());
@@ -112,8 +112,7 @@ async function updater(auth, txid, privKey, signer, key, url, folder) {
         pubKeyOrAddrToSign: {
             pubKeyOrAddr: privKey.toPublicKey(),
         },
-        // Prevents automatic addition of fee inputs.
-        autoPayFee: true,
+        changeAddress: privKey.toAddress(),
         next: {
             instance: nextInstance,
             balance: instance.balance,

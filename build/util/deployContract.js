@@ -66,11 +66,7 @@ export async function broadcastWithFee(auth, tx, inputSats, address) {
     console.log('Transaction signed, broadcasting to blockchain');
     await wocBroadcast(tx.uncheckedSerialize());
     await auth.checkAuth();
-    await axios.get('https://api.relysia.com/v1/metrics', {
-        headers: {
-            authToken: auth.relysia.authentication.v1.getAuthToken(),
-        }
-    });
+    await checkMetrics(auth);
     return tx.hash;
 }
 export async function addInputsToTx(tx, inputSats) {
@@ -99,4 +95,17 @@ export async function addInputsToTx(tx, inputSats) {
     }
     console.log('Inputs added');
     return tx;
+}
+async function checkMetrics(auth) {
+    await auth.checkAuth();
+    try {
+        await axios.get('https://api.relysia.com/v1/metrics', {
+            headers: {
+                authToken: auth.relysia.authentication.v1.getAuthToken(),
+            }
+        });
+    }
+    catch {
+        await checkMetrics(auth);
+    }
 }

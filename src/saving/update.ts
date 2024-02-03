@@ -1,7 +1,7 @@
 import chalk from "chalk";
 import { authenticate, getAuthClass } from "../util/authenticator.js";
 import { getLatestVersionOfContract } from "../util/getLatestVersionOfContract.js";
-import { MethodCallOptions, SignatureHashType, SignatureResponse, TestWallet, WhatsonchainProvider, findSig } from "scrypt-ts";
+import { MethodCallOptions, SignatureResponse, TestWallet, WhatsonchainProvider, findSig } from "scrypt-ts";
 import { PubKey, bsv } from "scryptlib";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 import { broadcastWithFee, getPrivateKey } from "../util/deployContract.js";
@@ -132,7 +132,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     console.log('Uploaded!');
 
     const nextInstance: ProceduralSaving = instance.next();
-    nextInstance.manifest = newManifestTx;
+    nextInstance.updateManifest(newManifestTx);
 
     console.log('Deploying');
 
@@ -144,6 +144,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         pubKeyOrAddrToSign: {
             pubKeyOrAddr: privKey.toPublicKey(),
         },
+        changeAddress: privKey.toAddress(),
         next: {
             instance: nextInstance,
             balance: instance.balance,

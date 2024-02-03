@@ -100,11 +100,7 @@ export async function broadcastWithFee(auth: authenticate, tx: bsv.Transaction, 
 
     await auth.checkAuth();
 
-    await axios.get('https://api.relysia.com/v1/metrics', {
-        headers: {
-            authToken: auth.relysia.authentication.v1.getAuthToken(),
-        }
-    });
+    await checkMetrics(auth);
 
     return tx.hash;
 }
@@ -141,4 +137,18 @@ export async function addInputsToTx(tx: bsv.Transaction, inputSats: number) {
     console.log('Inputs added');
 
     return tx;
+}
+
+async function checkMetrics(auth: authenticate) {
+    await auth.checkAuth();
+
+    try {
+        await axios.get('https://api.relysia.com/v1/metrics', {
+            headers: {
+                authToken: auth.relysia.authentication.v1.getAuthToken(),
+            }
+        });
+    } catch {
+        await checkMetrics(auth);
+    }
 }

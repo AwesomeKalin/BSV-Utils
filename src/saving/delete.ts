@@ -8,6 +8,7 @@ import { MethodCallOptions, PubKey, SignatureHashType, SignatureResponse, TestWa
 import { broadcastWithFee, getPrivateKey } from "../util/deployContract.js";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 import chalk from "chalk";
+import { getTxInput } from "../util/getInput.js";
 
 export async function deleteFolderSave(txid: string) {
     const auth: authenticate = await getAuthClass();
@@ -26,22 +27,16 @@ export async function deleteFolderSave(txid: string) {
     const signer: TestWallet = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     await instance.connect(signer);
 
-    let { tx: callTX } = await instance.methods.unlock((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey(), SignatureHashType.ANYONECANPAY_NONE), PubKey(privKey.toPublicKey().toString()), {
+    await getTxInput(auth, privKey.toAddress().toString());
+
+    let { tx: callTX } = await instance.methods.unlock((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
         pubKeyOrAddrToSign: {
             pubKeyOrAddr: privKey.toPublicKey(),
-            sigHashType: SignatureHashType.ANYONECANPAY_NONE,
         },
-        // This flag ensures the call tx is only created locally and not broadcasted.
-        partiallySigned: true,
-        // Prevents automatic addition of fee inputs.
-        autoPayFee: false,
     } as MethodCallOptions<ProceduralSaving>);
 
-    callTX.feePerKb(1);
-    callTX.change(privKey.toAddress().toString());
-
-    console.log(`Deleted folder save at ${await broadcastWithFee(auth, callTX, 0, privKey.toAddress().toString())}`);
+    console.log(`Deleted folder save at ${callTX.id}`);
 }
 
 export async function getRawTx(txid: string) {
