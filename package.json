@@ -11,8 +11,12 @@
     "type": "module",
     "keywords": [
         "cryptocurrency",
-        "bsv",
-        "bitcoin"
+        "BSV",
+        "Bitcoin",
+        "Bitcoin SV",
+        "crypto",
+        "blockchain",
+        "Relysia"
     ],
     "author": "AwesomeKalin55",
     "license": "MIT",
