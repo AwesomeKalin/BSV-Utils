@@ -11,12 +11,8 @@
     "type": "module",
     "keywords": [
         "cryptocurrency",
-        "BSV",
-        "Bitcoin",
-        "Bitcoin SV",
-        "crypto",
-        "blockchain",
-        "Relysia"
+        "bsv",
+        "bitcoin"
     ],
     "author": "AwesomeKalin55",
     "license": "MIT",
@@ -32,6 +28,7 @@
         "chalk": "^4.1.2",
         "cli-progress": "^3.12.0",
         "express": "^4.18.2",
+        "fs-extra": "^11.2.0",
         "get-port": "^7.0.0",
         "is-base64": "^1.1.0",
         "js-crc": "^0.2.0",
@@ -50,6 +47,7 @@
         "@types/cli-progress": "^3.11.5",
         "@types/express": "^4.17.21",
         "@types/figlet": "^1.5.8",
+        "@types/fs-extra": "^11.0.4",
         "@types/gradient-string": "^1.1.5",
         "@types/is-base64": "^1.1.3",
         "@types/js-crc": "^0.2.3",

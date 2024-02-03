@@ -5,7 +5,6 @@ import { mkdirSync, readFileSync, rmSync, unlinkSync } from "fs";
 import { expressServer } from "./expressServer.js";
 import getPort from "get-port";
 import { resumeUpload, uploadFiles } from "./uploadFiles.js";
-import localtunnel from "localtunnel";
 import { tunnelmole } from "tunnelmole";
 
 export async function upload(file: string, fileName: string, uploadJson: string) {

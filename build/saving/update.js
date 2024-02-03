@@ -25,6 +25,7 @@ export async function updateProceduralSave(txid, folder, pgp, interval) {
     }
     catch {
         console.log(chalk.red('This procedural save has been deleted!'));
+        process.exit(1);
     }
     const privKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
     let key = null;

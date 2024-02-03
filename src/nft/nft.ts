@@ -8,7 +8,6 @@ import { makeid } from "../util/randomString.js";
 import chalk from "chalk";
 import { issueToken } from "./issueToken.js";
 import { createOffer } from "./createOffer.js";
-import localtunnel from "localtunnel";
 import { tunnelmole } from "tunnelmole";
 
 export async function nft(prefix: string, folder: string, description: string, fileformat: string, digits: number, defaultPrice: number, toUpload: number, nftManifestList: { nfts: Array<nftinfo> } = { nfts: [] }) {

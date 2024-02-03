@@ -43,6 +43,9 @@ dependencies:
   express:
     specifier: ^4.18.2
     version: 4.18.2
+  fs-extra:
+    specifier: ^11.2.0
+    version: 11.2.0
   get-port:
     specifier: ^7.0.0
     version: 7.0.0
@@ -93,6 +96,9 @@ devDependencies:
   '@types/figlet':
     specifier: ^1.5.8
     version: 1.5.8
+  '@types/fs-extra':
+    specifier: ^11.0.4
+    version: 11.0.4
   '@types/gradient-string':
     specifier: ^1.1.5
     version: 1.1.5
@@ -560,6 +566,13 @@ packages:
     resolution: {integrity: sha512-G22AUvy4Tl95XLE7jmUM8s8mKcoz+Hr+Xm9W90gJsppJq9f9tHvOGkrpn4gRX0q/cLtBdNkWtWCKDg2UDZoZvQ==}
     dev: true
 
+  /@types/fs-extra@11.0.4:
+    resolution: {integrity: sha512-yTbItCNreRooED33qjunPthRcSjERP1r4MqCZc7wv0u2sUkzTFp45tgUfS5+r7FrZPdmCCNflLhVSP/o+SemsQ==}
+    dependencies:
+      '@types/jsonfile': 6.1.4
+      '@types/node': 20.11.16
+    dev: true
+
   /@types/gradient-string@1.1.5:
     resolution: {integrity: sha512-Z2VPQ0q+IhrAO7XjJSjpDsoPc+CsCshRNah1IE9LCo/NzHMHylssvx73i0BAKzuaGj9cdhmgq9rLaietpYAbKQ==}
     dependencies:
@@ -611,6 +624,12 @@ packages:
 
   /@types/js-crc@0.2.3:
     resolution: {integrity: sha512-XQNB5dDWZ1S0AS/NzY0F/Bl8c8uOTC1MbTZrIj08HzkwT4POxgeA7+wWesrP4MvJEdvy+tsHya3OHzcLnQhfIg==}
+    dev: true
+
+  /@types/jsonfile@6.1.4:
+    resolution: {integrity: sha512-D5qGUYwjvnNNextdU59/+fI+spnwtTFmyQP0h+PfIOSkNfpU6AOICUOkm4i0OnSk+NyjdPJrxCDro0sJsWlRpQ==}
+    dependencies:
+      '@types/node': 20.11.16
     dev: true
 
   /@types/keyv@3.1.4:
@@ -2563,6 +2582,15 @@ packages:
       jsonfile: 6.1.0
       universalify: 2.0.1
     dev: true
+
+  /fs-extra@11.2.0:
+    resolution: {integrity: sha512-PmDi3uwK5nFuXh7XDTlVnS17xJS7vW36is2+w3xcv8SVxiB4NyATf4ctkVY5bkSjX0Y4nbvZCq1/EjtEyr9ktw==}
+    engines: {node: '>=14.14'}
+    dependencies:
+      graceful-fs: 4.2.11
+      jsonfile: 6.1.0
+      universalify: 2.0.1
+    dev: false
 
   /fs-extra@9.1.0:
     resolution: {integrity: sha512-hcg3ZmepS30/7BSFqRvoo3DOMQu7IjqxO5nCDt+zM9XWjb33Wg7ziNT+Qvqbuc3+gWpzO02JubVyk2G4Zvo1OQ==}

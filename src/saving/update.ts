@@ -4,7 +4,7 @@ import { getLatestVersionOfContract } from "../util/getLatestVersionOfContract.j
 import { MethodCallOptions, SignatureResponse, TestWallet, WhatsonchainProvider, findSig } from "scrypt-ts";
 import { PubKey, bsv } from "scryptlib";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
-import { broadcastWithFee, getPrivateKey } from "../util/deployContract.js";
+import { getPrivateKey } from "../util/deployContract.js";
 import { getRawTx } from "./delete.js";
 import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
 import { mkdirSync, readFileSync, readdirSync, lstatSync, rmSync } from "fs";
@@ -27,6 +27,7 @@ export async function updateProceduralSave(txid: string, folder: string, pgp: st
         txid = await getLatestVersionOfContract(txid);
     } catch {
         console.log(chalk.red('This procedural save has been deleted!'));
+        process.exit(1);
     }
 
     const privKey: bsv.PrivateKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));

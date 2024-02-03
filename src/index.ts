@@ -11,6 +11,7 @@ import { hashSettings } from './settings/hash.js';
 import { createProceduralSave } from './saving/create.js';
 import { deleteFolderSave } from './saving/delete.js';
 import { updateProceduralSave } from './saving/update.js';
+import { downloadProceduralSave } from './saving/download.js';
 
 let ranCommand = false;
 
@@ -182,6 +183,33 @@ yargs(process.argv.slice(2))
         ranCommand = true;
         //@ts-expect-error
         await updateProceduralSave(argv.txid, argv.folder, argv.encryption, argv.interval);
+    })
+    .command('downloadFolderSave', 'Download a procedural save', (yargs) => {
+        yargs.positional('txid', {
+            type: 'string',
+            description: 'The transaction id  of the save. Does not have to be the latest',
+            required: true,
+            alias: 'tx',
+        });
+        yargs.positional('findLatest', {
+            type: 'boolean',
+            description: 'Whether you want to find the latest version of the save or download the state at the provided transaction',
+            default: false,
+        });
+        yargs.positional('encryption', {
+            type: 'string',
+            description: 'If encryption is used on this save, then input the path to a PGP key here. Must contain private key',
+        });
+        yargs.positional('folder', {
+            type: 'string',
+            description: 'The folder where you want the file(s) to be saved',
+            required: true,
+            alias: 'dir',
+        })
+    }, async function (argv) {
+        ranCommand = true;
+        //@ts-expect-error
+        await downloadProceduralSave(argv.txid, argv.findLatest, argv.encryption, argv.folder);
     })
     .help()
     .argv;
