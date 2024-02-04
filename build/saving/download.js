@@ -37,8 +37,10 @@ export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
     for (var i = 0; i < manifest.length; i++) {
         console.log(`Downloading ${manifest[i].name}`);
         let file = (await download(manifest[i].txid)).file;
+        if (file instanceof Buffer) {
+            file = file.toString();
+        }
         if (key !== null) {
-            //@ts-expect-error
             file = await decryptWithKey(file, key);
         }
         /**

@@ -47,8 +47,11 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
         console.log(`Downloading ${manifest[i].name}`);
         let file: Buffer | string = (await download(manifest[i].txid)).file;
 
+        if (file instanceof Buffer) {
+            file = file.toString();
+        }
+
         if (key !== null) {
-            //@ts-expect-error
             file = await decryptWithKey(file, key);
         }
         /**
