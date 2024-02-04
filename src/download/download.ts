@@ -15,8 +15,6 @@ export async function download(txid: string) {
     try {
         const manifestDecoded: { txs: string, name: string } = firstDl.data;
 
-        console.log(`Downloading ${manifestDecoded.name}`);
-
         const bar: SingleBar = new cliProgress.SingleBar({}, Presets.shades_classic);
         bar.start(manifestDecoded.txs.length, 0);
 
