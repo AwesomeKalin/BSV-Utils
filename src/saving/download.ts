@@ -54,14 +54,13 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
         if (key !== null) {
             file = await decryptWithKey(file, key);
         }
-        /**
-        const hashed: hashArray = hash(file);
+        
+        const hashed: hashArray = hash(Buffer.from(file));
 
         if (!compareHashes(manifest[i].hashes, hashed)) {
             console.log(chalk.red('Recieved incorrect file! Terminating'));
             process.exit(1);
         }
-        */
 
         outputFileSync(`${folder}/${manifest[i].name}`, file);
         

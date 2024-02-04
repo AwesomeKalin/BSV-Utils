@@ -23,7 +23,7 @@ export async function download(txid: string) {
         mkdirSync('temp');
 
         for (var i = 0; i < manifestDecoded.txs.length; i++) {
-            const txData: Uint8Array = new Uint8Array((await download(manifestDecoded.txs[i])).file);
+            const txData: Uint8Array = (await download(manifestDecoded.txs[i])).file;
 
             writeFileSync(`./temp/${i}`, txData);
 
