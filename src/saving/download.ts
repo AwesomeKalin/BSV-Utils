@@ -54,7 +54,7 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
 
         const hashed: hashArray = hash(file);
 
-        if (!compareHashes(hashed, manifest[i].hashes)) {
+        if (!compareHashes(manifest[i].hashes, hashed)) {
             console.log(chalk.red('Recieved incorrect file! Terminating'));
             process.exit(1);
         }

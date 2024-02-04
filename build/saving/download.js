@@ -43,7 +43,7 @@ export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
             file = await decryptWithKey(file, key);
         }
         const hashed = hash(file);
-        if (!compareHashes(hashed, manifest[i].hashes)) {
+        if (!compareHashes(manifest[i].hashes, hashed)) {
             console.log(chalk.red('Recieved incorrect file! Terminating'));
             process.exit(1);
         }
