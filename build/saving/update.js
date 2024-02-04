@@ -120,7 +120,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
         // Do not broadcast to blockchain
         partiallySigned: true,
     });
-    for (var i = 0; i < checkTx.getFee() + 2; i++) {
+    for (var i = 0; i < (checkTx.getFee() + 1) / 3; i++) {
         await getTxInput(auth, privKey.toAddress().toString());
     }
     let { tx: callTX } = await instance.methods.changeManifest((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {

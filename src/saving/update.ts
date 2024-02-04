@@ -69,7 +69,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     if (key === null) {
         manifest = (await download(manifestTx)).file;
     } else {
-        const file: Buffer = (await download(manifestTx)).file;
+        const file: string = (await download(manifestTx)).file;
         manifest = JSON.parse(await decryptWithKey(file, key));
     }
 
@@ -153,7 +153,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         partiallySigned: true,
     } as MethodCallOptions<ProceduralSaving>);
 
-    for (var i = 0; i < checkTx.getFee() + 2; i++) {
+    for (var i = 0; i < (checkTx.getFee() + 1) / 3; i++) {
         await getTxInput(auth, privKey.toAddress().toString());
     }
 

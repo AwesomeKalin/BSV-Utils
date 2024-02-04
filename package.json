@@ -11,8 +11,10 @@
     "type": "module",
     "keywords": [
         "cryptocurrency",
-        "bsv",
-        "bitcoin"
+        "BSV",
+        "Bitcoin",
+        "blockchain",
+        "Bitcoin SV"
     ],
     "author": "AwesomeKalin55",
     "license": "MIT",

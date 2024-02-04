@@ -6,6 +6,7 @@ export async function encryptWithKey(text: Buffer, key: string) {
     const publicKey: openpgp.Key = privateKey.toPublic();
 
     const message: openpgp.Message<Buffer> = await openpgp.createMessage({ binary: text });
+
     const encrypted: string = await openpgp.encrypt({
         message,
         encryptionKeys: publicKey,
@@ -16,11 +17,11 @@ export async function encryptWithKey(text: Buffer, key: string) {
 }
 
 // Decrypt a buffer using a given secret key
-export async function decryptWithKey(b: Buffer, key: string) {
+export async function decryptWithKey(b: string, key: string) {
     const privateKey: openpgp.Key = await openpgp.readKey({ armoredKey: key });
     const publicKey: openpgp.Key = privateKey.toPublic();
 
-    const message: openpgp.Message<Buffer> = await openpgp.readMessage({ binaryMessage: b });
+    const message: openpgp.Message<string> = await openpgp.readMessage({ armoredMessage: b });
     const { data: decrypted } = await openpgp.decrypt({
         message,
         //@ts-expect-error

@@ -47,7 +47,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
         const fileToHash: Buffer = fileToUpload;
 
         if (pgp != null) {
-            fileToUpload = await encryptWithKey(fileToUpload, pgp);
+            fileToUpload = await encryptWithKey(fileToUpload, key);
         }
 
         console.log(`Uploading ${files[i]}`);
@@ -68,7 +68,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     let manifestToUpload: Buffer = Buffer.from(JSON.stringify(manifest));
 
     if (pgp != null) {
-        manifestToUpload = await encryptWithKey(manifestToUpload, pgp);
+        manifestToUpload = await encryptWithKey(manifestToUpload, key);
     }
 
     const manifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
@@ -90,7 +90,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     const signer: TestWallet = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     instance.connect(signer);
 
-    for (var i = 0; i < tx.getFee() + 2; i++) {
+    for (var i = 0; i < (tx.getFee() + 2) / 3; i++) {
         await getTxInput(auth, privKey.toAddress().toString());
     }
 

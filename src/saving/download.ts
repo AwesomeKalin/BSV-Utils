@@ -37,7 +37,7 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
     if (key === null) {
         manifest = (await download(instance.manifest)).file;
     } else {
-        const file: Buffer = (await download(instance.manifest)).file;
+        const file: string = (await download(instance.manifest)).file;
         manifest = JSON.parse(await decryptWithKey(file, key));
     }
 
@@ -45,7 +45,7 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
 
     for (var i = 0; i < manifest.length; i++) {
         console.log(`Downloading ${manifest[i].name}`);
-        let file: Buffer = (await download(manifest[i].txid)).file;
+        let file: Buffer | string = (await download(manifest[i].txid)).file;
 
         if (key !== null) {
             //@ts-expect-error

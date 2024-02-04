@@ -36,7 +36,7 @@ export async function deleteFolderSave(txid: string) {
         partiallySigned: true,
     } as MethodCallOptions<ProceduralSaving>);
 
-    for (var i = 0; i < checkTx.getFee() + 2; i++) {
+    for (var i = 0; i < (checkTx.getFee() + 1) / 3; i++) {
         await getTxInput(auth, privKey.toAddress().toString());
     }
 

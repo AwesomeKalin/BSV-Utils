@@ -16,7 +16,7 @@ export async function encryptWithKey(text, key) {
 export async function decryptWithKey(b, key) {
     const privateKey = await openpgp.readKey({ armoredKey: key });
     const publicKey = privateKey.toPublic();
-    const message = await openpgp.readMessage({ binaryMessage: b });
+    const message = await openpgp.readMessage({ armoredMessage: b });
     const { data: decrypted } = await openpgp.decrypt({
         message,
         //@ts-expect-error

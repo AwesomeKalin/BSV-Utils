@@ -234,7 +234,7 @@ function hex(x: any[]) {
     return x.join('');
 }
 
-export function kalhash(s: Buffer) {
+export function kalhash(s: Buffer | string) {
     return hex(kalhash1(s));
 }
 
