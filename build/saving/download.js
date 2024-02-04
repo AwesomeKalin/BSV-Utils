@@ -7,7 +7,6 @@ import { getRawTx } from "./delete.js";
 import { bsv } from "scryptlib";
 import { readFileSync } from "fs";
 import { decryptWithKey } from "../util/encryptWithKey.js";
-import { compareHashes, hash } from "../util/hash.js";
 import { outputFileSync } from "fs-extra/esm";
 export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
     if (findLatest) {
@@ -42,11 +41,14 @@ export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
             //@ts-expect-error
             file = await decryptWithKey(file, key);
         }
-        const hashed = hash(file);
+        /**
+        const hashed: hashArray = hash(file);
+
         if (!compareHashes(manifest[i].hashes, hashed)) {
             console.log(chalk.red('Recieved incorrect file! Terminating'));
             process.exit(1);
         }
+        */
         outputFileSync(`${folder}/${manifest[i].name}`, file);
         console.log('Downloaded!');
     }
