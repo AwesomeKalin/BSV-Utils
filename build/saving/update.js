@@ -78,7 +78,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
         let fileToUpload = readFileSync(`${folder}/${files[i]}`);
         const fileToHash = fileToUpload;
         console.log(`Hashing ${files[i]}`);
-        const hashes = hash(fileToHash);
+        const hashes = hash(Buffer.from(fileToHash));
         console.log('Checking if file has changed');
         let fileTx = await compareManifestEntry(manifest, files[i], hashes);
         if (fileTx === false) {

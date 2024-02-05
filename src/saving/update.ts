@@ -94,7 +94,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
 
         console.log(`Hashing ${files[i]}`);
 
-        const hashes: hashArray = hash(fileToHash);
+        const hashes: hashArray = hash(Buffer.from(fileToHash));
 
         console.log('Checking if file has changed');
 
