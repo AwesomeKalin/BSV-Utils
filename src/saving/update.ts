@@ -13,11 +13,11 @@ import { tunnelmole } from "tunnelmole";
 import { expressServer } from "../upload/expressServer.js";
 import { ManifestEntry } from "../types/Manifest.js";
 import { download } from "../download/download.js";
-import { decryptWithKey, encryptWithKey } from "../util/encryptWithKey.js";
 import { hash, hashArray } from "../util/hash.js";
 import { compareHashes } from "../util/hash.js";
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { getTxInput } from "../util/getInput.js";
+import { decrypt, encrypt } from "../util/encryption.js";
 
 export async function updateProceduralSave(txid: string, folder: string, pgp: string, interval: number) {
     const auth: authenticate = await getAuthClass();
@@ -35,7 +35,7 @@ export async function updateProceduralSave(txid: string, folder: string, pgp: st
     let key: string | null = null;
 
     if (pgp != undefined || pgp != null) {
-        key = readFileSync(pgp).toString();
+        key = pgp;
     }
 
     const port: number = await getPort();
@@ -69,8 +69,8 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     if (key === null) {
         manifest = (await download(manifestTx)).file;
     } else {
-        const file: string = (await download(manifestTx)).file;
-        manifest = JSON.parse(await decryptWithKey(file, key));
+        const file: Buffer = Buffer.from((await download(manifestTx)).file);
+        manifest = JSON.parse(await decrypt(file, key));
     }
 
     console.log('Downloaded!');
@@ -104,7 +104,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
             console.log(`Uploading ${files[i]}`);
 
             if (key != null) {
-                fileToUpload = await encryptWithKey(fileToUpload, key);
+                fileToUpload = await encrypt(fileToUpload.toString(), key);
             }
 
             fileTx = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
@@ -125,7 +125,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     let manifestToUpload: Buffer = Buffer.from(JSON.stringify(newManifest));
 
     if (key != null) {
-        manifestToUpload = await encryptWithKey(manifestToUpload, key);
+        manifestToUpload = await encrypt(manifestToUpload.toString(), key);
     }
 
     const newManifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);

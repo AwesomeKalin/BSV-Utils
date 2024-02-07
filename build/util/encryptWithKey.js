@@ -17,12 +17,13 @@ export async function decryptWithKey(b, key) {
     const privateKey = await openpgp.readKey({ armoredKey: key });
     const publicKey = privateKey.toPublic();
     const message = await openpgp.readMessage({ armoredMessage: b });
+    //@ts-expect-error
     const { data: decrypted } = await openpgp.decrypt({
         message,
-        //@ts-expect-error
         decryptionKeys: privateKey,
         verificationKeys: publicKey,
         expectSigned: true,
+        format: 'string',
     });
     return decrypted.toString();
 }

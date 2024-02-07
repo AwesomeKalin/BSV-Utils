@@ -12,11 +12,11 @@ import getPort from "get-port";
 import { tunnelmole } from "tunnelmole";
 import { expressServer } from "../upload/expressServer.js";
 import { download } from "../download/download.js";
-import { decryptWithKey, encryptWithKey } from "../util/encryptWithKey.js";
 import { hash } from "../util/hash.js";
 import { compareHashes } from "../util/hash.js";
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { getTxInput } from "../util/getInput.js";
+import { decrypt, encrypt } from "../util/encryption.js";
 export async function updateProceduralSave(txid, folder, pgp, interval) {
     const auth = await getAuthClass();
     ProceduralSaving.loadArtifact(artifact);
@@ -30,7 +30,7 @@ export async function updateProceduralSave(txid, folder, pgp, interval) {
     const privKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
     let key = null;
     if (pgp != undefined || pgp != null) {
-        key = readFileSync(pgp).toString();
+        key = pgp;
     }
     const port = await getPort();
     mkdirSync('./temp');
@@ -60,8 +60,8 @@ async function updater(auth, txid, privKey, key, url, folder) {
         manifest = (await download(manifestTx)).file;
     }
     else {
-        const file = (await download(manifestTx)).file;
-        manifest = JSON.parse(await decryptWithKey(file, key));
+        const file = Buffer.from((await download(manifestTx)).file);
+        manifest = JSON.parse(await decrypt(file, key));
     }
     console.log('Downloaded!');
     //@ts-expect-error
@@ -84,7 +84,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
         if (fileTx === false) {
             console.log(`Uploading ${files[i]}`);
             if (key != null) {
-                fileToUpload = await encryptWithKey(fileToUpload, key);
+                fileToUpload = await encrypt(fileToUpload.toString(), key);
             }
             fileTx = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
             changed = true;
@@ -99,7 +99,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
     console.log('Uploading manifest');
     let manifestToUpload = Buffer.from(JSON.stringify(newManifest));
     if (key != null) {
-        manifestToUpload = await encryptWithKey(manifestToUpload, key);
+        manifestToUpload = await encrypt(manifestToUpload.toString(), key);
     }
     const newManifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
     console.log(newManifestTx);

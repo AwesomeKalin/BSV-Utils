@@ -1,5 +1,4 @@
 import { readFileSync, readdirSync, lstatSync, mkdirSync, rmSync } from "fs";
-import { encryptWithKey } from "../util/encryptWithKey.js";
 import { authenticate, getAuthClass } from "../util/authenticator.js";
 import getPort from "get-port";
 import { expressServer } from "../upload/expressServer.js";
@@ -7,14 +6,13 @@ import { uploadFiles } from "../upload/uploadFiles.js";
 import { hash, hashArray } from "../util/hash.js";
 import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
 import { Addr, TestWallet, WhatsonchainProvider, bsv } from "scrypt-ts";
-import { deployContract } from "../util/deployContract.js";
-import { Ripemd160, buildContractClass } from 'scryptlib';
 import { getPrivateKey } from "../util/deployContract.js";
 import chalk from "chalk";
 import { tunnelmole } from 'tunnelmole';
 import { ManifestEntry } from "../types/Manifest.js";
 import { getTxInput } from "../util/getInput.js";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
+import { encrypt } from "../util/encryption.js";
 
 export async function createProceduralSave(folder: string, pgp: string | undefined | null) {
     const auth: authenticate = await getAuthClass();
@@ -22,7 +20,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     let key: string | null = null;
 
     if (pgp != undefined || pgp != null) {
-        key = readFileSync(pgp).toString();
+        key = pgp;
     }
 
     //@ts-expect-error
@@ -47,7 +45,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
         const fileToHash: Buffer = fileToUpload;
 
         if (pgp != null) {
-            fileToUpload = await encryptWithKey(fileToUpload, key);
+            fileToUpload = await encrypt(fileToUpload.toString(), key);
         }
 
         console.log(`Uploading ${files[i]}`);
@@ -68,7 +66,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     let manifestToUpload: Buffer = Buffer.from(JSON.stringify(manifest));
 
     if (pgp != null) {
-        manifestToUpload = await encryptWithKey(manifestToUpload, key);
+        manifestToUpload = await encrypt(manifestToUpload.toString(), key);
     }
 
     const manifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);

@@ -1,5 +1,4 @@
 import { readFileSync, readdirSync, lstatSync, mkdirSync, rmSync } from "fs";
-import { encryptWithKey } from "../util/encryptWithKey.js";
 import { getAuthClass } from "../util/authenticator.js";
 import getPort from "get-port";
 import { expressServer } from "../upload/expressServer.js";
@@ -12,11 +11,12 @@ import chalk from "chalk";
 import { tunnelmole } from 'tunnelmole';
 import { getTxInput } from "../util/getInput.js";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
+import { encrypt } from "../util/encryption.js";
 export async function createProceduralSave(folder, pgp) {
     const auth = await getAuthClass();
     let key = null;
     if (pgp != undefined || pgp != null) {
-        key = readFileSync(pgp).toString();
+        key = pgp;
     }
     //@ts-expect-error
     const dirContents = readdirSync(folder, { recursive: true });
@@ -35,7 +35,7 @@ export async function createProceduralSave(folder, pgp) {
         let fileToUpload = readFileSync(`${folder}/${files[i]}`);
         const fileToHash = fileToUpload;
         if (pgp != null) {
-            fileToUpload = await encryptWithKey(fileToUpload, key);
+            fileToUpload = await encrypt(fileToUpload.toString(), key);
         }
         console.log(`Uploading ${files[i]}`);
         const txid = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
@@ -47,7 +47,7 @@ export async function createProceduralSave(folder, pgp) {
     console.log('Uploading manifest');
     let manifestToUpload = Buffer.from(JSON.stringify(manifest));
     if (pgp != null) {
-        manifestToUpload = await encryptWithKey(manifestToUpload, key);
+        manifestToUpload = await encrypt(manifestToUpload.toString(), key);
     }
     const manifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
     console.log('Deploying contract to blockchain');

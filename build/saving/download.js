@@ -5,10 +5,9 @@ import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
 import { getRawTx } from "./delete.js";
 import { bsv } from "scryptlib";
-import { readFileSync } from "fs";
-import { decryptWithKey } from "../util/encryptWithKey.js";
 import { compareHashes, hash } from "../util/hash.js";
 import { outputFileSync } from "fs-extra/esm";
+import { decrypt } from "../util/encryption.js";
 export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
     if (findLatest) {
         try {
@@ -20,7 +19,7 @@ export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
     }
     let key = null;
     if (pgp != undefined || pgp != null) {
-        key = readFileSync(pgp).toString();
+        key = pgp;
     }
     console.log('Downloading manifest');
     ProceduralSaving.loadArtifact(artifact);
@@ -31,20 +30,20 @@ export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
         manifest = (await download(instance.manifest)).file;
     }
     else {
-        const file = (await download(instance.manifest)).file;
-        manifest = JSON.parse(await decryptWithKey(file, key));
+        const file = Buffer.from((await download(instance.manifest)).file);
+        manifest = JSON.parse(await decrypt(file, key));
     }
     console.log('Downloaded!');
     for (var i = 0; i < manifest.length; i++) {
         console.log(`Downloading ${manifest[i].name}`);
         let file = (await download(manifest[i].txid)).file;
-        if (file instanceof Buffer) {
-            file = file.toString();
+        if (typeof file === 'string') {
+            file = Buffer.from(file);
         }
         if (key !== null) {
-            file = await decryptWithKey(file, key);
+            file = await decrypt(file, key);
         }
-        const hashed = hash(Buffer.from(file));
+        const hashed = hash(file);
         if (!compareHashes(manifest[i].hashes, hashed)) {
             console.log(chalk.red('Recieved incorrect file! Terminating'));
             process.exit(1);

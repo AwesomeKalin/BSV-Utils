@@ -134,7 +134,7 @@ yargs(process.argv.slice(2))
         });
         yargs.positional('encryption', {
             type: 'string',
-            description: 'If encryption is desired, then input the path to a PGP key here. Must contain private key. (HIGHLY RECOMMENDED!)',
+            description: 'If encryption is desired, then input the desired password. (HIGHLY RECOMMENDED!)',
         });
     }, async function (argv) {
         ranCommand = true;
@@ -172,7 +172,7 @@ yargs(process.argv.slice(2))
         });
         yargs.positional('encryption', {
             type: 'string',
-            description: 'If encryption is used on this save, then input the path to a PGP key here. Must contain private key',
+            description: 'If encryption is used on this save, then input the password',
         });
         yargs.positional('interval', {
             type: 'number',
@@ -198,14 +198,14 @@ yargs(process.argv.slice(2))
         });
         yargs.positional('encryption', {
             type: 'string',
-            description: 'If encryption is used on this save, then input the path to a PGP key here. Must contain private key',
+            description: 'If encryption is used on this save, then input the password.',
         });
         yargs.positional('folder', {
             type: 'string',
             description: 'The folder where you want the file(s) to be saved',
             required: true,
             alias: 'dir',
-        })
+        });
     }, async function (argv) {
         ranCommand = true;
         //@ts-expect-error

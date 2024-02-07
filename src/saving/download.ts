@@ -6,10 +6,9 @@ import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 import artifact from '../../artifacts/contracts/procedural-saving.json' with { type: 'json' };
 import { getRawTx } from "./delete.js";
 import { bsv } from "scryptlib";
-import { readFileSync } from "fs";
-import { decryptWithKey } from "../util/encryptWithKey.js";
 import { compareHashes, hash, hashArray } from "../util/hash.js";
 import { outputFileSync } from "fs-extra/esm";
+import { decrypt } from "../util/encryption.js";
 
 export async function downloadProceduralSave(txid: string, findLatest: boolean, pgp: string, folder: string) {
     if (findLatest) {
@@ -23,7 +22,7 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
     let key: string | null = null;
 
     if (pgp != undefined || pgp != null) {
-        key = readFileSync(pgp).toString();
+        key = pgp;
     }
 
     console.log('Downloading manifest');
@@ -37,8 +36,8 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
     if (key === null) {
         manifest = (await download(instance.manifest)).file;
     } else {
-        const file: string = (await download(instance.manifest)).file;
-        manifest = JSON.parse(await decryptWithKey(file, key));
+        const file: Buffer = Buffer.from((await download(instance.manifest)).file);
+        manifest = JSON.parse(await decrypt(file, key));
     }
 
     console.log('Downloaded!');
@@ -47,15 +46,15 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
         console.log(`Downloading ${manifest[i].name}`);
         let file: Buffer | string = (await download(manifest[i].txid)).file;
 
-        if (file instanceof Buffer) {
-            file = file.toString();
+        if (typeof file === 'string') {
+            file = Buffer.from(file);
         }
 
         if (key !== null) {
-            file = await decryptWithKey(file, key);
+            file = await decrypt(file, key);
         }
         
-        const hashed: hashArray = hash(Buffer.from(file));
+        const hashed: hashArray = hash(file);
 
         if (!compareHashes(manifest[i].hashes, hashed)) {
             console.log(chalk.red('Recieved incorrect file! Terminating'));
