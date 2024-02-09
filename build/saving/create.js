@@ -35,7 +35,7 @@ export async function createProceduralSave(folder, pgp) {
         let fileToUpload = readFileSync(`${folder}/${files[i]}`);
         const fileToHash = fileToUpload;
         if (pgp != null) {
-            fileToUpload = await encrypt(fileToUpload.toString(), key);
+            fileToUpload = await encrypt(fileToUpload, key);
         }
         console.log(`Uploading ${files[i]}`);
         const txid = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
@@ -47,7 +47,7 @@ export async function createProceduralSave(folder, pgp) {
     console.log('Uploading manifest');
     let manifestToUpload = Buffer.from(JSON.stringify(manifest));
     if (pgp != null) {
-        manifestToUpload = await encrypt(manifestToUpload.toString(), key);
+        manifestToUpload = await encrypt(manifestToUpload, key);
     }
     const manifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
     console.log('Deploying contract to blockchain');
@@ -61,8 +61,15 @@ export async function createProceduralSave(folder, pgp) {
     }));
     const signer = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     instance.connect(signer);
-    for (var i = 0; i < (tx.getFee() + 2) / 3; i++) {
-        await getTxInput(auth, privKey.toAddress().toString());
+    let satsNeeded = tx.getFee() + 2;
+    let inputs = 0;
+    while (satsNeeded > 0) {
+        const feeTx = (await getTxInput(auth, privKey.toAddress().toString()));
+        satsNeeded -= feeTx.tx.vout[feeTx.voutIndex].value * 100000000;
+        inputs += 1;
+        if ((inputs % 6) === 0) {
+            satsNeeded += 1;
+        }
     }
     const contract = (await instance.deploy(1)).id;
     console.log(chalk.greenBright(`Contract deployed at ${contract}`));

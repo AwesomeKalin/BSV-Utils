@@ -61,7 +61,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
     }
     else {
         const file = Buffer.from((await download(manifestTx)).file);
-        manifest = JSON.parse(await decrypt(file, key));
+        manifest = JSON.parse((await decrypt(file, key)).toString());
     }
     console.log('Downloaded!');
     //@ts-expect-error
@@ -84,7 +84,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
         if (fileTx === false) {
             console.log(`Uploading ${files[i]}`);
             if (key != null) {
-                fileToUpload = await encrypt(fileToUpload.toString(), key);
+                fileToUpload = await encrypt(fileToUpload, key);
             }
             fileTx = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
             changed = true;
@@ -99,7 +99,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
     console.log('Uploading manifest');
     let manifestToUpload = Buffer.from(JSON.stringify(newManifest));
     if (key != null) {
-        manifestToUpload = await encrypt(manifestToUpload.toString(), key);
+        manifestToUpload = await encrypt(manifestToUpload, key);
     }
     const newManifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
     console.log(newManifestTx);
@@ -120,8 +120,15 @@ async function updater(auth, txid, privKey, key, url, folder) {
         // Do not broadcast to blockchain
         partiallySigned: true,
     });
-    for (var i = 0; i < (checkTx.getFee() + 1) / 3; i++) {
-        await getTxInput(auth, privKey.toAddress().toString());
+    let satsNeeded = checkTx.getFee() + 2;
+    let inputs = 0;
+    while (satsNeeded > 0) {
+        const feeTx = (await getTxInput(auth, privKey.toAddress().toString()));
+        satsNeeded -= feeTx.tx.vout[feeTx.voutIndex].value * 100000000;
+        inputs += 1;
+        if ((inputs % 6) === 0) {
+            satsNeeded += 1;
+        }
     }
     let { tx: callTX } = await instance.methods.changeManifest((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.

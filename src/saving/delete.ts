@@ -9,6 +9,7 @@ import { getPrivateKey } from "../util/deployContract.js";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 import chalk from "chalk";
 import { getTxInput } from "../util/getInput.js";
+import { WOCTx } from "../types/WOCTx.js";
 
 export async function deleteFolderSave(txid: string) {
     const auth: authenticate = await getAuthClass();
@@ -36,8 +37,17 @@ export async function deleteFolderSave(txid: string) {
         partiallySigned: true,
     } as MethodCallOptions<ProceduralSaving>);
 
-    for (var i = 0; i < (checkTx.getFee() + 1) / 3; i++) {
-        await getTxInput(auth, privKey.toAddress().toString());
+    let satsNeeded: number = checkTx.getFee() + 2;
+    let inputs: number = 0;
+
+    while (satsNeeded > 0) {
+        const feeTx: { tx: WOCTx, voutIndex: number } = (await getTxInput(auth, privKey.toAddress().toString()));
+        satsNeeded -= feeTx.tx.vout[feeTx.voutIndex].value * 100000000;
+        inputs += 1;
+
+        if ((inputs % 6) === 0) {
+            satsNeeded += 1;
+        }
     }
 
     let { tx: callTX } = await instance.methods.unlock((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), {

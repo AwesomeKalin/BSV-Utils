@@ -36,8 +36,10 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
     if (key === null) {
         manifest = (await download(instance.manifest)).file;
     } else {
-        const file: Buffer = Buffer.from((await download(instance.manifest)).file);
-        manifest = JSON.parse(await decrypt(file, key));
+        const file: Buffer = (await download(instance.manifest)).file;
+
+        console.log(instance.manifest);
+        manifest = JSON.parse((await decrypt(file, key)).toString());
     }
 
     console.log('Downloaded!');

@@ -1,7 +1,7 @@
 import * as openpgp from 'openpgp';
 // Encrypt a string using a given secret key
 export async function encrypt(text, key) {
-    const message = await openpgp.createMessage({ text });
+    const message = await openpgp.createMessage({ binary: text });
     const encrypted = await openpgp.encrypt({
         message,
         passwords: [key],
@@ -17,5 +17,5 @@ export async function decrypt(b, key) {
         passwords: [key],
         format: 'binary',
     });
-    return Buffer.from(decrypted).toString();
+    return Buffer.from(decrypted);
 }

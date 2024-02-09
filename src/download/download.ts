@@ -2,12 +2,15 @@ import axios, { AxiosResponse } from "axios";
 import { SingleBar } from "cli-progress";
 import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "fs";
 import cliProgress, { Presets } from 'cli-progress';
+import { hash } from "../util/hash.js";
 
 export async function download(txid: string) {
     let firstDl: AxiosResponse;
 
     try {
-        firstDl = await axios.get(`https://bico.media/${txid}`);
+        firstDl = await axios.get(`https://bico.media/${txid}`, {
+            responseType: 'arraybuffer',
+        });
     } catch {
         await download(txid);
     }

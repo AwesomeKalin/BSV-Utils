@@ -9,7 +9,7 @@ export async function getUserInfo(account) {
     }
     else {
         try {
-            decoded = Buffer.from(await decrypt(account, await password({ message: 'Please enter your decryption key: ' })), 'base64').toString();
+            decoded = (await decrypt(account, await password({ message: 'Please enter your decryption key: ' })), 'base64').toString();
             console.clear();
         }
         catch {

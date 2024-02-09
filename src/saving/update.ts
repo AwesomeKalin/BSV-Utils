@@ -18,6 +18,7 @@ import { compareHashes } from "../util/hash.js";
 import { uploadFiles } from "../upload/uploadFiles.js";
 import { getTxInput } from "../util/getInput.js";
 import { decrypt, encrypt } from "../util/encryption.js";
+import { WOCTx } from "../types/WOCTx.js";
 
 export async function updateProceduralSave(txid: string, folder: string, pgp: string, interval: number) {
     const auth: authenticate = await getAuthClass();
@@ -70,7 +71,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         manifest = (await download(manifestTx)).file;
     } else {
         const file: Buffer = Buffer.from((await download(manifestTx)).file);
-        manifest = JSON.parse(await decrypt(file, key));
+        manifest = JSON.parse((await decrypt(file, key)).toString());
     }
 
     console.log('Downloaded!');
@@ -104,7 +105,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
             console.log(`Uploading ${files[i]}`);
 
             if (key != null) {
-                fileToUpload = await encrypt(fileToUpload.toString(), key);
+                fileToUpload = await encrypt(fileToUpload, key);
             }
 
             fileTx = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
@@ -125,7 +126,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     let manifestToUpload: Buffer = Buffer.from(JSON.stringify(newManifest));
 
     if (key != null) {
-        manifestToUpload = await encrypt(manifestToUpload.toString(), key);
+        manifestToUpload = await encrypt(manifestToUpload, key);
     }
 
     const newManifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
@@ -153,8 +154,17 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         partiallySigned: true,
     } as MethodCallOptions<ProceduralSaving>);
 
-    for (var i = 0; i < (checkTx.getFee() + 1) / 3; i++) {
-        await getTxInput(auth, privKey.toAddress().toString());
+    let satsNeeded: number = checkTx.getFee() + 2;
+    let inputs: number = 0;
+
+    while (satsNeeded > 0) {
+        const feeTx: { tx: WOCTx, voutIndex: number } = (await getTxInput(auth, privKey.toAddress().toString()));
+        satsNeeded -= feeTx.tx.vout[feeTx.voutIndex].value * 100000000;
+        inputs += 1;
+
+        if ((inputs % 6) === 0) {
+            satsNeeded += 1;
+        }
     }
 
     let { tx: callTX } = await instance.methods.changeManifest((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {

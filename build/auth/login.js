@@ -18,7 +18,7 @@ export async function login() {
         })).toString('base64');
         if (encryptionPassword != '') {
             spinner.stop();
-            return await encrypt(toSave, encryptionPassword);
+            return await encrypt(Buffer.from(toSave), encryptionPassword);
         }
         spinner.stop();
         return Buffer.from(toSave);

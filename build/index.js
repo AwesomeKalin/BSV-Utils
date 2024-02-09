@@ -184,7 +184,7 @@ yargs(process.argv.slice(2))
     yargs.positional('findLatest', {
         type: 'boolean',
         description: 'Whether you want to find the latest version of the save or download the state at the provided transaction',
-        default: false,
+        default: true,
     });
     yargs.positional('encryption', {
         type: 'string',

@@ -13,6 +13,7 @@ import { ManifestEntry } from "../types/Manifest.js";
 import { getTxInput } from "../util/getInput.js";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 import { encrypt } from "../util/encryption.js";
+import { WOCTx } from "../types/WOCTx.js";
 
 export async function createProceduralSave(folder: string, pgp: string | undefined | null) {
     const auth: authenticate = await getAuthClass();
@@ -45,7 +46,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
         const fileToHash: Buffer = fileToUpload;
 
         if (pgp != null) {
-            fileToUpload = await encrypt(fileToUpload.toString(), key);
+            fileToUpload = await encrypt(fileToUpload, key);
         }
 
         console.log(`Uploading ${files[i]}`);
@@ -66,7 +67,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     let manifestToUpload: Buffer = Buffer.from(JSON.stringify(manifest));
 
     if (pgp != null) {
-        manifestToUpload = await encrypt(manifestToUpload.toString(), key);
+        manifestToUpload = await encrypt(manifestToUpload, key);
     }
 
     const manifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
@@ -88,8 +89,17 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     const signer: TestWallet = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     instance.connect(signer);
 
-    for (var i = 0; i < (tx.getFee() + 2) / 3; i++) {
-        await getTxInput(auth, privKey.toAddress().toString());
+    let satsNeeded: number = tx.getFee() + 2;
+    let inputs: number = 0;
+
+    while (satsNeeded > 0) {
+        const feeTx: { tx: WOCTx, voutIndex: number } = (await getTxInput(auth, privKey.toAddress().toString()));
+        satsNeeded -= feeTx.tx.vout[feeTx.voutIndex].value * 100000000;
+        inputs += 1;
+
+        if ((inputs % 6) === 0) {
+            satsNeeded += 1;
+        }
     }
 
     const contract: string = (await instance.deploy(1)).id;

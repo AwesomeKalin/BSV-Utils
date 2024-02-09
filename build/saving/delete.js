@@ -31,8 +31,15 @@ export async function deleteFolderSave(txid) {
         // Do not broadcast to blockchain
         partiallySigned: true,
     });
-    for (var i = 0; i < (checkTx.getFee() + 1) / 3; i++) {
-        await getTxInput(auth, privKey.toAddress().toString());
+    let satsNeeded = checkTx.getFee() + 2;
+    let inputs = 0;
+    while (satsNeeded > 0) {
+        const feeTx = (await getTxInput(auth, privKey.toAddress().toString()));
+        satsNeeded -= feeTx.tx.vout[feeTx.voutIndex].value * 100000000;
+        inputs += 1;
+        if ((inputs % 6) === 0) {
+            satsNeeded += 1;
+        }
     }
     let { tx: callTX } = await instance.methods.unlock((sigResps) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.

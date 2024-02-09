@@ -39,7 +39,7 @@ export async function getAuthClass(): Promise<authenticate> {
         decoded = Buffer.from(account.toString('ascii'), 'base64').toString();
     } else {
         try {
-            decoded = Buffer.from(await decrypt(account, await password({ message: 'Please enter your decryption key: ' })), 'base64').toString();
+            decoded = (await decrypt(account, await password({ message: 'Please enter your decryption key: ' })), 'base64').toString();
             console.clear();
         } catch {
             console.log(chalk.red('Incorrect Password'));

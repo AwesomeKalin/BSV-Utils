@@ -20,7 +20,7 @@ export async function login() {
 
         if (encryptionPassword != '') {
             spinner.stop();
-            return await encrypt(toSave, encryptionPassword);
+            return await encrypt(Buffer.from(toSave), encryptionPassword);
         }
 
         spinner.stop();

@@ -4,7 +4,9 @@ import cliProgress, { Presets } from 'cli-progress';
 export async function download(txid) {
     let firstDl;
     try {
-        firstDl = await axios.get(`https://bico.media/${txid}`);
+        firstDl = await axios.get(`https://bico.media/${txid}`, {
+            responseType: 'arraybuffer',
+        });
     }
     catch {
         await download(txid);
