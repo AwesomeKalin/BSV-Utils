@@ -2,7 +2,6 @@ import axios, { AxiosResponse } from "axios";
 import { SingleBar } from "cli-progress";
 import { mkdirSync, readFileSync, readdirSync, rmSync, writeFileSync } from "fs";
 import cliProgress, { Presets } from 'cli-progress';
-import { hash } from "../util/hash.js";
 
 export async function download(txid: string) {
     let firstDl: AxiosResponse;
@@ -16,7 +15,7 @@ export async function download(txid: string) {
     }
 
     try {
-        const manifestDecoded: { txs: string, name: string } = firstDl.data;
+        const manifestDecoded: { txs: string, name: string } = JSON.parse(firstDl.data);
 
         const bar: SingleBar = new cliProgress.SingleBar({}, Presets.shades_classic);
         bar.start(manifestDecoded.txs.length, 0);

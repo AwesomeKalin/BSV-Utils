@@ -89,7 +89,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
     const signer: TestWallet = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     instance.connect(signer);
 
-    let satsNeeded: number = tx.getFee() + 2;
+    let satsNeeded: number = tx.getFee() + 4;
     let inputs: number = 0;
 
     while (satsNeeded > 0) {

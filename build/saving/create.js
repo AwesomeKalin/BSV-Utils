@@ -61,7 +61,7 @@ export async function createProceduralSave(folder, pgp) {
     }));
     const signer = new TestWallet(privKey, new WhatsonchainProvider(bsv.Networks.mainnet));
     instance.connect(signer);
-    let satsNeeded = tx.getFee() + 2;
+    let satsNeeded = tx.getFee() + 4;
     let inputs = 0;
     while (satsNeeded > 0) {
         const feeTx = (await getTxInput(auth, privKey.toAddress().toString()));

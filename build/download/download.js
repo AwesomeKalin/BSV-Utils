@@ -12,7 +12,7 @@ export async function download(txid) {
         await download(txid);
     }
     try {
-        const manifestDecoded = firstDl.data;
+        const manifestDecoded = JSON.parse(firstDl.data);
         const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
         bar.start(manifestDecoded.txs.length, 0);
         mkdirSync('temp');
