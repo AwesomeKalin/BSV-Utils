@@ -154,7 +154,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         partiallySigned: true,
     } as MethodCallOptions<ProceduralSaving>);
 
-    let satsNeeded: number = checkTx.getFee() + 2;
+    let satsNeeded: number = checkTx.getFee() + 1;
     let inputs: number = 0;
 
     while (satsNeeded > 0) {

@@ -120,7 +120,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
         // Do not broadcast to blockchain
         partiallySigned: true,
     });
-    let satsNeeded = checkTx.getFee() + 2;
+    let satsNeeded = checkTx.getFee() + 1;
     let inputs = 0;
     while (satsNeeded > 0) {
         const feeTx = (await getTxInput(auth, privKey.toAddress().toString()));

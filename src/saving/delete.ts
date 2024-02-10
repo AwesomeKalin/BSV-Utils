@@ -37,7 +37,7 @@ export async function deleteFolderSave(txid: string) {
         partiallySigned: true,
     } as MethodCallOptions<ProceduralSaving>);
 
-    let satsNeeded: number = checkTx.getFee() + 2;
+    let satsNeeded: number = checkTx.getFee() + 1;
     let inputs: number = 0;
 
     while (satsNeeded > 0) {
