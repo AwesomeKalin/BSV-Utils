@@ -20,7 +20,7 @@ export async function upload(file: string, fileName: string, uploadJson: string)
     let txid: string;
 
     if (uploadJson === undefined) {
-        txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);
+        txid = await uploadFiles(authenticator, fileBuffer, fileName, url, true, spinner);
     } else {
         const parsedJson: { txs: Array<string>, name: string } = JSON.parse(readFileSync(uploadJson).toString());
         const uploadedParts: number = parsedJson.txs.length;

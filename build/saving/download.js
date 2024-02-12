@@ -8,6 +8,7 @@ import { bsv } from "scryptlib";
 import { compareHashes, hash } from "../util/hash.js";
 import { outputFileSync } from "fs-extra/esm";
 import { decrypt } from "../util/encryption.js";
+import cliProgress, { Presets } from "cli-progress";
 export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
     if (findLatest) {
         try {
@@ -34,8 +35,9 @@ export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
         manifest = JSON.parse((await decrypt(file, key)).toString());
     }
     console.log('Downloaded!');
+    const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
+    bar.start(manifest.length, 0);
     for (var i = 0; i < manifest.length; i++) {
-        console.log(`Downloading ${manifest[i].name}`);
         let file = (await download(manifest[i].txid)).file;
         if (typeof file === 'string') {
             file = Buffer.from(file);
@@ -49,7 +51,7 @@ export async function downloadProceduralSave(txid, findLatest, pgp, folder) {
             process.exit(1);
         }
         outputFileSync(`${folder}/${manifest[i].name}`, file);
-        console.log('Downloaded!');
+        bar.increment(1);
     }
     process.exit(0);
 }

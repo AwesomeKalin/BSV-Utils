@@ -12,6 +12,7 @@ import { tunnelmole } from 'tunnelmole';
 import { getTxInput } from "../util/getInput.js";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 import { encrypt } from "../util/encryption.js";
+import cliProgress, { Presets } from 'cli-progress';
 export async function createProceduralSave(folder, pgp) {
     const auth = await getAuthClass();
     let key = null;
@@ -31,26 +32,26 @@ export async function createProceduralSave(folder, pgp) {
     const server = new expressServer(port);
     const url = await tunnelmole({ port });
     let manifest = [];
+    const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
+    bar.start(files.length + 2, 0);
     for (var i = 0; i < files.length; i++) {
         let fileToUpload = readFileSync(`${folder}/${files[i]}`);
         const fileToHash = fileToUpload;
         if (pgp != null) {
             fileToUpload = await encrypt(fileToUpload, key);
         }
-        console.log(`Uploading ${files[i]}`);
         const txid = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
-        console.log(`Hashing ${files[i]}`);
         const hashes = hash(fileToHash);
         const toPush = { name: files[i], txid, hashes };
         manifest.push(toPush);
+        bar.increment(1);
     }
-    console.log('Uploading manifest');
     let manifestToUpload = Buffer.from(JSON.stringify(manifest));
     if (pgp != null) {
         manifestToUpload = await encrypt(manifestToUpload, key);
     }
     const manifestTx = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
-    console.log('Deploying contract to blockchain');
+    bar.increment(1);
     ProceduralSaving.loadArtifact(artifact);
     const privKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
     let instance = new ProceduralSaving(manifestTx, Addr(privKey.toAddress().toByteString()));
@@ -71,8 +72,16 @@ export async function createProceduralSave(folder, pgp) {
             satsNeeded += 1;
         }
     }
-    const contract = (await instance.deploy(1)).id;
+    const contract = await deployInstance(instance);
     console.log(chalk.greenBright(`Contract deployed at ${contract}`));
     rmSync('./temp', { recursive: true, force: true });
     process.exit(0);
+}
+async function deployInstance(instance) {
+    try {
+        return (await instance.deploy(1)).id;
+    }
+    catch {
+        return await deployInstance(instance);
+    }
 }

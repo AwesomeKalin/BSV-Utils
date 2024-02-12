@@ -3,7 +3,7 @@ import axios from 'axios';
 import fs, { writeFileSync } from 'fs';
 import cliProgress, { Presets } from 'cli-progress';
 import { sleep } from '../util/sleep.js';
-export async function uploadFiles(auth, fileBuffer, fileName, ngrok, spinner) {
+export async function uploadFiles(auth, fileBuffer, fileName, ngrok, showProgress = false, spinner) {
     await auth.checkAuth();
     let relysia = auth.relysia;
     if (fileBuffer.length > 921600) {
@@ -14,13 +14,18 @@ export async function uploadFiles(auth, fileBuffer, fileName, ngrok, spinner) {
             spinner.stop();
         }
         let txid = [];
-        const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
-        bar.start(chunk + 1, 0);
+        let bar;
+        if (showProgress) {
+            bar = new cliProgress.SingleBar({}, Presets.shades_classic);
+            bar.start(chunk + 1, 0);
+        }
         for (var i = 0; i < bufferList.length; i++) {
             txid.push(await uploadFiles(auth, bufferList[i], Date.now().toString(), ngrok));
             const tempJson = JSON.stringify({ txs: txid, name: fileName });
             writeFileSync('./uploadedFile.json', tempJson);
-            bar.increment(1);
+            if (showProgress) {
+                bar.increment(1);
+            }
         }
         const fileJson = JSON.stringify({ txs: txid, name: fileName });
         bar.increment(1);

@@ -7,7 +7,7 @@ import { Spinner } from 'nanospinner';
 import cliProgress, { Presets } from 'cli-progress';
 import { sleep } from '../util/sleep.js';
 
-export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileName: string, ngrok: string, spinner?: Spinner): Promise<string> {
+export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileName: string, ngrok: string, showProgress: boolean = false, spinner?: Spinner): Promise<string> {
     await auth.checkAuth();
     let relysia: RelysiaSDK = auth.relysia;
 
@@ -21,14 +21,19 @@ export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileNa
         }
 
         let txid: Array<string> = [];
-        const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
-        bar.start(chunk + 1, 0);
+        let bar: cliProgress.SingleBar;
+        if (showProgress) {
+            bar = new cliProgress.SingleBar({}, Presets.shades_classic);
+            bar.start(chunk + 1, 0);
+        }
 
         for (var i = 0; i < bufferList.length; i++) {
             txid.push(await uploadFiles(auth, bufferList[i], Date.now().toString(), ngrok));
             const tempJson: string = JSON.stringify({ txs: txid, name: fileName });
             writeFileSync('./uploadedFile.json', tempJson);
-            bar.increment(1);
+            if (showProgress) {
+                bar.increment(1);
+            }
         }
 
         const fileJson: string = JSON.stringify({ txs: txid, name: fileName });

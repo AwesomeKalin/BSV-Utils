@@ -14,6 +14,7 @@ import { getTxInput } from "../util/getInput.js";
 import { ProceduralSaving } from "../contracts/procedural-saving.cjs";
 import { encrypt } from "../util/encryption.js";
 import { WOCTx } from "../types/WOCTx.js";
+import cliProgress, { Presets } from 'cli-progress';
 
 export async function createProceduralSave(folder: string, pgp: string | undefined | null) {
     const auth: authenticate = await getAuthClass();
@@ -41,6 +42,9 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
 
     let manifest: ManifestEntry[] = [];
 
+    const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
+    bar.start(files.length + 2, 0);
+
     for (var i = 0; i < files.length; i++) {
         let fileToUpload: Buffer = readFileSync(`${folder}/${files[i]}`);
         const fileToHash: Buffer = fileToUpload;
@@ -49,20 +53,16 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
             fileToUpload = await encrypt(fileToUpload, key);
         }
 
-        console.log(`Uploading ${files[i]}`);
-
         const txid: string = await uploadFiles(auth, fileToUpload, Date.now().toString(), url, undefined);
-
-        console.log(`Hashing ${files[i]}`);
 
         const hashes: hashArray = hash(fileToHash);
 
         const toPush: ManifestEntry = { name: files[i], txid, hashes };
 
         manifest.push(toPush);
-    }
 
-    console.log('Uploading manifest');
+        bar.increment(1);
+    }
 
     let manifestToUpload: Buffer = Buffer.from(JSON.stringify(manifest));
 
@@ -72,7 +72,7 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
 
     const manifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
 
-    console.log('Deploying contract to blockchain');
+    bar.increment(1);
 
     ProceduralSaving.loadArtifact(artifact);
     const privKey: bsv.PrivateKey = bsv.PrivateKey.fromWIF(await getPrivateKey(auth));
@@ -102,11 +102,19 @@ export async function createProceduralSave(folder: string, pgp: string | undefin
         }
     }
 
-    const contract: string = (await instance.deploy(1)).id;
+    const contract: string = await deployInstance(instance);
 
     console.log(chalk.greenBright(`Contract deployed at ${contract}`));
 
     rmSync('./temp', { recursive: true, force: true });
 
     process.exit(0);
+}
+
+async function deployInstance(instance: ProceduralSaving) {
+    try {
+        return (await instance.deploy(1)).id;
+    } catch {
+        return await deployInstance(instance);
+    }
 }

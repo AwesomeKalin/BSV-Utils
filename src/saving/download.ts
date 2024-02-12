@@ -9,6 +9,7 @@ import { bsv } from "scryptlib";
 import { compareHashes, hash, hashArray } from "../util/hash.js";
 import { outputFileSync } from "fs-extra/esm";
 import { decrypt } from "../util/encryption.js";
+import cliProgress, { Presets } from "cli-progress";
 
 export async function downloadProceduralSave(txid: string, findLatest: boolean, pgp: string, folder: string) {
     if (findLatest) {
@@ -42,8 +43,10 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
 
     console.log('Downloaded!');
 
+    const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
+    bar.start(manifest.length, 0);
+
     for (var i = 0; i < manifest.length; i++) {
-        console.log(`Downloading ${manifest[i].name}`);
         let file: Buffer | string = (await download(manifest[i].txid)).file;
 
         if (typeof file === 'string') {
@@ -62,8 +65,8 @@ export async function downloadProceduralSave(txid: string, findLatest: boolean, 
         }
 
         outputFileSync(`${folder}/${manifest[i].name}`, file);
-        
-        console.log('Downloaded!');
+
+        bar.increment(1);
     }
 
     process.exit(0);

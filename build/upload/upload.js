@@ -16,7 +16,7 @@ export async function upload(file, fileName, uploadJson) {
     const url = await tunnelmole({ port });
     let txid;
     if (uploadJson === undefined) {
-        txid = await uploadFiles(authenticator, fileBuffer, fileName, url, spinner);
+        txid = await uploadFiles(authenticator, fileBuffer, fileName, url, true, spinner);
     }
     else {
         const parsedJson = JSON.parse(readFileSync(uploadJson).toString());

@@ -19,6 +19,7 @@ import { uploadFiles } from "../upload/uploadFiles.js";
 import { getTxInput } from "../util/getInput.js";
 import { decrypt, encrypt } from "../util/encryption.js";
 import { WOCTx } from "../types/WOCTx.js";
+import cliProgress, { Presets } from 'cli-progress';
 
 export async function updateProceduralSave(txid: string, folder: string, pgp: string, interval: number) {
     const auth: authenticate = await getAuthClass();
@@ -86,6 +87,9 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         }
     }
 
+    const bar = new cliProgress.SingleBar({}, Presets.shades_classic);
+    bar.start(files.length + 2, 0);
+
     let newManifest: ManifestEntry[] = [];
     let changed: boolean = false;
 
@@ -93,16 +97,11 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         let fileToUpload: Buffer = readFileSync(`${folder}/${files[i]}`);
         const fileToHash: Buffer = fileToUpload;
 
-        console.log(`Hashing ${files[i]}`);
-
         const hashes: hashArray = hash(Buffer.from(fileToHash));
-
-        console.log('Checking if file has changed');
 
         let fileTx: string | false = await compareManifestEntry(manifest, files[i], hashes)
 
         if (fileTx === false) {
-            console.log(`Uploading ${files[i]}`);
 
             if (key != null) {
                 fileToUpload = await encrypt(fileToUpload, key);
@@ -114,14 +113,14 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
 
         const toPush: ManifestEntry = { name: files[i], txid: fileTx, hashes };
         newManifest.push(toPush);
+
+        bar.increment(1);
     }
 
     if (!changed) {
         console.log('No files updated');
         return txid;
     }
-
-    console.log('Uploading manifest');
 
     let manifestToUpload: Buffer = Buffer.from(JSON.stringify(newManifest));
 
@@ -131,14 +130,12 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
 
     const newManifestTx: string = await uploadFiles(auth, manifestToUpload, Date.now().toString(), url, undefined);
 
-    console.log(newManifestTx);
+    bar.increment(1);
 
-    console.log('Uploaded!');
+    console.log(newManifestTx);
 
     const nextInstance: ProceduralSaving = instance.next();
     nextInstance.updateManifest(newManifestTx);
-
-    console.log('Deploying');
 
     let { tx: checkTx } = await instance.methods.changeManifest((sigResps: SignatureResponse[]) => findSig(sigResps, privKey.toPublicKey()), PubKey(privKey.toPublicKey().toString()), newManifestTx, {
         // Direct the signer to use the private key associated with `publicKey` and the specified sighash type to sign this transaction.
@@ -180,6 +177,8 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     } as MethodCallOptions<ProceduralSaving>);
 
     const nextTxId: string = callTX.id;
+
+    bar.increment(1);
 
     console.log(`Updated contract on blockchain: ${nextTxId}`);
 
