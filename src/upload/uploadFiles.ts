@@ -37,8 +37,10 @@ export async function uploadFiles(auth: authenticate, fileBuffer: Buffer, fileNa
         }
 
         const fileJson: string = JSON.stringify({ txs: txid, name: fileName });
-        bar.increment(1);
-        bar.stop();
+        if (showProgress) {
+            bar.increment(1);
+            bar.stop();
+        }
         return await uploadFiles(auth, Buffer.from(fileJson), `${fileName}.json`, ngrok);
     } else {
         if (spinner !== undefined) {

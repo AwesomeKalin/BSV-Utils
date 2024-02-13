@@ -142,6 +142,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
     });
     const nextTxId = callTX.id;
     bar.increment(1);
+    bar.stop();
     console.log(`Updated contract on blockchain: ${nextTxId}`);
     return nextTxId;
 }

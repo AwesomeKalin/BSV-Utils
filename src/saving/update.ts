@@ -179,6 +179,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
     const nextTxId: string = callTX.id;
 
     bar.increment(1);
+    bar.stop();
 
     console.log(`Updated contract on blockchain: ${nextTxId}`);
 
