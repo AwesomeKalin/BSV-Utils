@@ -20,12 +20,12 @@ export async function download(txid: string) {
         const bar: SingleBar = new cliProgress.SingleBar({}, Presets.shades_classic);
         bar.start(manifestDecoded.txs.length, 0);
 
-        mkdirSync('temp');
+        mkdirSync('dlTemp');
 
         for (var i = 0; i < manifestDecoded.txs.length; i++) {
             const txData: Uint8Array = (await download(manifestDecoded.txs[i])).file;
 
-            writeFileSync(`./temp/${i}`, txData);
+            writeFileSync(`./dlTemp/${i}`, txData);
 
             bar.increment(1);
         }
@@ -40,14 +40,14 @@ export async function download(txid: string) {
         let fileBuffer: Buffer = Buffer.from("");
 
         for (var i = 0; i < manifestDecoded.txs.length; i++) {
-            const data: Buffer = readFileSync(`./temp/${i}`);
+            const data: Buffer = readFileSync(`./dlTemp/${i}`);
 
             fileBuffer = Buffer.concat([fileBuffer, data]);
 
             bar2.increment(1);
         }
 
-        rmSync('temp', { recursive: true, force: true });
+        rmSync('dlTemp', { recursive: true, force: true });
 
         bar2.stop();
 
