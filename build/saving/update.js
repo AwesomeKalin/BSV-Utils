@@ -148,13 +148,10 @@ async function updater(auth, txid, privKey, key, url, folder) {
 }
 async function compareManifestEntry(manifest, name, entry) {
     for (var i = 0; i < manifest.length; i++) {
-        if (manifest[i].name !== name) {
-            return false;
-        }
         const result = compareHashes(entry, manifest[i].hashes);
         if (result == true) {
             return manifest[i].txid;
         }
-        return false;
     }
+    return false;
 }

@@ -102,7 +102,6 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         let fileTx: string | false = await compareManifestEntry(manifest, files[i], hashes)
 
         if (fileTx === false) {
-
             if (key != null) {
                 fileToUpload = await encrypt(fileToUpload, key);
             }
@@ -188,16 +187,13 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
 
 async function compareManifestEntry(manifest: ManifestEntry[], name: string, entry: hashArray) {
     for (var i = 0; i < manifest.length; i++) {
-        if (manifest[i].name !== name) {
-            return false;
-        }
 
         const result = compareHashes(entry, manifest[i].hashes);
 
         if (result == true) {
             return manifest[i].txid;
         }
-
-        return false;
     }
+
+    return false;
 }
