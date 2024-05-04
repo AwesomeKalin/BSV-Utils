@@ -118,6 +118,7 @@ async function updater(auth, txid, privKey, key, url, folder) {
         },
         // Do not broadcast to blockchain
         partiallySigned: true,
+        autoPayFee: false,
     });
     let satsNeeded = checkTx.getFee() + 1;
     let inputs = 0;

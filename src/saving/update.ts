@@ -148,6 +148,7 @@ async function updater(auth: authenticate, txid: string, privKey: bsv.PrivateKey
         },
         // Do not broadcast to blockchain
         partiallySigned: true,
+        autoPayFee: false,
     } as MethodCallOptions<ProceduralSaving>);
 
     let satsNeeded: number = checkTx.getFee() + 1;
